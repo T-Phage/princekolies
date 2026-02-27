@@ -73,6 +73,7 @@ export class PosComponent {
   // }
 
   ngOnInit(): void {
+    console.log(this.newSalesFrm.value)
     this.httpservice.getProducts(1, 10)
       .subscribe({
         next: data => {
@@ -112,6 +113,7 @@ export class PosComponent {
     'grand_total': ['', Validators.required],
     // 'amount_paid': [0.0, Validators.required],
     'payment_status': [{ value: 'Paid', disabled: true }, Validators.required],
+    'payment_method':[{ value: 'Cash'}, Validators.required],
     'biller': [sessionStorage.getItem('id')],
     'items': this.formBuilder.array([]),
   })
@@ -206,6 +208,7 @@ export class PosComponent {
 
     this.newSalesFrm.get('status')?.enable();
     this.newSalesFrm.get('payment_status')?.enable();
+    console.log(this.newSalesFrm)
 
     this.submitted = true
 
