@@ -1,0 +1,365 @@
+<div class="content">
+    <div class="page-header">
+        <div class="add-item d-flex">
+            <div class="page-title">
+                <h4>User List</h4>
+                <h6>Manage Your Users</h6>
+            </div>
+        </div>
+        <ul class="table-top-head">
+            
+        </ul>
+        <div class="page-btn">
+            <a href="#" class="btn btn-added" data-bs-toggle="modal" data-bs-target="#add-units"><i
+                    data-feather="plus-circle" class="me-2"></i>Add New User</a>
+        </div>
+    </div>
+
+    <div class="card table-list-card">
+        <div class="card-body">
+            <div class="table-top">
+                <div class="search-set">
+                    <div class="search-input">
+                        <a href class="btn btn-searchset"><i data-feather="search" class="feather-search"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" id="filter_inputs">
+                <div class="card-body pb-0">
+                    
+                    
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <div *ngIf="!(users$ | async); else userTable">
+                    Loading...
+                  </div>
+                <ng-template #userTable>
+                    <table class="table datanew">
+                        <thead>
+                            <tr>
+                                <th class="no-sort">
+                                    <label class="checkboxs">
+                                        <input type="checkbox" id="select-all">
+                                        <span class="checkmarks"></span>
+                                    </label>
+                                </th>
+                                <th>User Name</th>
+                                <th>Phone</th>
+                                <th>email</th>
+                                <th>Role</th>
+                                <th>Created On</th>
+                                <th>Status</th>
+                                <th class="no-sort">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let user of users$ | async">
+                                <td>
+                                    <label class="checkboxs">
+                                        <input type="checkbox">
+                                        <span class="checkmarks"></span>
+                                    </label>
+                                </td>
+                                <td>{{user.name}}</td>
+                                <td>{{user.phone_number}}</td>
+                                <td>{{user.email}}</td>
+                                <td>{{user.role}}</td>
+                                <td>{{user.created_at}}</td>
+                                <td> 
+                                    <span *ngIf="user.user_account == 'Inactive'" class="badge badge-linedanger">{{user.user_account}}</span>
+                                    <span *ngIf="user.user_account == 'Active'" class="badge badge-linesuccess">{{user.user_account}}</span>
+                                </td>
+                                <td class="action-table-data">
+                                    <div class="edit-delete-action">
+                                        <!-- <a class="me-2 p-2 mb-0" href="javascript:void(0);">
+                                            <i data-feather="eye" class="action-eye"></i>
+                                        </a> -->
+                                        <a (click)="userClicked(user.id, user.name, user.email, user.phone_number, user.role,user.user_account)" class="me-2 p-2 mb-0" data-bs-toggle="modal" data-bs-target="#edit-units">
+                                            <i data-feather="edit" class="feather-edit"></i>
+                                        </a>
+                                        <a [routerLink]="['/dashboard/staff-sales/', user.id, user.name]" class="me-2 p-2 mb-0">
+                                            <i data-feather="eye" class="">
+                                                <svg fill="#000000" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+                                                    width="18px" height="22px" viewBox="0 0 442.04 442.04"
+                                                    xml:space="preserve">
+                                                    <g>
+                                                        <g>
+                                                            <path d="M221.02,341.304c-49.708,0-103.206-19.44-154.71-56.22C27.808,257.59,4.044,230.351,3.051,229.203
+                                                                c-4.068-4.697-4.068-11.669,0-16.367c0.993-1.146,24.756-28.387,63.259-55.881c51.505-36.777,105.003-56.219,154.71-56.219
+                                                                c49.708,0,103.207,19.441,154.71,56.219c38.502,27.494,62.266,54.734,63.259,55.881c4.068,4.697,4.068,11.669,0,16.367
+                                                                c-0.993,1.146-24.756,28.387-63.259,55.881C324.227,321.863,270.729,341.304,221.02,341.304z M29.638,221.021
+                                                                c9.61,9.799,27.747,27.03,51.694,44.071c32.83,23.361,83.714,51.212,139.688,51.212s106.859-27.851,139.688-51.212
+                                                                c23.944-17.038,42.082-34.271,51.694-44.071c-9.609-9.799-27.747-27.03-51.694-44.071
+                                                                c-32.829-23.362-83.714-51.212-139.688-51.212s-106.858,27.85-139.688,51.212C57.388,193.988,39.25,211.219,29.638,221.021z"/>
+                                                        </g>
+                                                        <g>
+                                                            <path d="M221.02,298.521c-42.734,0-77.5-34.767-77.5-77.5c0-42.733,34.766-77.5,77.5-77.5c18.794,0,36.924,6.814,51.048,19.188
+                                                                c5.193,4.549,5.715,12.446,1.166,17.639c-4.549,5.193-12.447,5.714-17.639,1.166c-9.564-8.379-21.844-12.993-34.576-12.993
+                                                                c-28.949,0-52.5,23.552-52.5,52.5s23.551,52.5,52.5,52.5c28.95,0,52.5-23.552,52.5-52.5c0-6.903,5.597-12.5,12.5-12.5
+                                                                s12.5,5.597,12.5,12.5C298.521,263.754,263.754,298.521,221.02,298.521z"/>
+                                                        </g>
+                                                        <g>
+                                                            <path d="M221.02,246.021c-13.785,0-25-11.215-25-25s11.215-25,25-25c13.786,0,25,11.215,25,25S234.806,246.021,221.02,246.021z"/>
+                                                        </g>
+                                                    </g>
+                                                </svg>
+                                                <!-- <img src="assets/images/trash-solid.svg"> -->
+                                            </i>
+                                        </a>
+                                        <a (click)="userClicked(user.id, user.name, user.email, user.phone_number, user.role,user.user_account)" class="me-2 confirm-text p-2 mb-0" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#delete-units">
+                                            <i data-feather="trash-2" class="feather-trash-2">
+                                                <!-- <img src="assets/images/trash-solid.svg"> -->
+                                            </i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </ng-template>
+                <div class="info"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+<div class="modal fade" id="add-units">
+    <div class="modal-dialog modal-dialog-centered custom-modal-two">
+        <div class="modal-content">
+            <div class="page-wrapper-new p-0">
+                <div class="content">
+                    <div class="modal-header border-0 custom-modal-header">
+                        <div class="page-title">
+                            <h4>Add User</h4>
+                        </div>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body custom-modal-body">
+                        <form (submit)="createNewUser($event);" [formGroup]="newUserFrm">
+                            <div class="row">
+                                
+                                <div class="col-lg-6">
+                                    <div class="input-blocks">
+                                        <label>User Name</label>
+                                        <input formControlName="name" type="text" class="form-control">
+                                    </div>
+                                    <div *ngIf="(newUserFrm.get('name')?.invalid && newUserFrm.get('name')?.touched)">
+                                        <div *ngIf="newUserFrm.controls['name'] && newUserFrm.controls['name'].errors"
+                                            class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;">user name field is
+                                            required.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="input-blocks">
+                                        <label>Phone</label>
+                                        <input formControlName="phone_number" type="text" class="form-control">
+                                    </div>
+                                    <div *ngIf="(newUserFrm.get('phone_number')?.invalid && newUserFrm.get('phone_number')?.touched)">
+                                        <div *ngIf="newUserFrm.controls['phone_number'] && newUserFrm.controls['phone_number'].errors"
+                                            class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;">user phone number is
+                                            required.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="input-blocks">
+                                        <label>Email</label>
+                                        <input formControlName="email" type="email" class="form-control">
+                                    </div>
+                                    <div *ngIf="(newUserFrm.get('email')?.invalid && newUserFrm.get('email')?.touched)">
+                                        <div *ngIf="newUserFrm.controls['email'] && newUserFrm.controls['email'].errors"
+                                            class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;"> enter a valid email
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="input-blocks">
+                                        <label>Role</label>
+                                        <select formControlName="role" class="form-control">
+                                            <option>Choose</option>
+                                            <option value="Manager">Manager</option>
+                                            <option value="Attendant">Attendant</option>
+                                        </select>
+                                    </div>
+                                    <div *ngIf="(newUserFrm.get('role')?.invalid && newUserFrm.get('role')?.touched)">
+                                        <div *ngIf="newUserFrm.controls['role'] && newUserFrm.controls['role'].errors"
+                                            class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;"> role is required
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="input-blocks">
+                                        <label>Status</label>
+                                        <select formControlName="user_account" class="form-control">
+                                            <option value="Active">Active</option>
+                                            <option value="Inactive">Inactive</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="input-blocks">
+                                        <label>Password</label>
+                                        <div class="pass-group">
+                                            <input formControlName="password" type="password" class="pass-input">
+                                            <span class="fas toggle-password fa-eye-slash"></span>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="(newUserFrm.get('password')?.invalid && newUserFrm.get('password')?.touched)">
+                                        <div *ngIf="newUserFrm.controls['password'] && newUserFrm.controls['password'].errors"
+                                            class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;"> password is required
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="input-blocks">
+                                        <label>Confirm Passworrd</label>
+                                        <div class="pass-group">
+                                            <input formControlName="c_password" type="password" class="pass-input">
+                                            <span class="fas toggle-password fa-eye-slash"></span>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="(newUserFrm.get('c_password')?.invalid && newUserFrm.get('c_password')?.touched)">
+                                        <div *ngIf="newUserFrm.controls['c_password'] && newUserFrm.controls['c_password'].errors"
+                                            class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;"> Password mismatch
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div style="display: flex;justify-content:center;">
+                                <app-errormodal></app-errormodal>
+                            </div>
+                            <div class="modal-footer-btn">
+                                <button [disabled]="sharedservice.responses.disabled" type="button" class="btn btn-cancel me-2"
+                                    data-bs-dismiss="modal">Cancel</button>
+                                <button [disabled]="sharedservice.responses.disabled" type="submit" class="btn btn-submit">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="edit-units">
+    <div class="modal-dialog modal-dialog-centered custom-modal-two">
+        <div class="modal-content">
+            <div class="page-wrapper-new p-0">
+                <div class="content">
+                    <div class="modal-header border-0 custom-modal-header">
+                        <div class="page-title">
+                            <h4>Edit User</h4>
+                        </div>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body custom-modal-body">
+                        <form (submit)="updateUser($event)" [formGroup]="updateUserFrm">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="input-blocks">
+                                        <label>User Name</label>
+                                        <input formControlName="name" type="text" placeholder="Thomas">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="input-blocks">
+                                        <label>Phone</label>
+                                        <input formControlName="phone_number" type="text" placeholder="+12163547758 ">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="input-blocks">
+                                        <label>Email</label>
+                                        <input formControlName="email" type="email" placeholder="thomas@example.com">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="input-blocks">
+                                        <label>Role</label>
+                                        <select formControlName="role" class="form-control">
+                                            <option value="Manager">Manager</option>
+                                            <option value="Attendant">Attendant</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="input-blocks">
+                                        <label>Status</label>
+                                        <select formControlName="user_account" class="form-control">
+                                            <option value="Active">Active</option>
+                                            <option value="Inactive">Inactive</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <!-- <div class="col-lg-12">
+                                    <div class="mb-0 input-blocks">
+                                        <label class="form-label">Descriptions</label>
+                                        <textarea class="form-control mb-1"></textarea>
+                                        <p>Maximum 600 Characters</p>
+                                    </div>
+                                </div> -->
+                            </div>
+                            <div style="display: flex;justify-content:center;">
+                                <app-errormodal></app-errormodal>
+                            </div>
+                            <div class="modal-footer-btn">
+                                <button [disabled]="sharedservice.responses.disabled"  type="button" class="btn btn-cancel me-2"
+                                    data-bs-dismiss="modal">Cancel</button>
+                                <button [disabled]="sharedservice.responses.disabled" (click)="resetPasswordTodefault()" type="button" class="btn btn-secondary me-2">Reset Password</button>
+                                <button [disabled]="sharedservice.responses.disabled"  type="submit" class="btn btn-submit">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="delete-units">
+    <div class="modal-dialog modal-dialog-centered custom-modal-two">
+        <div class="modal-content">
+            <div class="page-wrapper-new p-0">
+                <div class="content">
+                    <div class="modal-header border-0 custom-modal-header">
+                        <div class="page-title">
+                            <h4 *ngIf="hide">Delete this user account</h4>
+                            <h4 *ngIf="!hide">User account deleted</h4>
+                        </div>
+                        <!-- <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button> -->
+                    </div>
+                    <div class="modal-body custom-modal-body">
+                        <div *ngIf="hide"> <h5>Are you sure you want to continue</h5></div>
+                        <div style="display: flex;justify-content:center;">
+                            <app-errormodal></app-errormodal>
+                        </div>
+                        <div class="modal-footer-btn">
+                            <button [disabled]="sharedservice.responses.disabled"  type="button" class="btn btn-cancel me-2"
+                                data-bs-dismiss="modal" (click)="hide=true;">Cancel</button>
+                            <button *ngIf="hide" (click)="deleteUser()" [disabled]="sharedservice.responses.disabled"  type="submit" class="btn btn-danger">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

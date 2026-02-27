@@ -1,0 +1,9 @@
+.scanner-container {
+    position: fixed;
+    top: 0;
+    width: 500px;
+    height: 500px;
+    padding: 12px;
+    z-index: 9999;
+    background: white;
+}

@@ -1,0 +1,13 @@
+/* Align the pagination controls to the right */
+.dataTables_wrapper .dataTables_paginate {
+    float: right;
+    margin-top: 10px; /* Optional: Adjusts spacing from the table */
+}
+
+
+/* Hide empty rows with the `odd` or `even` class when the table is empty */
+.dataTables_empty, 
+#yourTableId tbody tr.odd, 
+#yourTableId tbody tr.even {
+    display: none;
+}

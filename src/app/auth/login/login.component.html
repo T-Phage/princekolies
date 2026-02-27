@@ -1,0 +1,71 @@
+
+<div class="account-page">
+    <div id="global-loader">
+        <div class="whirly-loader"> </div>
+    </div>
+
+    <div class="main-wrapper">
+        <div class="account-content">
+            <div class="login-wrapper">
+                <div class="login-content">
+                    <form (submit)="login($event)" [formGroup]="loginForm">
+                        <div class="login-userset">
+                            <div class="login-logo logo-normal">
+                                <img style="min-width: 100%;" src="assets/images/dukesmart.png" alt="img">
+                            </div>
+                            <!-- <a class="login-logo logo-white">
+                                <img src="assets/images/logo-white.png" alt>
+                            </a> -->
+                            <div class="login-userheading">
+                                <h3>Sign In</h3>
+                                <h4>Access the DukesMart panel using your email and passcode.</h4>
+                            </div>
+                            <div style="display: flex;justify-content:center;">
+                                <app-errormodal></app-errormodal>
+                            </div>
+                            <div class="form-login">
+                                <label>Email Address</label>
+                                <div class="form-addons">
+                                    <input type="text" formControlName="email" class="form-control">
+                                    <img src="assets/images/mail.svg" alt="img">
+                                </div>
+                                <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+                                    <div class="forgot-link" style="font-size: 12px;font-weight: 500;" *ngIf="loginForm.get('email')?.errors!['required']">email is required.</div>
+                                    <div class="forgot-link" style="font-size: 12px;font-weight: 500;" *ngIf="loginForm.get('email')!.errors!['email']">invalid email format.</div>
+                                </div>
+                                <!-- <p class="forgot-link" style="font-size: 12px;font-weight: 500;">enter a valid email address</p> -->
+                            </div>
+                            <div class="form-login">
+                                <label>Password</label>
+                                <div class="pass-group">
+                                    <input type="password" formControlName="password" class="pass-input">
+                                    <span class="fas toggle-password fa-eye-slash"></span>
+                                </div>
+                                <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+                                    <div class="forgot-link" style="font-size: 12px;font-weight: 500;" *ngIf="loginForm.get('password')?.errors!['required']">password is required.</div>
+                                </div>
+                                <!-- <p *ngif="submitted && loginForm.controls.password.hasError('required')" class="forgot-link" style="font-size: 12px;font-weight: 500;">password field is required</p> -->
+                            </div>
+                            
+                            <div class="form-login">
+                                <button type="submit" [disabled]="sharedservice.responses.disabled" class="btn btn-login">
+                                    <span>Sign In</span>
+                                    <!-- <div *ngIf="submitted" class="spinner-border" role="status">
+                                        <span class="sr-only">signing in...</span>
+                                    </div> -->
+                                </button>
+                            </div>
+                            <!-- <div class="signinform">
+                                <h4>New on our platform?<a href="register-2.html" class="hover-a"> Create an account</a>
+                                </h4>
+                            </div> --> 
+                        </div>
+                    </form>
+                </div>
+                <div class="login-img">
+                    <img src="assets/images/login02.png" alt="img">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

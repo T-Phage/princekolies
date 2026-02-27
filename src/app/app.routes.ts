@@ -1,0 +1,41 @@
+import { Routes } from '@angular/router';
+import { LoginComponent } from './auth/login/login.component';
+import { DashboardComponent } from './layout/dashboard/dashboard.component';
+import { AddproductComponent } from './pages/addproduct/addproduct.component';
+import { CategoryComponent } from './pages/category/category.component';
+import { ExpiryComponent } from './pages/expiry/expiry.component';
+import { LowStockComponent } from './pages/low-stock/low-stock.component';
+import { OverviewDashboardComponent } from './pages/overview-dashboard/overview-dashboard.component';
+import { PosComponent } from './pages/pos/pos.component';
+import { ProductsComponent } from './pages/products/products.component';
+import { ProfileComponent } from './pages/profile/profile.component';
+import { ReturnsComponent } from './pages/returns/returns.component';
+import { SalesDashb0ardComponent } from './pages/sales-dashb0ard/sales-dashb0ard.component';
+import { SalesComponent } from './pages/sales/sales.component';
+import { StaffSalesComponent } from './pages/staff-sales/staff-sales.component';
+import { UpdatePasswordComponent } from './pages/update-password/update-password.component';
+import { UsersComponent } from './pages/users/users.component';
+
+export const routes: Routes = [
+    {
+        path: 'dashboard',
+        component: DashboardComponent,
+        children: [
+            {path: 'products', component: ProductsComponent},
+            {path: 'products/expiry', component: ExpiryComponent},
+            {path: 'category', component: CategoryComponent},
+            {path: 'add-product', component: AddproductComponent},
+            {path: 'low-stocks', component: LowStockComponent},
+            {path: 'sales', component: SalesComponent},
+            {path: 'overview-dashboard', component: OverviewDashboardComponent},
+            {path: 'sales-dashboard', component: SalesDashb0ardComponent},
+            {path: 'users', component: UsersComponent},
+            {path: 'pos', component: PosComponent},
+            {path: 'profile', component: ProfileComponent},
+            {path: 'update-password', component: UpdatePasswordComponent},
+            {path: 'returns', component: ReturnsComponent},
+            {path: 'staff-sales/:id/:name', component: StaffSalesComponent},
+        ]
+    },
+    { path: 'auth/login', component: LoginComponent },
+];

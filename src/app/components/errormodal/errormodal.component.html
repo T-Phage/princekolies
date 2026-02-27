@@ -1,0 +1,6 @@
+<div [ngClass]="sharedservice.responses.class" style="display: inline-flex;" role="alert">
+    {{sharedservice.responses.message}}
+    <div *ngIf="sharedservice.responses.spin" class="spinner-border d-flex align-self-center" style="width: 1.5rem; height: 1.5rem;" role="status">
+        <span class="sr-only"></span>
+    </div>
+</div>

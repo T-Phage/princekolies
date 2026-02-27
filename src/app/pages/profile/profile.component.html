@@ -1,0 +1,68 @@
+<div class="content">
+    <div class="page-header">
+        <div class="page-title">
+            <h4>Profile</h4>
+            <h6>User Profile</h6>
+        </div>
+    </div>
+
+    <div class="card">
+        <form (submit)="submitForm($event)" [formGroup]="updateProfileFrm" class="card-body">
+            <div class="profile-set">
+                <div class="profile-head">
+                </div>
+                <div class="profile-top">
+                    <div class="profile-content">
+                        <div class="profile-contentname">
+                            <h2>{{currentUser.name}}</h2>
+                            <h4>Updates Your Personal Details.</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-12">
+                    <div class="input-blocks">
+                        <label class="form-label">Name</label>
+                        <input type="text" formControlName="name" class="form-control" >
+                    </div>
+                    <div *ngIf="(updateProfileFrm.get('name')?.invalid && updateProfileFrm.get('name')?.touched)">
+                        <div *ngIf="updateProfileFrm.controls['name'] && updateProfileFrm.controls['name'].errors"
+                            class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;"> field is required
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-12">
+                    <div class="input-blocks">
+                        <label>Email</label>
+                        <input type="email" formControlName="email" class="form-control">
+                    </div>
+                    <div *ngIf="(updateProfileFrm.get('email')?.invalid && updateProfileFrm.get('email')?.touched)">
+                        <div *ngIf="updateProfileFrm.controls['email'] && updateProfileFrm.controls['email'].errors"
+                            class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;"> field is required
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-12">
+                    <div class="input-blocks">
+                        <label class="form-label">Phone</label>
+                        <input type="text" formControlName="phone_number">
+                    </div>
+                    <div *ngIf="(updateProfileFrm.get('phone_number')?.invalid && updateProfileFrm.get('phone_number')?.touched)">
+                        <div *ngIf="updateProfileFrm.controls['phone_number'] && updateProfileFrm.controls['phone_number'].errors"
+                            class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;"> field is required
+                        </div>
+                    </div>
+                </div>
+                <div style="display: flex;justify-content:center;">
+                    <app-errormodal></app-errormodal>
+                </div>
+                <div class="col-12">
+                    <button [disabled]="sharedservice.responses.disabled" type="submit" class="btn btn-submit me-2">Submit</button>
+                    <button [disabled]="sharedservice.responses.disabled" type="button" class="btn btn-cancel">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
