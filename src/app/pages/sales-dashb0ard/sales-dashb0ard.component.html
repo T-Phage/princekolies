@@ -62,6 +62,135 @@
             </div>
         </div> -->
     </div>
+    <!-- Payment Methods breakdown -->
+     <div class="row">
+
+        <!-- Momo -->
+        <div class="col-xl-3 col-sm-6 col-12 d-flex">
+            <div class="card revenue-widget flex-fill">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom">
+                        <div>
+                            <h4 class="mb-1">{{momo | currency : 'Ghc '}}</h4>
+                            <p>Momo Ins</p>
+                        </div>
+                        <span class="revenue-icon bg-cyan-transparent text-cyan">
+                            <i class="fa-solid fa-layer-group fs-16"></i>
+                        </span>
+                    </div>
+                    <!-- <div class="d-flex align-items-center justify-content-between">
+                        <p class="mb-0"><span class="fs-13 fw-bold text-success">+35%</span> vs Last Month</p>
+                        <a href="profit-and-loss.html" class="text-decoration-underline fs-13 fw-medium">View All</a>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+        <!-- /Momo -->
+
+        <!-- Bank Cash In -->
+        <div class="col-xl-3 col-sm-6 col-12 d-flex">
+            <div class="card revenue-widget flex-fill">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom">
+                        <div>
+                            <h4 class="mb-1">{{bankCashIn | currency : 'Ghc '}}</h4>
+                            <p>Bank Ins</p>
+                        </div>
+                        <span class="revenue-icon bg-teal-transparent text-teal">
+                            <i class="ti ti-chart-pie fs-16"></i>
+                        </span>
+                    </div>
+                    <!-- <div class="d-flex align-items-center justify-content-between">
+                        <p class="mb-0"><span class="fs-13 fw-bold text-success">+35%</span> vs Last Month</p>
+                        <a href="invoice-report.html" class="text-decoration-underline fs-13 fw-medium">View All</a>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+        <!-- /Bank Cash In -->
+
+        <!-- Cash cash In -->
+        <div class="col-xl-3 col-sm-6 col-12 d-flex">
+            <div class="card revenue-widget flex-fill">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom">
+                        <div>
+                            <h4 class="mb-1">{{cashIn | currency : 'Ghc '}}</h4>
+                            <p>Cash Ins</p>
+                        </div>
+                        <span class="revenue-icon bg-indigo-transparent text-indigo">
+                            <i class="ti ti-hash fs-16"></i>
+                        </span>
+                    </div>
+                    <!-- <div class="d-flex align-items-center justify-content-between">
+                        <p class="mb-0"><span class="fs-13 fw-bold text-danger">-20%</span> vs Last Month</p>
+                        <a href="sales-report.html" class="text-decoration-underline fs-13 fw-medium">View All</a>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+        <!-- /Cash cash In -->
+
+        <!-- Expenses -->
+        <!-- <div class="col-xl-3 col-sm-6 col-12 d-flex">
+            <div class="card revenue-widget flex-fill">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom">
+                        <div>
+                            <h4 class="mb-1">$8,980,097</h4>
+                            <p>Total Expenses</p>
+                        </div>
+                        <span class="revenue-icon bg-orange-transparent text-orange">
+                            <i class="ti ti-lifebuoy fs-16"></i>
+                        </span>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <p class="mb-0"><span class="fs-13 fw-bold text-success">+41%</span> vs Last Month</p>
+                        <a href="expense-list.html" class="text-decoration-underline fs-13 fw-medium">View All</a>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        <!-- /Expenses -->
+
+				</div>
+    <div *ngIf="!manager" class="content">
+        <div class="row">
+            <div class="col-xl-3 col-sm-6 col-12 d-flex">
+            <div class="dash-count" style="background:#ff0000;">
+                <div class="dash-counts">
+                    <h4>{{out_of_stock}}</h4>
+                    <h5>Out of stock</h5>
+                </div>
+                <div class="dash-imgs">
+                    <i data-feather="trending-down"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 col-12 d-flex">
+            <div class="dash-count das1">
+                <div class="dash-counts">
+                    <h4>{{lowStock}}</h4>
+                    <h5>Low stocks</h5>
+                </div>
+                <div class="dash-imgs">
+                    <i data-feather="cash"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 col-12 d-flex">
+            <div class="dash-count das2">
+                <div class="dash-counts">
+                    <h4>{{products_expiryLen}}</h4>
+                    <h5>Expiry</h5>
+                </div>
+                <div class="dash-imgs">
+                    <img src="assets/images/file-text-icon-01.svg" class="img-fluid" alt="icon">
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
     <div class="row">
         <!-- <div class="col-sm-12 col-md-12 col-xl-4 d-flex">
             <div class="card flex-fill default-cover w-100 mb-4">

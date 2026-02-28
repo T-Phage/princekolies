@@ -1,1 +1,9 @@
 <router-outlet />
+
+<div *ngIf="isOffline" class="network-overlay">
+  <div class="alert-box">
+    <h2>📡 Connection Lost</h2>
+    <p>Please check your internet settings. Actions are disabled until you're back online.</p>
+    <div class="spinner"></div>
+  </div>
+</div>

@@ -37,10 +37,6 @@ export class DashboardComponent {
     }
   }
 
-  
-
-  
-
   ngAfterViewInit(): void {
     // Hide preloader once the view is fully initialized
    

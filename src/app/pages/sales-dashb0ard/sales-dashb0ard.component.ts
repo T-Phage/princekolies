@@ -25,6 +25,14 @@ export class SalesDashb0ardComponent {
   salescount: any;
   todayCashAmount:any;
   percentageIncrease:number = 0;
+  lowStock:number = 0;
+  out_of_stock:number = 0;
+  expiryStock:number = 0;
+  products_expiryLen:number = 0;
+  momo:number = 0;
+  cashIn:number = 0;
+  bankCashIn:number = 0;
+
 
   years$!: Observable<any>;
 
@@ -59,13 +67,21 @@ export class SalesDashb0ardComponent {
     this.years$ = this.httpservice.getallyears()
     this.httpservice.getSalesAnalytics(sessionStorage.getItem('id'), this.year, sessionStorage.getItem('role')).subscribe({
       next: data => {
-        // console.log(data)  
+        console.log(data)  
         this.salesa = data.monthlySales
         this.recentSales = data.recentSales 
         this.salescount = data.todaySales
         this.todayCashAmount = data.todayCashAmount
         this.percentageIncrease = data.percentage_increase
+        this.products_expiryLen = data.products_expiryLen
+        this.lowStock = data.low_stock
+        this.out_of_stock = data.out_of_stock
+        this.momo = data.momo;
+        this.cashIn = data.cash;
+        this.bankCashIn = data.bank;
+
         console.log(data.recentSales)
+        // console.log(dara)
          if(this.manager){this.createChart()}
       },
       error: error => {
