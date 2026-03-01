@@ -1,6 +1,8 @@
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
 import { HttpService } from '../../services/httpservices/http.service';
+import { SharedService } from '../../services/sharedservices/shared.service';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import  Chart from 'chart.js/auto';
 
@@ -33,7 +35,6 @@ export class SalesDashb0ardComponent {
   cashIn:number = 0;
   bankCashIn:number = 0;
 
-
   years$!: Observable<any>;
 
   today = new Date();
@@ -51,6 +52,8 @@ export class SalesDashb0ardComponent {
 
   constructor(
     private httpservice: HttpService,
+    public sharedservice: SharedService,
+    private router: Router,
   ){
     let role = `${sessionStorage.getItem('role')}`
     if(role == 'Manager'){
@@ -61,6 +64,11 @@ export class SalesDashb0ardComponent {
       let jsonUser = JSON.parse(user)
       this.username = jsonUser.name
     }
+  }
+
+  refresh(){
+    let url = this.router.url;
+    this.sharedservice.refreshComponentFunc(url)
   }
 
   ngOnInit(){
@@ -92,7 +100,6 @@ export class SalesDashb0ardComponent {
   }
 
   createChart(){
-
     const data = {// values on X-Axis
       labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'August', 'Sep', 'Oct', 'Nov', 'Dec'], 
        datasets: [

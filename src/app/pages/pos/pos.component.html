@@ -158,10 +158,10 @@
 </div>
 
 <!-- receipt.component.html -->
-<div style="display: none;" id="receipt" #receiptContent>
+<div style="display: none; padding-bottom:40mm" id="receipt" #receiptContent>
     <div class="page-content">
         <div class="page-header text-blue-d2 text-center" style="display: flex;justify-content:center;">
-            <h4 class="page-title text-secondary-d1 text-center">DukesMart</h4>
+            <h4 class="page-title text-secondary-d1 text-center">Princekolies Poultry</h4>
             <!-- <h1 class="page-title text-secondary-d1">
                 Invoice
                 <small class="page-info">
@@ -178,7 +178,7 @@
                         <div class="col-12">
                             <div class="text-center text-150">
                                 <!-- <i class="fa fa-book fa-2x text-success-m2 mr-1"></i> -->
-                                <span class="text-default-d3 text-center">0244446790/0246667715</span>
+                                <span class="text-default-d3 text-center">0502893903/</span>
                             </div>
                         </div>
                     </div>
@@ -276,4 +276,12 @@
         </div>
     </div>
     
+</div>
+
+<div *ngIf="loadingService.loading$ | async" class="loading-overlay">
+    <div class="spinner">Loading product items, please wait...</div>
+</div>
+
+<div *ngIf="errorLoading" class="loadingError">
+    <div>Loading failed. <button (click)="refresh()">Click to retry</button></div>
 </div>

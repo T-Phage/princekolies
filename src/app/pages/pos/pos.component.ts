@@ -7,6 +7,8 @@ import { SharedService } from '../../services/sharedservices/shared.service';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { ErrormodalComponent } from '../../components/errormodal/errormodal.component';
 // import { BarcodeFormat } from '@zxing/library';
+import { LoadingService } from '../../services/loadingservice/loading.service';
+import { Router } from '@angular/router';
 
 declare const window: any;
 
@@ -29,14 +31,23 @@ export class PosComponent {
   selectedProduct: any;
   username:any;
 
+  errorLoading: boolean= false;
+
   constructor(
     private formBuilder: FormBuilder,
     private httpservice: HttpService,
     public sharedservice: SharedService,
     private printservice: PrintService,
+    public loadingService: LoadingService,
+    public router: Router,
   ) {
     this.username = sessionStorage.getItem('username')
    }
+
+  refresh(){
+    let url = this.router.url;
+    this.sharedservice.refreshComponentFunc(url)
+  }
 
   // formats: BarcodeFormat[] = [BarcodeFormat.QR_CODE, BarcodeFormat.EAN_13, BarcodeFormat.UPC_A];
   // scannedCode: string | null = null;
@@ -73,15 +84,20 @@ export class PosComponent {
   // }
 
   ngOnInit(): void {
-    console.log(this.newSalesFrm.value)
+    // console.log(this.newSalesFrm.value)
+    this.loadingService.show()
     this.httpservice.getProducts(1, 10)
       .subscribe({
         next: data => {
-          console.log(data)
+          // console.log(data)
           this.products = data
         },
         error: error => {
+          this.errorLoading = true;
           console.error('error :', error)
+        },
+        complete: () => {
+          this.loadingService.hide();
         }
       });
   }

@@ -31,6 +31,7 @@ export class PrintService {
                  table {
                   width: 100%;
                   border-collapse: collapse;
+                  color: #000;
                 }
                 table, th, td {
                   border: 1px solid black;
@@ -44,10 +45,11 @@ export class PrintService {
                   }
                 h2, h3 {
                   text-align: center;
+                  color: #000;
                 } 
                body{
                   margin-top:20px;
-                  color: #484b51;
+                  color: #000;
                 }
             .page-header {
               margin: 0 0 1rem;
