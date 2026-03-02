@@ -27,7 +27,9 @@ export class PrintService {
               <link rel="stylesheet" href="/assets/css/style.css">
               <style>
                 /* Add any receipt-specific styling here */
-                
+                body {
+                  padding-bottom: 40mm;
+                }
                  table {
                   width: 100%;
                   border-collapse: collapse;

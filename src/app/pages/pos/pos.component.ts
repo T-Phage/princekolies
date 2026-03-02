@@ -94,7 +94,7 @@ export class PosComponent {
         },
         error: error => {
           this.errorLoading = true;
-          console.error('error :', error)
+          // console.error('error :', error)
         },
         complete: () => {
           this.loadingService.hide();

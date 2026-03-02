@@ -62,4 +62,7 @@
   .mobile_btn {
     display: block;
   }
+  .take {
+    display: none !important;
+  }
 }

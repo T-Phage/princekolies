@@ -12,7 +12,7 @@ import { NetworkService } from './services/networkservice/network.service';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'princekolies';
+  title = 'exposale';
 
   isOffline: boolean = false;
   manager: boolean = false;

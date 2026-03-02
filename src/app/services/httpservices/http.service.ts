@@ -43,37 +43,42 @@ export class HttpService {
     //   console.log("log")
     //   return;
     // }
-    console.log("something is happening")
-    this.http.post<any>(`${this.baseUrl}/auth/login`, body, {headers: this.getHeaders(),}).subscribe({
-      next: data => {
-        this.sharedservice.infoFunc('alert alert-success', 'user authenticated', false, false, false)
-        // console.log(data)
+    try {
+
+      console.log("something is happening")
+      this.http.post<any>(`${this.baseUrl}/auth/login`, body, {headers: this.getHeaders(),}).subscribe({
+        next: data => {
+          this.sharedservice.infoFunc('alert alert-success', 'user authenticated', false, false, false)
+          // console.log(data)
         
-        sessionStorage.setItem('token', data.token)
-        sessionStorage.setItem('is_admin', data.is_admin)
-        sessionStorage.setItem('email', data.user.email)
-        sessionStorage.setItem('id', data.user.id)
-        sessionStorage.setItem('role', data.user.role)
-        sessionStorage.setItem('username', data.user.name)
-        sessionStorage.setItem('user', JSON.stringify(data.user))
+          sessionStorage.setItem('token', data.token)
+          sessionStorage.setItem('is_admin', data.is_admin)
+          sessionStorage.setItem('email', data.user.email)
+          sessionStorage.setItem('id', data.user.id)
+          sessionStorage.setItem('role', data.user.role)
+          sessionStorage.setItem('username', data.user.name)
+          sessionStorage.setItem('user', JSON.stringify(data.user))
 
-        if(data.user.role == "Manager"){
-          this.router.navigate(['/dashboard/overview-dashboard'])
-        } else {
-          this.router.navigate(['/dashboard/pos'])
+          if(data.user.role == "Manager"){
+            this.router.navigate(['/dashboard/overview-dashboard'])
+          } else {
+            this.router.navigate(['/dashboard/pos'])
+          }
+          
+          setTimeout(() => {
+            this.sharedservice.infoFunc('', '', false, false, false)
+          }, 3000)
+          
+        },
+        error: error => {
+          let msg = error.error.message
+          // console.error('error :', error)
+          this.sharedservice.infoFunc('alert alert-danger', msg, false, false, false)
         }
-
-        setTimeout(() => {
-          this.sharedservice.infoFunc('', '', false, false, false)
-        }, 3000)
-
-      },
-      error: error => {
-        let msg = error.error.message
-        console.error('error :', error)
-        this.sharedservice.infoFunc('alert alert-danger', msg, false, false, false)
-      }
-    })
+      })
+    } catch(e){
+      this.sharedservice.infoFunc('alert alert-danger', 'Network Error', false, false, false)
+    }
 
   }
 
