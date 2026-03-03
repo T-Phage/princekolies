@@ -431,7 +431,7 @@ export class SalesComponent implements OnInit {
 
           },
         });  // Initialize jQuery DataTable outside Angular’s zone
-      }, 1000)
+      }, 1200)
     }
     );
     // }

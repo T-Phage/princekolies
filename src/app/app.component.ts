@@ -25,7 +25,7 @@ export class AppComponent {
     console.log('app component loaded');
     let token = sessionStorage.getItem('token');
     let role = `${sessionStorage.getItem('role')}`;
-    console.log (token)
+    // console.log (token)
     if (token == null){
       this.router.navigateByUrl('/auth/login')
     } else {
