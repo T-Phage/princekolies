@@ -158,10 +158,10 @@
 </div>
 
 <!-- receipt.component.html -->
-<div style="display: none; padding-bottom:40mm" id="receipt" #receiptContent>
+<div style="display: none;" id="receipt" #receiptContent>
     <div class="page-content">
-        <div class="page-header text-blue-d2 text-center" style="display: flex;justify-content:center;">
-            <h4 class="page-title text-secondary-d1 text-center">Princekolies Poultry</h4>
+        <div class="page-header text-blue-d2 text-center " style="display: flex;justify-content:center;color: #000;">
+            <h4 class="page-title text-center">Princekolies Poultry Ent.</h4>
             <!-- <h1 class="page-title text-secondary-d1">
                 Invoice
                 <small class="page-info">
@@ -171,12 +171,12 @@
             </h1> -->
         </div>
 
-        <div class="px-0">
-            <div class="row mt-4">
+        <div class="px-0 mt-0">
+            <div class="row mt-0 mb-4">
                 <div class="col-12 col-lg-12">
                     <div class="row">
                         <div class="col-12">
-                            <div class="text-center text-150">
+                            <div class="text-center" style="display: flex;justify-content:center;color: #000;">
                                 <!-- <i class="fa fa-book fa-2x text-success-m2 mr-1"></i> -->
                                 <span class="text-default-d3 text-center">0502893903/</span>
                             </div>
@@ -190,7 +190,7 @@
                         <div class="col-sm-12 col-12">
                             <div>
                                 <span class="text-sm text-grey-m2 align-middle">Attendant: </span>
-                                <span class="text-600 text-110 text-blue align-middle">{{username}}</span>
+                                <span class="text-600 text-110 text-black align-middle">{{username}}</span>
                             </div>
                         
                         </div>
@@ -226,8 +226,8 @@
                         <div class="row table-responsive">
                             <table class="table table-striped table-borderless border-0">
                                 <thead>
-                                    <tr class="text-white">
-                                        <th class="opacity-2">#</th>
+                                    <tr class="text-black">
+                                        <th>#</th>
                                         <th>Item</th>
                                         <th>Quantity</th>
                                         <th>Price</th>
@@ -235,7 +235,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr class="border-0" *ngFor="let item of items.controls; let i=index" >
+                                    <tr class="border-0 text-black" style="color: #000;font-size: 0.813rem" *ngFor="let item of items.controls; let i=index" >
                                         <td>{{ i+1 }}</td>
                                         <td>{{ item.value.product }}</td>
                                         <td>{{ item.value.quantity }}</td>
@@ -271,6 +271,10 @@
                         
                         </div>
                     </div>
+                    <br/>
+                    <br/>
+                    <hr/>
+                    <hr/>
                 </div>
             </div>
         </div>

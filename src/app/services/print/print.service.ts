@@ -20,16 +20,25 @@ export class PrintService {
             <head>
               <title>Receipt</title>
               <meta name="viewport" content="width=device-width, initial-scale=1">
-               <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
-                <link rel="stylesheet" href="/assets/css/fontawesome.min.css">
-              <link rel="stylesheet" href="/assets/css/all.min.css">
-    
-              <link rel="stylesheet" href="/assets/css/style.css">
+              
               <style>
                 /* Add any receipt-specific styling here */
-                body {
-                  padding-bottom: 40mm;
+                @page {
+                  margin: 0;
                 }
+                body {
+                  margin-top: 0px !important;
+                  padding-top: 0px !important;
+                  color: #000 !important;
+                  margin: 0 auto;
+                  font-size: 11px;
+                }
+                  body::after {
+                    content: "";
+                    display: block;
+                    height: 150px;
+                  }
+                    
                  table {
                   width: 100%;
                   border-collapse: collapse;
@@ -49,10 +58,6 @@ export class PrintService {
                   text-align: center;
                   color: #000;
                 } 
-               body{
-                  margin-top:20px;
-                  color: #000;
-                }
             .page-header {
               margin: 0 0 1rem;
               padding-bottom: 1rem;
@@ -130,6 +135,7 @@ export class PrintService {
             </style>
           </head>
           <body onload="window.print(); window.close();">
+          
             ${printContent}
           </body>
           </html>
