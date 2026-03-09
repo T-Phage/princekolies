@@ -26,7 +26,7 @@ export class ProductsComponent {
 
   products: any[] = [];
   currentPage = 1;
-  perPage = 10;
+  perPage = 15;
   totalProducts = 0;
   categories$!: Observable<any>
 
@@ -49,6 +49,11 @@ export class ProductsComponent {
       .subscribe({
         next: data => {
           this.products = data
+
+          // Initialize DataTable after data loads
+          setTimeout(() => {
+            this.initDataTable();
+          });
         },
         error: _error => {
 
@@ -147,7 +152,7 @@ export class ProductsComponent {
               //   $('body').css('overflow', 'auto');
               //   $('.modal-backdrop').remove(); // Remove leftover backdrop
               // });
-            }, 1000)
+            }, 2000)
             this.hide = false;
             // setTimeout(()=>this.sharedservice.refreshComponentFunc('dashboard/users'), 2000)
           },
@@ -184,7 +189,7 @@ export class ProductsComponent {
               "ordering": true,
               "language": {
                 search: ' ',
-                emptyTable: "No data available in table",
+                emptyTable: "No data available",
                 infoEmpty: "",
                 sLengthMenu: '_MENU_',
                 searchPlaceholder: "Search",
@@ -199,7 +204,7 @@ export class ProductsComponent {
                 $('.dataTables_filter').appendTo('.search-input');
               },
             }); 
-          },1000)  
+          },2000)  
               
         },
         error: error => {
@@ -319,46 +324,79 @@ export class ProductsComponent {
     },3000)
   }
 
-  ngAfterViewInit(): void {
-    // Hide preloader once the view is fully initialized
+  // ngAfterViewInit(): void {
+  //   // Hide preloader once the view is fully initialized
 
-    // this.products$.subscribe({
-    //   next: data => {
-    //     if(data){
+  //   // this.products$.subscribe({
+  //   //   next: data => {
+  //   //     if(data){
+  //   this.zone.runOutsideAngular(() => {
+  //     setTimeout(() => {
+  //       const preloader = document.getElementById('global-loader') as HTMLDivElement;
+  //       if (preloader) {
+  //         preloader.style.display = 'none';
+  //       }
+  //       $('.datanew').DataTable({
+  //         "bFilter": true,
+  //         // "sDom": 'fBtlpi',
+  //         "dom": 'pftil',
+  //         "ordering": true,
+  //         "language": {
+  //           emptyTable: "No data available in table",
+  //           infoEmpty: "",
+  //           search: ' ',
+  //           sLengthMenu: '_MENU_',
+  //           searchPlaceholder: "Search",
+  //           info: "_START_ - _END_ of _TOTAL_ items",
+  //           paginate: {
+  //             next: ' <i class=" fa fa-angle-right"></i>',
+  //             previous: '<i class="fa fa-angle-left"></i> '
+  //           },
+  //         },
+  //         initComplete: (_settings: any, _json: any) => {
+  //           $('.dataTables_filter').appendTo('#tableSearch');
+  //           $('.dataTables_filter').appendTo('.search-input');
+  //         },
+  //       });  // Initialize jQuery DataTable outside Angular’s zone
+  //     }, 1000)
+  //   }
+  //   );
+  //   // }
+  //   // });
+  //   // });
+  // }
+
+  initDataTable() {
     this.zone.runOutsideAngular(() => {
-      setTimeout(() => {
-        const preloader = document.getElementById('global-loader') as HTMLDivElement;
-        if (preloader) {
-          preloader.style.display = 'none';
-        }
-        $('.datanew').DataTable({
-          "bFilter": true,
-          // "sDom": 'fBtlpi',
-          "dom": 'pftil',
-          "ordering": true,
-          "language": {
-            emptyTable: "No data available in table",
-            infoEmpty: "",
-            search: ' ',
-            sLengthMenu: '_MENU_',
-            searchPlaceholder: "Search",
-            info: "_START_ - _END_ of _TOTAL_ items",
-            paginate: {
-              next: ' <i class=" fa fa-angle-right"></i>',
-              previous: '<i class="fa fa-angle-left"></i> '
-            },
+
+      const preloader = document.getElementById('global-loader') as HTMLDivElement;
+      if (preloader) {
+        preloader.style.display = 'none';
+      }
+
+      $('.datanew').DataTable({
+        bFilter: true,
+        dom: 'pftil',
+        ordering: true,
+        language: {
+          emptyTable: "No data available in table",
+          infoEmpty: "",
+          search: ' ',
+          sLengthMenu: '_MENU_',
+          searchPlaceholder: "Search",
+          info: "_START_ - _END_ of _TOTAL_ items",
+          paginate: {
+            next: ' <i class=" fa fa-angle-right"></i>',
+            previous: '<i class="fa fa-angle-left"></i> '
           },
-          initComplete: (_settings: any, _json: any) => {
-            $('.dataTables_filter').appendTo('#tableSearch');
-            $('.dataTables_filter').appendTo('.search-input');
-          },
-        });  // Initialize jQuery DataTable outside Angular’s zone
-      }, 1000)
-    }
-    );
-    // }
-    // });
-    // });
+        },
+        initComplete: (_settings: any, _json: any) => {
+          $('.dataTables_filter').appendTo('#tableSearch');
+          $('.dataTables_filter').appendTo('.search-input');
+        },
+      });
+
+    });
   }
 
   ngOnDestroy(): void {

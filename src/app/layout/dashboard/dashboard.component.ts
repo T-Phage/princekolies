@@ -3,6 +3,7 @@ import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { SharedService } from '../../services/sharedservices/shared.service';
 import { CommonModule } from '@angular/common';
 import { ValidationService } from '../../services/validationservices/validation.service';
+import { HttpService } from '../../services/httpservices/http.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -30,6 +31,7 @@ export class DashboardComponent {
     private zone: NgZone,
     private sharedservice: SharedService,
     public validationService: ValidationService,
+    public httpservice: HttpService,
   ){
     let role = `${sessionStorage.getItem('role')}`
     if(role == 'Manager'){

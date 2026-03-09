@@ -40,17 +40,17 @@ export class AddproductComponent {
   inputBuffer: string = '';
   scanTimeout: any;
 
-  @HostListener('window:keypress', ['$event'])
-  handleKeyDown(event: KeyboardEvent) {
-    if (event.key === 'Enter') {
-      event.preventDefault(); // Prevent form submission
-      this.barcodeData = this.inputBuffer; // Finalize barcode data
-      this.inputBuffer = ''; // Clear the buffer
-      this.onBarcodeScanned(this.barcodeData);
-    } else {
-      this.inputBuffer += event.key; // Capture the scanned key
-    }
-  }
+  // @HostListener('window:keypress', ['$event'])
+  // handleKeyDown(event: KeyboardEvent) {
+  //   if (event.key === 'Enter') {
+  //     event.preventDefault(); // Prevent form submission
+  //     this.barcodeData = this.inputBuffer; // Finalize barcode data
+  //     this.inputBuffer = ''; // Clear the buffer
+  //     this.onBarcodeScanned(this.barcodeData);
+  //   } else {
+  //     this.inputBuffer += event.key; // Capture the scanned key
+  //   }
+  // }
 
   onBarcodeScanned(barcode: string) {
     console.log('Scanned barcode:', barcode);
@@ -62,7 +62,7 @@ export class AddproductComponent {
   newProductForm = this.formBuilder.group({
     'name': ['', Validators.required],
     'description': [''],
-    'barcode': [{ value: '', disabled: false }, Validators.required],
+    'barcode': ['',],
     'price': ['', Validators.compose([Validators.required, Validators.pattern(this.sharedservice.amount)])],
     'category_id': [parseInt(''), Validators.required],
     'quantity': ['', Validators.compose([Validators.required, Validators.min(0), this.validationservice.positiveIntegerValidator()])],

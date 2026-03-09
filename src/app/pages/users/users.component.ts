@@ -17,6 +17,7 @@ import { RouterLink } from '@angular/router';
 export class UsersComponent {
 
   users$!: Observable<any>
+  users:any = []
 
   constructor(
     private httpservice: HttpService,
@@ -27,6 +28,7 @@ export class UsersComponent {
 
   ngOnInit() {
     this.users$ = this.httpservice.getUsers()
+    // this.httpservice.getUsers()
     // Ensure the value is a boolean on every change
   }
 
@@ -257,35 +259,35 @@ export class UsersComponent {
     return null; // Invalid input, not a boolean
   }
 
-  ngAfterViewInit() {
-    this.zone.runOutsideAngular(() => {
-      setTimeout(() => {
-        $('.datanew').DataTable({
-          "bFilter": true,
-          // "sDom": 'fBtlpi',
-          "dom": 'pftil',
-          "ordering": true,
-          "language": {
-            emptyTable: "No data available in table",
-            infoEmpty: "",
-            search: ' ',
-            sLengthMenu: '_MENU_',
-            searchPlaceholder: "Search",
-            info: "_START_ - _END_ of _TOTAL_ items",
-            paginate: {
-              next: ' <i class="fa fa-angle-right"></i>',
-              previous: '<i class="fa fa-angle-left"></i> '
-            },
-          },
-          initComplete: (_settings: any, _json: any) => {
-            $('.dataTables_filter').appendTo('#tableSearch');
-            $('.dataTables_filter').appendTo('.search-input');
-            $('#info').appendTo('#info')
-          }
-        })
-      }, 1000)
-    })
-  }
+  // ngAfterViewInit() {
+  //   this.zone.runOutsideAngular(() => {
+  //     setTimeout(() => {
+  //       $('.datanew').DataTable({
+  //         "bFilter": true,
+  //         // "sDom": 'fBtlpi',
+  //         "dom": 'pftil',
+  //         "ordering": true,
+  //         "language": {
+  //           emptyTable: "No data available in table",
+  //           infoEmpty: "",
+  //           search: ' ',
+  //           sLengthMenu: '_MENU_',
+  //           searchPlaceholder: "Search",
+  //           info: "_START_ - _END_ of _TOTAL_ items",
+  //           paginate: {
+  //             next: ' <i class="fa fa-angle-right"></i>',
+  //             previous: '<i class="fa fa-angle-left"></i> '
+  //           },
+  //         },
+  //         initComplete: (_settings: any, _json: any) => {
+  //           $('.dataTables_filter').appendTo('#tableSearch');
+  //           $('.dataTables_filter').appendTo('.search-input');
+  //           $('#info').appendTo('#info')
+  //         }
+  //       })
+  //     }, 1000)
+  //   })
+  // }
 
   ngOnDestroy(): void {
     // Destroy the DataTable to free up resources

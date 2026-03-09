@@ -16,6 +16,8 @@ import { SharedService } from '../../services/sharedservices/shared.service';
 })
 export class LoginComponent {
 
+  showPassword = false;
+
   constructor(
     private formBuilder: FormBuilder,
     private httpService: HttpService,

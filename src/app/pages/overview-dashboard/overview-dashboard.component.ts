@@ -47,6 +47,7 @@ export class OverviewDashboardComponent {
       this.totalPrice = this.calculateTotal(products);
       // console.log(this.totalPrice)
     });
+    // this.httpservice.httpself();
     this.years$ = this.httpservice.getallyears()
     // this.sharedservice.loadScripts();
     this.httpservice.getAnalytics().subscribe({

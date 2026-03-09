@@ -101,7 +101,7 @@
             <div class="dropdown-menu dropdown-menu-right">
                 <a class="dropdown-item" [routerLink]="['/dashboard/profile']">My Profile</a>
                 <a class="dropdown-item" [routerLink]="['/dashboard/update-password']">Update Password</a>
-                <a class="dropdown-item" [routerLink]="['/auth/login']">Logout</a>
+                <a class="dropdown-item" (click)="httpservice.httpLogout()">Logout</a>
             </div>
         </div>
     </div>
@@ -127,7 +127,7 @@
                             <li [className]="router.url == '/dashboard/products'? 'active': '' "><a
                                     [routerLink]="['/dashboard/products']"><i
                                         ></i><span>Products</span></a></li>
-                            <li [className]="router.url == '/dashboard/add-product'? 'active': '' "><a
+                            <li *ngIf="manager" [className]="router.url == '/dashboard/add-product'? 'active': '' "><a
                                     [routerLink]="['/dashboard/add-product']"><i
                                         data-feather=""></i><span>Create
                                         Product</span></a></li>
@@ -193,7 +193,7 @@
                             <li (click)="toggleMenu()" [className]="router.url == '/dashboard/products'? 'active': '' "><a
                                     [routerLink]="['/dashboard/products']"><i
                                         ></i><span>Products</span></a></li>
-                            <li (click)="toggleMenu()" [className]="router.url == '/dashboard/add-product'? 'active': '' "><a
+                            <li *ngIf="manager" (click)="toggleMenu()" [className]="router.url == '/dashboard/add-product'? 'active': '' "><a
                                     [routerLink]="['/dashboard/add-product']"><i
                                         ></i><span>Create
                                         Product</span></a></li>

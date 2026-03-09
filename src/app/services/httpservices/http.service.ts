@@ -24,13 +24,31 @@ export class HttpService {
   ) { }
 
   httpLogout() {
-    sessionStorage.clear();
-    localStorage.clear();
-    this.router.navigate(['/'])
+    this.http.post<any>(`${this.baseUrl}/auth/logout`, {}, {headers: this.getHeaders(),}).subscribe({
+        next: data => {
+          sessionStorage.clear();
+          localStorage.clear();
+          this.router.navigate(['/auth/login'])
+        },
+        error: error => {
+
+        }
+      });
+  }
+
+  httpself() {
+    this.http.get<any>(`${this.baseUrl}/self`, {headers: this.getHeaders(),}).subscribe({
+        next: data => {
+          console.log(data)
+        },
+        error: error => {
+
+        }
+      });
   }
 
    // Set up headers
-   private getHeaders(): HttpHeaders {
+  private getHeaders(): HttpHeaders {
     return new HttpHeaders({
       'Authorization': `Bearer ${sessionStorage.getItem('token') || this.appToken}`, // Custom header
       'Content-Type': 'application/json', // Standard header
@@ -62,6 +80,8 @@ export class HttpService {
           sessionStorage.setItem('user', JSON.stringify(data.user))
 
           this.appToken = data.token;
+
+          // console.log(data)
 
           if(data.user.role == "Manager"){
             this.router.navigate(['/dashboard/overview-dashboard'])
@@ -122,7 +142,7 @@ export class HttpService {
 
   createProduct(body: any) {
     this.sharedservice.infoFunc('alert alert-info', 'adding new product...', true, true, true)
-    return this.http.post<any>(`${this.baseUrl}/add/product`, body)
+    return this.http.post<any>(`${this.baseUrl}/add/product`, body, {headers: this.getHeaders()})
 
   }
 
