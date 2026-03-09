@@ -6,6 +6,7 @@ import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Va
 import { ErrormodalComponent } from '../../components/errormodal/errormodal.component';
 import { SharedService } from '../../services/sharedservices/shared.service';
 import { RouterLink } from '@angular/router';
+import { DatabaleService } from '../../services/datatable/databale.service';
 
 @Component({
   selector: 'app-users',
@@ -23,11 +24,24 @@ export class UsersComponent {
     private httpservice: HttpService,
     private formbuilder: FormBuilder,
     public sharedservice: SharedService,
+    private datatableservice: DatabaleService,
     private zone: NgZone,
   ) { }
 
   ngOnInit() {
     this.users$ = this.httpservice.getUsers()
+    // .subscribe({
+    //   next: data => { 
+    //     this.users = data.users
+    //     this.users$ = of(this.users)
+    //     console.log(data)
+    //     setTimeout(() => {
+    //         this.datatableservice.initiateDataTable();
+    //     }, 2000);
+        
+    //   },
+    //   error: _error => {}
+    // });
     // this.httpservice.getUsers()
     // Ensure the value is a boolean on every change
   }
@@ -107,28 +121,29 @@ export class UsersComponent {
             // this.users$.
             setTimeout(() => {
               this.sharedservice.infoFunc('', '', false, false, false)
-              $('.datanew').DataTable({
-              "bFilter": true,
-              // "sDom": 'fBtlpi',
-              "dom": 'pftil',
-              "ordering": true,
-              "language": {
-                search: ' ',
-                sLengthMenu: '_MENU_',
-                searchPlaceholder: "Search",
-                info: "_START_ - _END_ of _TOTAL_ items",
-                paginate: {
-                  next: ' <i class="fa fa-angle-right"></i>',
-                  previous: '<i class="fa fa-angle-left"></i> '
-                },
-              },
-              initComplete: (_settings: any, _json: any) => {
-                $('.dataTables_filter').appendTo('#tableSearch');
-                $('.dataTables_filter').appendTo('.search-input');
-                $('#info').appendTo('#info')
-              },
-            })
-          }, 1000)
+              this.closeModalAndRefresh();
+              //   $('.datanew').DataTable({
+              //   "bFilter": true,
+              //   // "sDom": 'fBtlpi',
+              //   "dom": 'pftil',
+              //   "ordering": true,
+              //   "language": {
+              //     search: ' ',
+              //     sLengthMenu: '_MENU_',
+              //     searchPlaceholder: "Search",
+              //     info: "_START_ - _END_ of _TOTAL_ items",
+              //     paginate: {
+              //       next: ' <i class="fa fa-angle-right"></i>',
+              //       previous: '<i class="fa fa-angle-left"></i> '
+              //     },
+              //   },
+              //   initComplete: (_settings: any, _json: any) => {
+              //     $('.dataTables_filter').appendTo('#tableSearch');
+              //     $('.dataTables_filter').appendTo('.search-input');
+              //     $('#info').appendTo('#info')
+              //   },
+              // })
+            }, 1000)
             // setTimeout(()=>this.sharedservice.refreshComponentFunc('dashboard/users'), 2000)
           },
           error: error => {
@@ -155,31 +170,32 @@ export class UsersComponent {
             // this.users$.
             setTimeout(() =>{ 
               this.sharedservice.infoFunc('', '', false, false, false)
-
-              $('.datanew').DataTable({
-                "bFilter": true,
-                // "sDom": 'fBtlpi',
-                "dom": 'pftil',
-                "ordering": true,
-                "language": {
-                  search: ' ',
-                  emptyTable: "No data available in table",
-                  infoEmpty: "",
-                  sLengthMenu: '_MENU_',
-                  searchPlaceholder: "Search",
-                  info: "_START_ - _END_ of _TOTAL_ items",
-                  paginate: {
-                    next: ' <i class="fa fa-angle-right"></i>',
-                    previous: '<i class="fa fa-angle-left"></i> '
-                  },
-                },
-                initComplete: (_settings: any, _json: any) => {
-                  $('.dataTables_filter').appendTo('#tableSearch');
-                  $('.dataTables_filter').appendTo('.search-input');
-                  $('#info').appendTo('#info')
-                },
+              this.closeModalAndRefresh();
+              // $('.datanew').DataTable({
+              //   "bFilter": true,
+              //   // "sDom": 'fBtlpi',
+              //   "dom": 'pftil',
+              //   "ordering": true,
+              //   "language": {
+              //     search: ' ',
+              //     emptyTable: "No data available in table",
+              //     infoEmpty: "",
+              //     sLengthMenu: '_MENU_',
+              //     searchPlaceholder: "Search",
+              //     info: "_START_ - _END_ of _TOTAL_ items",
+              //     paginate: {
+              //       next: ' <i class="fa fa-angle-right"></i>',
+              //       previous: '<i class="fa fa-angle-left"></i> '
+              //     },
+              //   },
+              //   initComplete: (_settings: any, _json: any) => {
+              //     $('.dataTables_filter').appendTo('#tableSearch');
+              //     $('.dataTables_filter').appendTo('.search-input');
+              //     $('#info').appendTo('#info')
+              //   },
               
-              })
+              // })
+              
             }, 1000)
             // setTimeout(()=>this.sharedservice.refreshComponentFunc('dashboard/users'), 2000)
           },
@@ -195,6 +211,30 @@ export class UsersComponent {
     }
   }
 
+   closeModalAndRefresh() {
+    // Get the modal element
+    const modalElement = document.getElementById('update-product');
+    if (modalElement) {
+      // Get Bootstrap modal instance and hide it
+      const modal = (window as any).bootstrap.Modal.getInstance(modalElement);
+      if (modal) {
+        modal.hide();
+      }
+    }
+
+    // Remove modal backdrop
+    const backdrop = document.querySelector('.modal-backdrop');
+    if (backdrop) {
+      backdrop.remove();
+    }
+
+    // Restore body scroll
+    document.body.classList.remove('modal-open');
+    document.body.style.overflow = 'auto';
+
+    // Refresh the component
+    this.sharedservice.refreshComponentFunc('dashboard/users');
+  }
   hide:boolean = true;
   deleteUser() {
       this.httpservice.deleteUser(this.userid)

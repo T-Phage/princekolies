@@ -437,52 +437,52 @@ export class LowStockComponent {
     })
     $('.datanew-1').DataTable().destroy();
     $('.datanew-2').DataTable().destroy();
-    setTimeout(()=> {
-      $('.datanew-1').DataTable({
-        "bFilter": true,
-        // "sDom": 'fBtlpi',
-        "dom": 'pftil',
-        "ordering": true,
-        "language": {
-          search: ' ',
-          emptyTable: "No data available in table",
-          infoEmpty: "",
-          sLengthMenu: '_MENU_',
-          searchPlaceholder: "Search",
-          info: "_START_ - _END_ of _TOTAL_ items",
-          paginate: {
-            next: ' <i class=" fa fa-angle-right"></i>',
-            previous: '<i class="fa fa-angle-left"></i> '
-          },
-        },
-        initComplete: (_settings: any, _json: any) => {
-          $('.dataTables_filter').appendTo('#tableSearch');
-          $('.dataTables_filter').appendTo('.search-input');
-        },
-      }); 
-      $('.datanew-2').DataTable({
-        "bFilter": true,
-        // "sDom": 'fBtlpi',
-        "dom": 'pftil',
-        "ordering": true,
-        "language": {
-          search: ' ',
-          emptyTable: "No data available in table",
-          infoEmpty: "",
-          sLengthMenu: '_MENU_',
-          searchPlaceholder: "Search",
-          info: "_START_ - _END_ of _TOTAL_ items",
-          paginate: {
-            next: ' <i class=" fa fa-angle-right"></i>',
-            previous: '<i class="fa fa-angle-left"></i> '
-          },
-        },
-        initComplete: (_settings: any, _json: any) => {
-          $('.dataTables_filter').appendTo('#tableSearch');
-          $('.dataTables_filter').appendTo('.search-input');
-        },
-      }); 
-    },3000)
+    // setTimeout(()=> {
+    //   $('.datanew-1').DataTable({
+    //     "bFilter": true,
+    //     // "sDom": 'fBtlpi',
+    //     "dom": 'pftil',
+    //     "ordering": true,
+    //     "language": {
+    //       search: ' ',
+    //       emptyTable: "No data available in table",
+    //       infoEmpty: "",
+    //       sLengthMenu: '_MENU_',
+    //       searchPlaceholder: "Search",
+    //       info: "_START_ - _END_ of _TOTAL_ items",
+    //       paginate: {
+    //         next: ' <i class=" fa fa-angle-right"></i>',
+    //         previous: '<i class="fa fa-angle-left"></i> '
+    //       },
+    //     },
+    //     initComplete: (_settings: any, _json: any) => {
+    //       $('.dataTables_filter').appendTo('#tableSearch');
+    //       $('.dataTables_filter').appendTo('.search-input');
+    //     },
+    //   }); 
+    //   $('.datanew-2').DataTable({
+    //     "bFilter": true,
+    //     // "sDom": 'fBtlpi',
+    //     "dom": 'pftil',
+    //     "ordering": true,
+    //     "language": {
+    //       search: ' ',
+    //       emptyTable: "No data available in table",
+    //       infoEmpty: "",
+    //       sLengthMenu: '_MENU_',
+    //       searchPlaceholder: "Search",
+    //       info: "_START_ - _END_ of _TOTAL_ items",
+    //       paginate: {
+    //         next: ' <i class=" fa fa-angle-right"></i>',
+    //         previous: '<i class="fa fa-angle-left"></i> '
+    //       },
+    //     },
+    //     initComplete: (_settings: any, _json: any) => {
+    //       $('.dataTables_filter').appendTo('#tableSearch');
+    //       $('.dataTables_filter').appendTo('.search-input');
+    //     },
+    //   }); 
+    // },3000)
   }
 
   ngAfterViewInit(){

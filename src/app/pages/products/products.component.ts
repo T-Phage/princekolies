@@ -53,7 +53,7 @@ export class ProductsComponent {
           // Initialize DataTable after data loads
           setTimeout(() => {
             this.initDataTable();
-          });
+          }, 2000);
         },
         error: _error => {
 
@@ -79,6 +79,11 @@ export class ProductsComponent {
   productId:any;
 
   productClicked(id:any,name:any,description:string,barcode:string,price:any,category_id:any,quantity:any,quantity_alert:any,manufactured_date:any,expiry_date:any){
+    // Reset the product ID first
+    this.productId = null;
+
+    console.log('clicked',id, name, description, barcode, price, category_id, quantity, quantity_alert, manufactured_date, expiry_date)
+    
     if(expiry_date != undefined){
       const date = new Date(expiry_date); // or any Date value
       const formattedDate = date.toISOString().split('T')[0]; // Convert to 'yyyy-MM-dd' format
@@ -95,7 +100,7 @@ export class ProductsComponent {
       this.updateProductFrm.controls.manufactured_date.reset()
     }
 
-    this.updateProductFrm.controls.name.patchValue(name)
+    this.updateProductFrm.controls.name.setValue(name)
     this.updateProductFrm.controls.description.setValue(description)
     this.updateProductFrm.controls.barcode.setValue(barcode)
     this.updateProductFrm.controls.price.setValue(price)
@@ -179,32 +184,40 @@ export class ProductsComponent {
           this.sharedservice.infoFunc('alert alert-success', 'product updated', false, false, false) 
           this.products$ = this.httpservice.getProducts(this.currentPage, this.perPage);
           this.categories$ = this.httpservice.getCategories(1, 10)
-          setTimeout(()=> this.sharedservice.infoFunc('','', false,false,false), 3500)
-
+          
+          // Reset form and product ID
+          this.resetForm();
+          
           setTimeout(()=> {
-            $('.datanew').DataTable({
-              "bFilter": true,
-              // "sDom": 'fBtlpi',
-              "dom": 'pftil',
-              "ordering": true,
-              "language": {
-                search: ' ',
-                emptyTable: "No data available",
-                infoEmpty: "",
-                sLengthMenu: '_MENU_',
-                searchPlaceholder: "Search",
-                info: "_START_ - _END_ of _TOTAL_ items",
-                paginate: {
-                  next: ' <i class=" fa fa-angle-right"></i>',
-                  previous: '<i class="fa fa-angle-left"></i> '
-                },
-              },
-              initComplete: (_settings: any, _json: any) => {
-                $('.dataTables_filter').appendTo('#tableSearch');
-                $('.dataTables_filter').appendTo('.search-input');
-              },
-            }); 
-          },2000)  
+            this.sharedservice.infoFunc('','', false,false,false)
+            // Close the modal and clean up backdrop
+            this.closeModalAndRefresh();
+          }, 3500)
+
+          // setTimeout(()=> {
+          //   $('.datanew').DataTable({
+          //     "bFilter": true,
+          //     // "sDom": 'fBtlpi',
+          //     "dom": 'pftil',
+          //     "ordering": true,
+          //     "language": {
+          //       search: ' ',
+          //       emptyTable: "No data available",
+          //       infoEmpty: "",
+          //       sLengthMenu: '_MENU_',
+          //       searchPlaceholder: "Search",
+          //       info: "_START_ - _END_ of _TOTAL_ items",
+          //       paginate: {
+          //         next: ' <i class=" fa fa-angle-right"></i>',
+          //         previous: '<i class="fa fa-angle-left"></i> '
+          //       },
+          //     },
+          //     initComplete: (_settings: any, _json: any) => {
+          //       $('.dataTables_filter').appendTo('#tableSearch');
+          //       $('.dataTables_filter').appendTo('.search-input');
+          //     },
+          //   }); 
+          // },2000)  
               
         },
         error: error => {
@@ -219,6 +232,47 @@ export class ProductsComponent {
         }
       })
     }
+  }
+
+  resetForm() {
+    this.productId = null;
+    this.updateProductFrm.reset({
+      'name': '',
+      'description': '',
+      'barcode': '',
+      'price': '',
+      'category_id': parseInt(''),
+      'quantity': '',
+      'quantity_alert': '',
+      'manufactured_date': this.formattedDate,
+      'expiry_date': this.formattedDate,
+      'updatedby': parseInt(`${sessionStorage.getItem('id')}`)
+    });
+  }
+
+  closeModalAndRefresh() {
+    // Get the modal element
+    const modalElement = document.getElementById('update-product');
+    if (modalElement) {
+      // Get Bootstrap modal instance and hide it
+      const modal = (window as any).bootstrap.Modal.getInstance(modalElement);
+      if (modal) {
+        modal.hide();
+      }
+    }
+
+    // Remove modal backdrop
+    const backdrop = document.querySelector('.modal-backdrop');
+    if (backdrop) {
+      backdrop.remove();
+    }
+
+    // Restore body scroll
+    document.body.classList.remove('modal-open');
+    document.body.style.overflow = 'auto';
+
+    // Refresh the component
+    this.refreshData();
   }
 
   // Method to export the product table to Excel
@@ -295,33 +349,35 @@ export class ProductsComponent {
   }
   
   refreshData(){
-    this.products$ = this.httpservice.getProducts(1, 10);
-    this.categories$ = this.httpservice.getCategories(1, 10);
-    $('.datanew').DataTable().destroy();
-    setTimeout(()=> {
-      $('.datanew').DataTable({
-        "bFilter": true,
-        // "sDom": 'fBtlpi',
-        "dom": 'pftil',
-        "ordering": true,
-        "language": {
-          search: ' ',
-          emptyTable: "No data available in table",
-          infoEmpty: "",
-          sLengthMenu: '_MENU_',
-          searchPlaceholder: "Search",
-          info: "_START_ - _END_ of _TOTAL_ items",
-          paginate: {
-            next: ' <i class=" fa fa-angle-right"></i>',
-            previous: '<i class="fa fa-angle-left"></i> '
-          },
-        },
-        initComplete: (_settings: any, _json: any) => {
-          $('.dataTables_filter').appendTo('#tableSearch');
-          $('.dataTables_filter').appendTo('.search-input');
-        },
-      }); 
-    },3000)
+    // location.reload();
+    this.sharedservice.refreshComponentFunc('dashboard/products');
+    // this.products$ = this.httpservice.getProducts(1, 10);
+    // this.categories$ = this.httpservice.getCategories(1, 10);
+    // $('.datanew').DataTable().destroy();
+    // setTimeout(()=> {
+    //   $('.datanew').DataTable({
+    //     "bFilter": true,
+    //     // "sDom": 'fBtlpi',
+    //     "dom": 'pftil',
+    //     "ordering": true,
+    //     "language": {
+    //       search: ' ',
+    //       emptyTable: "No data available in table",
+    //       infoEmpty: "",
+    //       sLengthMenu: '_MENU_',
+    //       searchPlaceholder: "Search",
+    //       info: "_START_ - _END_ of _TOTAL_ items",
+    //       paginate: {
+    //         next: ' <i class=" fa fa-angle-right"></i>',
+    //         previous: '<i class="fa fa-angle-left"></i> '
+    //       },
+    //     },
+    //     initComplete: (_settings: any, _json: any) => {
+    //       $('.dataTables_filter').appendTo('#tableSearch');
+    //       $('.dataTables_filter').appendTo('.search-input');
+    //     },
+    //   }); 
+    // },3000)
   }
 
   // ngAfterViewInit(): void {
