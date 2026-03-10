@@ -18,16 +18,16 @@ export class ProfileComponent {
     private httpservice: HttpService,
     public sharedservice: SharedService,
   ) { 
-    
   }
-
+  
   currentUser:any = {
     phone_number: '',
     name: '',
     email: ''
   };
-
+  
   ngOnInit(){
+    this.httpservice.httpself(); 
     let rawUser = sessionStorage.getItem('user')
     if (rawUser !=  null){
       var user = JSON.parse(rawUser) 
@@ -40,7 +40,7 @@ export class ProfileComponent {
     'name': [this.currentUser.name, Validators.required],
     'email': [this.currentUser.email, Validators.email],
   })
-
+ 
   submitForm(evt: Event){
     evt.preventDefault()
     console.log(this.updateProfileFrm.value)

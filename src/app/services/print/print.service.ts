@@ -137,6 +137,12 @@ export class PrintService {
           <body onload="window.print(); window.close();">
           
             ${printContent}
+            <hr/>
+            <hr/>
+            <hr/>
+            <hr/>
+            <hr/>
+            ...
           </body>
           </html>
         `);

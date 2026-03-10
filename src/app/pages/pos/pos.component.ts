@@ -113,7 +113,7 @@ export class PosComponent {
           'product': [product, Validators.required],
           'product_id': [product_id, Validators.required],
           'quantity': [quantity, Validators.compose([Validators.min(1)])],
-          'barcode': [barcode, Validators.required],
+          'barcode': [barcode,],
           'purchase_price': [parseFloat(purchase_price), Validators.compose([Validators.required])],
           'unit_cost': [parseFloat(unit_cost)],
         }));
@@ -125,11 +125,11 @@ export class PosComponent {
   newSalesFrm = this.formBuilder.group({
     'customer_name': ['_'],
     'reference': [''],
-    'status': [{ value: 'Completed', disabled: true }, Validators.required],
+    'status': ['Completed', Validators.required],
     'grand_total': ['', Validators.required],
     // 'amount_paid': [0.0, Validators.required],
-    'payment_status': [{ value: 'Paid', disabled: true }, Validators.required],
-    'payment_method':[{ value: 'Cash'}, Validators.required],
+    'payment_status': ['Paid',],
+    'payment_method':['Cash', Validators.required],
     'biller': [sessionStorage.getItem('id')],
     'items': this.formBuilder.array([]),
   })
@@ -194,7 +194,7 @@ export class PosComponent {
         1,
         this.selectedProduct.price,
         this.selectedProduct.price,
-        this.selectedProduct.barcode,
+        this.selectedProduct.barcode || '',
       );
     } else {
       this.selectedProduct = null;
@@ -222,9 +222,10 @@ export class PosComponent {
   submitSalesFrm(evt: Event){
     evt.preventDefault()
 
-    this.newSalesFrm.get('status')?.enable();
-    this.newSalesFrm.get('payment_status')?.enable();
+    // this.newSalesFrm.get('status')?.enable();
+    // this.newSalesFrm.get('payment_status')?.enable();
     console.log(this.newSalesFrm)
+    console.log(this.newSalesFrm.value)
 
     this.submitted = true
 
