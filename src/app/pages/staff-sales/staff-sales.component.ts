@@ -15,15 +15,22 @@ import { ActivatedRoute } from '@angular/router';
   providers: [CurrencyPipe]
 })
 export class StaffSalesComponent {
+  loading:boolean = false
   $sales!: Observable<any>;
 
   salesa:any;
   public chart: any;
   recentSales:any[] = [];
+  productSold:any[] = [];
   username = '';
   salescount: any;
   todayCashAmount:any;
   percentageIncrease:number = 0;
+
+  momo:number = 0;
+  cashIn:number = 0;
+  bankCashIn:number = 0;
+  productsSold:any = [];
 
   years$!: Observable<any>;
 
@@ -40,21 +47,29 @@ export class StaffSalesComponent {
   
   selectedDate = this.formattedDate
   onDateChange(event: any) {
+    this.loading = true;
     this.selectedDate = event.target.value;
     this.httpservice.getUserSalesDateAnalytics(this.id, event.target.value).subscribe({
       next: data => {
-        // console.log("woow",data)
+        console.log("woow",data)
         // console.log("woow",data.cashSalesTotal)
         // this.salesa = data.monthlySales
         // this.recentSales = data.recentSales
         this.salescount = data.salesCount
         this.todayCashAmount = data.cashSalesTotal
+        this.momo = data.momo;
+        this.cashIn = data.cash;
+        this.bankCashIn = data.bank;
         this.percentageIncrease = data.percentage_increase
-        console.log(data.recentSales)
+        this.productSold = data.productsSold;
+        // console.log(data.recentSales)
       },
       error: error => {
         let msg = error.error.message
         console.error('error :', error)
+      },
+      complete: ()=>{
+        this.loading = false
       }
     })
   }
@@ -80,6 +95,7 @@ export class StaffSalesComponent {
   name: any;
 
   ngOnInit(){
+    this.loading = true;
     // Get the 'id' parameter from the route
     this.id = this.route.snapshot.paramMap.get('id');
     this.name = this.route.snapshot.paramMap.get('name');
@@ -92,21 +108,26 @@ export class StaffSalesComponent {
       console.log('Updated Route ID:', this.id);
     });
 
+    // let date = new Date()[]
     this.years$ = this.httpservice.getallyears()
-    this.httpservice.getUserSalesAnalytics(this.id, this.year).subscribe({
+    this.httpservice.getUserSalesDateAnalytics(this.id, this.today.toISOString()).subscribe({
       next: data => {
-        // console.log(data)  
-        this.salesa = data.monthlySales
-        this.recentSales = data.recentSales 
-        this.salescount = data.todaySales
-        this.todayCashAmount = data.todayCashAmount
+        this.salescount = data.salesCount
+        this.todayCashAmount = data.cashSalesTotal
+        this.momo = data.momo;
+        this.cashIn = data.cash;
+        this.bankCashIn = data.bank;
         this.percentageIncrease = data.percentage_increase
-        console.log(data.recentSales)
-         if(this.manager){this.createChart()}
+        this.productSold = data.productsSold;
+        // console.log(data.recentSales)
+        //  if(this.manager){this.createChart()}
       },
       error: error => {
         let msg = error.error.message
         console.error('error :', error)
+      },
+      complete: ()=>{
+        this.loading = false
       }
     })
   }

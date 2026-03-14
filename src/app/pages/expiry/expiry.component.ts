@@ -31,6 +31,8 @@ export class ExpiryComponent {
   products$!: Observable<any>;
   categories$! : Observable<any>;
 
+  role:string = '';
+
   constructor(
     private httpservice: HttpService,
     public currency: CurrencyPipe,
@@ -41,6 +43,7 @@ export class ExpiryComponent {
   ) { }
 
   ngOnInit() {
+    this.role = sessionStorage.getItem('role') || '';
     this.products$ = this.httpservice.getProductsExpiring(this.currentPage, this.perPage);
     this.categories$ = this.httpservice.getCategories(1, 10)
 
@@ -150,9 +153,9 @@ export class ExpiryComponent {
 
         }
       })
-    $('.datanew').DataTable().destroy();
+    $('.dataexp').DataTable().destroy();
     setTimeout(()=> {
-      $('.datanew').DataTable({
+      $('.dataexp').DataTable({
         "bFilter": true,
         // "sDom": 'fBtlpi',
         "dom": 'pftil',
@@ -231,7 +234,7 @@ export class ExpiryComponent {
           next: data => {
             this.sharedservice.infoFunc('alert alert-success', 'product deleted', false, false, false)
             // console.log(data)
-            $('.datanew').DataTable().destroy()
+            $('.dataexp').DataTable().destroy()
             this.products$ = this.httpservice.getProductsExpiring(1, 10);
             this.categories$ = this.httpservice.getCategories(1, 10);
             this.httpservice.getProductsExpiring(this.currentPage, this.perPage)
@@ -248,7 +251,7 @@ export class ExpiryComponent {
             setTimeout(() =>{ 
               this.sharedservice.infoFunc('', '', false, false, false)
 
-              $('.datanew').DataTable({
+              $('.dataexp').DataTable({
                 "bFilter": true,
                 // "sDom": 'fBtlpi',
                 "dom": 'pftil',
@@ -303,8 +306,8 @@ export class ExpiryComponent {
       this.httpservice.updateProduct(this.productId, this.updateProductFrm.value)
       .subscribe({
         next: data => {
-          $('.datanew').DataTable().destroy()
-          // $('.datanew ').empty()
+          $('.dataexp').DataTable().destroy()
+          // $('.dataexp ').empty()
           this.sharedservice.infoFunc('alert alert-success', 'product updated', false, false, false) 
           this.products$ = this.httpservice.getProductsExpiring(this.currentPage, this.perPage);
           this.categories$ = this.httpservice.getCategories(1, 10)
@@ -324,7 +327,7 @@ export class ExpiryComponent {
 
           // window.location.reload() 
           setTimeout(()=> {
-            $('.datanew').DataTable({
+            $('.dataexp').DataTable({
               "bFilter": true,
               // "sDom": 'fBtlpi',
               "dom": 'pftil',
@@ -377,7 +380,7 @@ export class ExpiryComponent {
         if (preloader) {
           preloader.style.display = 'none';
         }
-        $('.datanew').DataTable({
+        $('.dataexp').DataTable({
           "bFilter": true,
           // "sDom": 'fBtlpi',
           "dom": 'pftil',
@@ -409,7 +412,7 @@ export class ExpiryComponent {
 
   ngOnDestroy(): void {
     // Destroy the DataTable to free up resources
-    $('.datanew').DataTable().destroy();
+    $('.dataexp').DataTable().destroy();
   }
 
 

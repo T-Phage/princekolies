@@ -7,8 +7,9 @@
         <div class="d-flex align-items-center">
             <div class="position-relative daterange-wraper me-2">
                 <div class="input-groupicon calender-input">
-                    <input type="text" class="form-control  date-range bookingrange" placeholder="Select"
-                        value="{{formattedDate}}">
+                    <!-- <input type="text" class="form-control  date-range bookingrange" placeholder="Select"
+                        value="{{formattedDate}}"> -->
+                    <input (change)="todayDateChange($event)" type="date" class="form-control" [(ngModel)]="today">
                 </div>
                 <i data-feather="calendar" class="feather-14"></i>
             </div>
@@ -153,7 +154,7 @@
         </div> -->
         <!-- /Expenses -->
 
-				</div>
+    </div>
     <div *ngIf="!manager" class="content">
         <div class="row">
             <div class="col-xl-3 col-sm-6 col-12 d-flex">
@@ -301,7 +302,7 @@
         <div class="col-sm-12 col-md-12 col-xl-12 d-flex">
             <div class="card flex-fill default-cover w-100 mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h4 class="card-title mb-0">Recent Transactions</h4>
+                    <h4 class="card-title mb-0">Products Sold</h4>
                     <!-- <div class="dropdown">
                         <a href="javascript:void(0);" class="view-all d-flex align-items-center">
                             View All<span class="ps-2 d-flex align-items-center"><i data-feather="arrow-right"
@@ -310,6 +311,33 @@
                     </div> -->
                 </div>
                 <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-borderless recent-transactions">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Product</th>
+                                    <th>Quantity</th>
+                                    <th>Unit Cost</th>
+                                    <th>Total Cost</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let product of productSold; let i=index">
+                                    <td>{{i+1}}</td>
+                                    <td> {{product.product}}</td>
+                                    <td>
+                                        {{product.total_quantity}}
+                                    </td>
+                                    <td>{{product.unit_cost | currency : 'GHc '}}</td>
+                                    <td>{{product.grand_total | currency : 'GHc '}}</td>
+                                </tr>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-borderless recent-transactions">
                             <thead>
@@ -334,7 +362,7 @@
                             </tbody>
                         </table>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
@@ -397,3 +425,5 @@
         </div> -->
     </div>
 </div>
+
+<div *ngIf="loading" style="background:#0000000d;z-index:9999;position:fixed;top:0;left:0;display:flex;width:100vw;height:100vh;cursor:progress;"></div>

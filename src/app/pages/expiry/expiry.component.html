@@ -6,7 +6,7 @@
         </div>
     </div>
     <ul class="table-top-head">
-        <li>
+        <li *ngIf="role != 'Attendant'">
             <a (click)="exportTableToPDF()" data-bs-toggle="tooltip" data-bs-placement="top" title="Pdf" disabled><img
                     src="assets/images/pdf.svg" alt="img"></a>
         </li>
@@ -14,7 +14,7 @@
             <a (click)="exportToExcel()"  data-bs-toggle="tooltip" data-bs-placement="top" title="Excel"><img
                     src="assets/images/excel.svg" alt="img"></a>
         </li>
-        <li>
+        <li *ngIf="role != 'Attendant'">
             <a (click)="printTable()" data-bs-toggle="tooltip" data-bs-placement="top" title="Print">
                 <!-- <i data-feather="printer" class="feather-rotate-ccw"></i> -->
                 <img src="assets/images/printer.svg">
@@ -29,7 +29,7 @@
                     data-feather="chevron-up" class="feather-chevron-up"></i></a>
         </li> -->
     </ul>
-    <div class="page-btn">
+    <div *ngIf="role != 'Attendant'" class="page-btn">
         <a [routerLink]="['/dashboard/add-product']" class="btn btn-added"><i data-feather="plus-circle" class="me-2"></i>Add
             New Product</a>
     </div>
@@ -61,7 +61,7 @@
         </div>
 
         <div class="table-responsive product-list">
-            <table class="table datanew" id="table">
+            <table class="table dataexp" id="table">
                 <thead>
                     <tr>
                         <th class="no-sort">
@@ -74,8 +74,8 @@
                         <th>Category</th>
                         <th>Price</th>
                         <th>Qty</th>
-                        <th>Created by</th>
-                        <th class="no-sort">Action</th>
+                        <!-- <th>Created by</th> -->
+                        <th *ngIf="role != 'Attendant'" class="no-sort">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -90,8 +90,8 @@
                         <td>{{ product.category_id }}</td>
                         <td>{{product.price | currency:'GHc ':'symbol':'1.2-2' }}</td>
                         <td>{{ product.quantity }}</td>
-                        <td>{{ product.createdby }}</td>
-                        <td class="action-table-data">
+                        <!-- <td>{{ product.createdby }}</td> -->
+                        <td *ngIf="role != 'Attendant'" class="action-table-data">
                             <div class="edit-delete-action">
                                 <!-- <a class="me-2 edit-icon  p-2" href="product-details.html">
                                     <i data-feather="eye" class="feather-eye"></i>
@@ -149,13 +149,12 @@
                                     </div>
                                 </div>
                                 
-                                <div class="col-lg-6 col-sm-6 col-12">
+                                <!-- <div class="col-lg-6 col-sm-6 col-12">
                                     <div class="input-blocks">
                                         <label>Barcode</label>
                                         <input type="text" formControlName="barcode" class="form-control">
-                                         
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="col-lg-6 col-sm-6 col-12">
                                     <div class="mb-3">
                                         <label class="form-label">Price</label>

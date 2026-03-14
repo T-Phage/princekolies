@@ -32,6 +32,8 @@ export class ProductsComponent {
 
   products$!: Observable<any>;
 
+  role:string = '';
+
   constructor(
     private httpservice: HttpService,
     public currency: CurrencyPipe,
@@ -39,9 +41,11 @@ export class ProductsComponent {
     private zone: NgZone,
     private formBuilder: FormBuilder,
     public sharedservice: SharedService,
-  ) { }
-
+  ) { 
+  }
+  
   ngOnInit() {
+    this.role = sessionStorage.getItem('role') || '';
     this.products$ = this.httpservice.getProducts(this.currentPage, this.perPage);
     this.categories$ = this.httpservice.getCategories(1, 10)
 
@@ -192,7 +196,7 @@ export class ProductsComponent {
             this.sharedservice.infoFunc('','', false,false,false)
             // Close the modal and clean up backdrop
             this.closeModalAndRefresh();
-          }, 3500)
+          }, 2000)
 
           // setTimeout(()=> {
           //   $('.datanew').DataTable({

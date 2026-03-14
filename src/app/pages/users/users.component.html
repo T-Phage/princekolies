@@ -37,7 +37,7 @@
                     Loading...
                   </div>
                 <ng-template #userTable>
-                    <table class="table datanew">
+                    <table class="table datauser">
                         <thead>
                             <tr>
                                 <th class="no-sort">
@@ -50,7 +50,7 @@
                                 <th>Phone</th>
                                 <th>email</th>
                                 <th>Role</th>
-                                <th>Created On</th>
+                                <th>Branch</th>
                                 <th>Status</th>
                                 <th class="no-sort">Action</th>
                             </tr>
@@ -67,7 +67,7 @@
                                 <td>{{user.phone_number}}</td>
                                 <td>{{user.email}}</td>
                                 <td>{{user.role}}</td>
-                                <td>{{user.created_at}}</td>
+                                <td>{{user.branch_name}}</td>
                                 <td> 
                                     <span *ngIf="user.user_account == 'Inactive'" class="badge badge-linedanger">{{user.user_account}}</span>
                                     <span *ngIf="user.user_account == 'Active'" class="badge badge-linesuccess">{{user.user_account}}</span>
@@ -77,7 +77,7 @@
                                         <!-- <a class="me-2 p-2 mb-0" href="javascript:void(0);">
                                             <i data-feather="eye" class="action-eye"></i>
                                         </a> -->
-                                        <a (click)="userClicked(user.id, user.name, user.email, user.phone_number, user.role,user.user_account)" class="me-2 p-2 mb-0" data-bs-toggle="modal" data-bs-target="#edit-units">
+                                        <a (click)="userClicked(user.id, user.name, user.email, user.phone_number, user.role,user.user_account,user.branch_id)" class="me-2 p-2 mb-0" data-bs-toggle="modal" data-bs-target="#edit-units">
                                             <i data-feather="edit" class="feather-edit"></i>
                                         </a>
                                         <a [routerLink]="['/dashboard/staff-sales/', user.id, user.name]" class="me-2 p-2 mb-0">
@@ -109,7 +109,7 @@
                                                 <!-- <img src="assets/images/trash-solid.svg"> -->
                                             </i>
                                         </a>
-                                        <a (click)="userClicked(user.id, user.name, user.email, user.phone_number, user.role,user.user_account)" class="me-2 confirm-text p-2 mb-0" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#delete-units">
+                                        <a (click)="userClicked(user.id, user.name, user.email, user.phone_number, user.role,user.user_account,user.branch_id)" class="me-2 confirm-text p-2 mb-0" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#delete-units">
                                             <i data-feather="trash-2" class="feather-trash-2">
                                                 <!-- <img src="assets/images/trash-solid.svg"> -->
                                             </i>
@@ -207,10 +207,18 @@
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="input-blocks">
+                                        <label>Branch</label>
+                                        <select formControlName="branch" class="form-control">
+                                            <option *ngFor="let branch of branches" [value]="branch.id">{{branch.branch_name}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="input-blocks">
                                         <label>Password</label>
-                                        <div class="pass-group">
-                                            <input formControlName="password" type="password" class="pass-input">
-                                            <span class="fas toggle-password fa-eye-slash"></span>
+                                        <div class="pass-group">                                            
+                                            <input [type]="showPassword ? 'text' : 'password'" formControlName="password" class="pass-input">
+                                            <span [ngClass]="showPassword ? 'fa-eye' : 'fa-eye-slash'" class="fas toggle-password" (click)="showPassword = !showPassword"></span>
                                         </div>
                                     </div>
                                     <div *ngIf="(newUserFrm.get('password')?.invalid && newUserFrm.get('password')?.touched)">
@@ -223,8 +231,8 @@
                                     <div class="input-blocks">
                                         <label>Confirm Passworrd</label>
                                         <div class="pass-group">
-                                            <input formControlName="c_password" type="password" class="pass-input">
-                                            <span class="fas toggle-password fa-eye-slash"></span>
+                                            <input [type]="showCPassword ? 'text' : 'password'" formControlName="c_password" type="password" class="pass-input">
+                                            <span [ngClass]="showCPassword ? 'fa-eye' : 'fa-eye-slash'" class="fas toggle-password" (click)="showCPassword = !showCPassword"></span>
                                         </div>
                                     </div>
                                     <div *ngIf="(newUserFrm.get('c_password')?.invalid && newUserFrm.get('c_password')?.touched)">
@@ -304,6 +312,14 @@
                                         <select formControlName="user_account" class="form-control">
                                             <option value="Active">Active</option>
                                             <option value="Inactive">Inactive</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="input-blocks">
+                                        <label>Branch</label>
+                                        <select formControlName="branch" class="form-control">
+                                            <option *ngFor="let branch of branches" [value]="branch.id">{{branch.branch_name}}</option>
                                         </select>
                                     </div>
                                 </div>

@@ -26,9 +26,11 @@ export class LowStockComponent {
   products_out:any[] = []
   products_low:any[] = []
   currentPage = 1;
-  perPage = 10;
+  perPage = 15;
 
   low:boolean = true;
+  
+  role:string = '';
 
   constructor(
     private httpservice: HttpService,
@@ -40,12 +42,16 @@ export class LowStockComponent {
   ){}
 
   ngOnInit(){
-    this.products_out$ = this.httpservice.getStockedOutProducts(this.currentPage, this.perPage);
-    this.products_low$ = this.httpservice.getLowStockedProducts(this.currentPage, this.perPage);
+    this.role = sessionStorage.getItem('role') || '';
+    // this.products_out$ = this.httpservice.getStockedOutProducts(this.currentPage, this.perPage);
+    // this.products_low$ = this.httpservice.getLowStockedProducts(this.currentPage, this.perPage);
     this.categories$ = this.httpservice.getCategories(this.currentPage, this.perPage);
     this.httpservice.getStockedOutProducts(this.currentPage, this.perPage).subscribe({
       next: data=> {
         this.products_out = data
+        setTimeout(()=>{
+          this.data2TableInit();
+        }, 900)
       },
       error: error => {
 
@@ -54,6 +60,9 @@ export class LowStockComponent {
     this.httpservice.getLowStockedProducts(this.currentPage, this.perPage).subscribe({
       next: data=> {
         this.products_low = data
+        setTimeout(()=>{
+          this.data1TableInit()
+        },900)
       },
       error: error => {
 
@@ -422,6 +431,9 @@ export class LowStockComponent {
     this.httpservice.getStockedOutProducts(this.currentPage, this.perPage).subscribe({
       next: data=> {
         this.products_out = data
+        setTimeout(()=>{
+          this.data2TableInit();
+        }, 900)
       },
       error: error => {
 
@@ -430,6 +442,9 @@ export class LowStockComponent {
     this.httpservice.getLowStockedProducts(this.currentPage, this.perPage).subscribe({
       next: data=> {
         this.products_low = data
+        setTimeout(()=>{
+          this.data1TableInit()
+        },1000)
       },
       error: error => {
 
@@ -493,56 +508,63 @@ export class LowStockComponent {
           preloader.style.display = 'none';
         }
         // if ($('.datanew').length > 0){
-          $('.datanew-1').DataTable({
-            "bFilter": true,
-            // "sDom": 'fBtlpi',
-            "dom": 'pftil',
-            "ordering": true,
-            "language": {
-              emptyTable: "No data available in table",
-              infoEmpty: "",
-              search: ' ',
-              sLengthMenu: '_MENU_',
-              searchPlaceholder: "Search",
-              info: "_START_ - _END_ of _TOTAL_ items",
-              paginate: {
-                next: ' <i class=" fa fa-angle-right"></i>',
-                previous: '<i class="fa fa-angle-left"></i> '
-              },
-            },
-            initComplete: (_settings: any, _json: any) => {
-              $('.dataTables_filter').appendTo('#tableSearch');
-              $('.dataTables_filter').appendTo('.search-input');
-  
-            },
-          }); 
-          $('.datanew-2').DataTable({
-            "bFilter": true,
-            // "sDom": 'fBtlpi',
-            "dom": 'pftil',
-            "ordering": true,
-            "language": {
-              emptyTable: "",
-              infoEmpty: "",
-              search: ' ',
-              sLengthMenu: '_MENU_',
-              searchPlaceholder: "Search",
-              info: "_START_ - _END_ of _TOTAL_ items",
-              paginate: {
-                next: ' <i class=" fa fa-angle-right"></i>',
-                previous: '<i class="fa fa-angle-left"></i> '
-              },
-            },
-            initComplete: (_settings: any, _json: any) => {
-              $('.dataTables_filter').appendTo('#tableSearch');
-              $('.dataTables_filter').appendTo('.search-input');
-            },
-          });  // Initialize jQuery DataTable outside Angular’s zone
-
+          
+          
         // }
       }, 1000)
     }
     );
+  }
+
+  data1TableInit(){
+    $('.datanew-1').DataTable({
+      "bFilter": true,
+      // "sDom": 'fBtlpi',
+      "dom": 'pftil',
+      "ordering": true,
+      "language": {
+        emptyTable: "No data available in table",
+        infoEmpty: "",
+        search: ' ',
+        sLengthMenu: '_MENU_',
+        searchPlaceholder: "Search",
+        info: "_START_ - _END_ of _TOTAL_ items",
+        paginate: {
+          next: ' <i class=" fa fa-angle-right"></i>',
+          previous: '<i class="fa fa-angle-left"></i> '
+        },
+      },
+      initComplete: (_settings: any, _json: any) => {
+        $('.dataTables_filter').appendTo('#tableSearch');
+        $('.dataTables_filter').appendTo('.search-input');
+
+      },
+    }); 
+  }
+
+  data2TableInit(){
+    $('.datanew-2').DataTable({
+      "bFilter": true,
+      // "sDom": 'fBtlpi',
+      "dom": 'pftil',
+      "ordering": true,
+      "language": {
+        emptyTable: "",
+        infoEmpty: "",
+        search: ' ',
+        sLengthMenu: '_MENU_',
+        searchPlaceholder: "Search",
+        info: "_START_ - _END_ of _TOTAL_ items",
+        paginate: {
+          next: ' <i class=" fa fa-angle-right"></i>',
+          previous: '<i class="fa fa-angle-left"></i> '
+        },
+      },
+      initComplete: (_settings: any, _json: any) => {
+        $('.dataTables_filter').appendTo('#tableSearch');
+        $('.dataTables_filter').appendTo('.search-input');
+      },
+    });  // Initialize jQuery DataTable outside Angular’s zone
   }
 
   ngOnDestroy(): void {

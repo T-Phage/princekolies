@@ -36,6 +36,8 @@ export class OverviewDashboardComponent {
   expiringproducts:any[] = [];
   monthlyCashSales:any;
 
+  session_off:boolean = false;
+
   salesa:any;
   year = new Date().getFullYear();
   years$!: Observable<any>;
@@ -72,6 +74,15 @@ export class OverviewDashboardComponent {
       error: error => {
         let msg = error.error.message
         console.error('error :', error)
+        console.log(msg)
+        if (msg == 'Unauthenticated.' || error.status == 401 || msg == 'Token has expired' || msg == 'Invalid token') {
+          this.session_off = true;
+          setTimeout(()=>{
+            this.session_off = true;
+            this.httpservice.httpLogout()
+          },300)
+          // this.sharedservice.infoFunc('alert alert-danger', 'Session expired. Please login again.', false, false, false)
+        }
       }
     })
 

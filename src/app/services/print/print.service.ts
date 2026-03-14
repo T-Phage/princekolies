@@ -142,6 +142,7 @@ export class PrintService {
             <hr/>
             <hr/>
             <hr/>
+            <hr/>
             ...
           </body>
           </html>

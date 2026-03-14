@@ -33,6 +33,8 @@ export class CategoryComponent {
   ];
   categories$!: Observable<any>;
 
+  role:string = '';
+
   constructor(
     private formBuilder: FormBuilder,
     public sharedservices: SharedService,
@@ -72,8 +74,8 @@ export class CategoryComponent {
       this.httpservices.updateCategory(this.selectedCategoryId, this.updateCategoryFrm.value)
       .subscribe({
         next: data => {
-          $('.datanew').DataTable().destroy()
-          // $('.datanew ').empty()
+          $('.datanewcat').DataTable().destroy()
+          // $('.datanewcat ').empty()
           this.sharedservices.infoFunc('alert alert-success', 'category updated', false, false, false) 
           this.categories$ = this.httpservices.getCategories(1, 10)
           this.httpservices.getCategories(1, 10)
@@ -91,7 +93,7 @@ export class CategoryComponent {
 
           // window.location.reload() 
           setTimeout(()=> {
-            $('.datanew').DataTable({
+            $('.datanewcat').DataTable({
               "bFilter": true,
               // "sDom": 'fBtlpi',
               "dom": 'pftil',
@@ -140,7 +142,7 @@ export class CategoryComponent {
         next : data => {
           this.sharedservices.infoFunc('alert alert-success', 'category created', false, false, false)
           // console.log(data)
-          $('.datanew').DataTable().destroy()
+          $('.datanewcat').DataTable().destroy()
           this.categories$ = this.httpservices.getCategories(1, 10)
           this.httpservices.getCategories(1, 10)
             .subscribe({
@@ -153,7 +155,7 @@ export class CategoryComponent {
           this.sharedservices.infoFunc('alert alert-success', 'category created', false, false, false)
           setTimeout(()=>{
             this.sharedservices.infoFunc('', '', false, false, false)
-            $('.datanew').DataTable({
+            $('.datanewcat').DataTable({
             "bFilter": true,
           // "sDom": 'fBtlpi',
             "dom": 'pftil',
@@ -193,7 +195,7 @@ export class CategoryComponent {
         next: data => {
           this.sharedservices.infoFunc('alert alert-success', 'category deleted', false, false, false)
           // console.log(data)
-          $('.datanew').DataTable().destroy()
+          $('.datanewcat').DataTable().destroy()
           this.categories$ = this.httpservices.getCategories(1, 10);
           this.httpservices.getCategories(1, 10)
             .subscribe({
@@ -206,7 +208,7 @@ export class CategoryComponent {
           setTimeout(() =>{ 
             this.sharedservices.infoFunc('', '', false, false, false)
 
-            $('.datanew').DataTable({
+            $('.datanewcat').DataTable({
               "bFilter": true,
               // "sDom": 'fBtlpi',
               "dom": 'pftil',
@@ -260,6 +262,7 @@ export class CategoryComponent {
   }
 
   ngOnInit() {
+    this.role = sessionStorage.getItem('role') || '';
     // this.loadCategories()
     this.categories$ = this.httpservices.getCategories(1, 10);
 
@@ -364,9 +367,9 @@ export class CategoryComponent {
 
   refreshData(){
     this.categories$ = this.httpservices.getCategories(1, 10)
-    $('.datanew').DataTable().destroy();
+    $('.datanewcat').DataTable().destroy();
     setTimeout(()=> {
-      $('.datanew').DataTable({
+      $('.datanewcat').DataTable({
         "bFilter": true,
         // "sDom": 'fBtlpi',
         "dom": 'pftil',
@@ -405,7 +408,7 @@ export class CategoryComponent {
           if (preloader) {
             preloader.style.display = 'none';
           }
-          $('.datanew').DataTable({
+          $('.datanewcat').DataTable({
             "bFilter": true,
             // "sDom": 'fBtlpi',
             "dom": 'pftil',
@@ -436,7 +439,7 @@ export class CategoryComponent {
 
   ngOnDestroy(): void {
     // Destroy the DataTable to free up resources
-    $('.datanew').DataTable().destroy();
+    $('.datanewcat').DataTable().destroy();
   }
 
 }

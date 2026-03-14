@@ -7,7 +7,7 @@
     </div>
     <ul class="table-top-head">
         <li>
-            <a (click)="exportTableToPDF()" data-bs-toggle="tooltip" data-bs-placement="top" title="Pdf" disabled><img
+            <a  *ngIf="role != 'Attendant'" (click)="exportTableToPDF()" data-bs-toggle="tooltip" data-bs-placement="top" title="Pdf" disabled><img
                     src="assets/images/pdf.svg" alt="img"></a>
         </li>
         <li>
@@ -15,7 +15,7 @@
                     src="assets/images/excel.svg" alt="img"></a>
         </li>
         <li>
-            <a (click)="printTable()" data-bs-toggle="tooltip" data-bs-placement="top" title="Print">
+            <a  *ngIf="role != 'Attendant'" (click)="printTable()" data-bs-toggle="tooltip" data-bs-placement="top" title="Print">
                 <!-- <i data-feather="printer" class="feather-rotate-ccw"></i> -->
                 <img src="assets/images/printer.svg">
             </a>
@@ -29,7 +29,7 @@
                     data-feather="chevron-up" class="feather-chevron-up"></i></a>
         </li> -->
     </ul>
-    <div class="page-btn">
+    <div *ngIf="role != 'Attendant'" class="page-btn">
         <a [routerLink]="['/dashboard/add-product']" class="btn btn-added"><i data-feather="plus-circle" class="me-2"></i>Add
             New Product</a>
     </div>
@@ -74,8 +74,8 @@
                         <th>Category</th>
                         <th>Price</th>
                         <th>Qty</th>
-                        <th>Created by</th>
-                        <th class="no-sort">Action</th>
+                        <!-- <th>Created by</th> -->
+                        <th *ngIf="role != 'Attendant'" class="no-sort">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -90,8 +90,8 @@
                         <td>{{ product.category_id }}</td>
                         <td>{{product.price | currency:'GHc':'symbol':'1.2-2' }}</td>
                         <td>{{ product.quantity }}</td>
-                        <td>{{ product.createdby }}</td>
-                        <td class="action-table-data">
+                        <!-- <td>{{ product.createdby }}</td> -->
+                        <td class="action-table-data"  *ngIf="role != 'Attendant'">
                             <div class="edit-delete-action">
                                 <!-- <a class="me-2 edit-icon  p-2" href="product-details.html">
                                     <i data-feather="eye" class="feather-eye"></i>

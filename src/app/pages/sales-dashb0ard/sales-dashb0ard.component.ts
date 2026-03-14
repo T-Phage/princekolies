@@ -23,6 +23,7 @@ export class SalesDashb0ardComponent {
   salesa:any;
   public chart: any;
   recentSales:any[] = [];
+  productSold:any[] = [];
   username = ''
   salescount: any;
   todayCashAmount:any;
@@ -35,6 +36,8 @@ export class SalesDashb0ardComponent {
   cashIn:number = 0;
   bankCashIn:number = 0;
 
+  
+
   years$!: Observable<any>;
 
   today = new Date();
@@ -46,9 +49,12 @@ export class SalesDashb0ardComponent {
 
   year = new Date().getFullYear();
 
+  selectedDate:any = this.today.toISOString().split('T')[0]; // Format as YYYY-MM-DD for input[type="date"]
   
   manager:boolean = false;
   userrole = `${sessionStorage.getItem('role')}`
+
+  loading: boolean = true;
 
   constructor(
     private httpservice: HttpService,
@@ -63,7 +69,47 @@ export class SalesDashb0ardComponent {
     if (user != null || user != undefined){
       let jsonUser = JSON.parse(user)
       this.username = jsonUser.name
+    } else {
+      router.navigate(['/auth/login'])
     }
+
+  }
+  todayDateChange(e: Event){
+    this.loading = true;
+    // getUserSalesDateAnalyticsAsAdmin
+    this.selectedDate = (e.target as HTMLInputElement).value
+    // console.log('date',new Date(this.selectedDate).toISOString().split('T')[0])
+    this.salescount = 0
+        this.todayCashAmount = 0
+        this.momo = 0;
+        this.cashIn = 0;
+        this.bankCashIn = 0;
+        this.productSold = []
+    // this.httpservice.getUserSalesDateAnalytics(sessionStorage.getItem('id'), new Date(this.selectedDate).toISOString().split('T')[0]).subscribe({
+    this.httpservice.getUserSalesDateAnalyticsAsAdmin(new Date(this.selectedDate).toISOString().split('T')[0]).subscribe({
+      next: data => {
+        console.log(data)
+        // console.log(data.salesCount)
+        // console.log(data.cashSalesTotal)
+        // console.log(data.momo)
+        // console.log(data.cash)
+        // console.log(data.bank)
+        this.salescount = data.salesCount
+        this.todayCashAmount = data.cashSalesTotal
+        this.momo = data.momo;
+        this.cashIn = data.cash;
+        this.bankCashIn = data.bank;
+        this.percentageIncrease = data.percentage_increase
+        this.productSold = data.productsSold;
+      },
+      error: error => {
+        let msg = error.error.message
+        console.log('error :', error)
+      },
+      complete: (()=>{
+        this.loading = false;
+      }),
+    })
   }
 
   refresh(){
@@ -72,10 +118,13 @@ export class SalesDashb0ardComponent {
   }
 
   ngOnInit(){
+    console.log('selected date:',this.selectedDate);
+
     this.years$ = this.httpservice.getallyears()
     this.httpservice.getSalesAnalytics(sessionStorage.getItem('id'), this.year, sessionStorage.getItem('role')).subscribe({
       next: data => {
-        console.log(data)  
+        // this.loading = false;
+        console.log(data)
         this.salesa = data.monthlySales
         this.recentSales = data.recentSales 
         this.salescount = data.todaySales
@@ -87,6 +136,7 @@ export class SalesDashb0ardComponent {
         this.momo = data.momo;
         this.cashIn = data.cash;
         this.bankCashIn = data.bank;
+        this.productSold = data.productsSold;
 
         console.log(data.recentSales)
         // console.log(dara)
@@ -95,7 +145,10 @@ export class SalesDashb0ardComponent {
       error: error => {
         let msg = error.error.message
         console.error('error :', error)
-      }
+      },
+      complete: (() => {
+        this.loading = false;
+      })
     })
   }
 
@@ -154,6 +207,13 @@ export class SalesDashb0ardComponent {
         console.error('error :', error)
       }
     })
+  }
+
+  ngOnDestroy(){
+    var chartExist = Chart.getChart("MyChart"); // <canvas> id
+    if (chartExist != undefined) { 
+      chartExist.destroy(); 
+    }
   }
 
 }

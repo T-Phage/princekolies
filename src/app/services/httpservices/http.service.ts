@@ -10,10 +10,12 @@ import { SharedService } from '../sharedservices/shared.service';
 
 export class HttpService {
   // baseUrl = 'http://localhost/pos/public/api'
+  // baseUrl = 'http://localhost/techne_app_2/public/api'
   baseUrl = 'https://techneservers.com/pos_api/api'
   // appToken = 'ZxcvkdmnvnbjkjewoMQ23'
   // appToken = sessionStorage.getItem('token') || '';
   appToken:string = '';
+  role:string = '';
   dateError: boolean = false;
   allowedDate: Date = new Date('2025-02-22'); // Replace with your desired date
 
@@ -26,12 +28,17 @@ export class HttpService {
   httpLogout() {
     this.http.post<any>(`${this.baseUrl}/auth/logout`, {}, {headers: this.getHeaders(),}).subscribe({
         next: data => {
+          this.appToken = '';
           sessionStorage.clear();
           localStorage.clear();
           this.router.navigate(['/auth/login'])
         },
         error: error => {
-
+          alert("wht")
+          this.appToken = '';
+          sessionStorage.clear();
+          localStorage.clear();
+          this.router.navigate(['/auth/login']);
         }
       });
   }
@@ -80,6 +87,7 @@ export class HttpService {
           sessionStorage.setItem('user', JSON.stringify(data.user))
 
           this.appToken = data.token;
+          this.role = data.role;
 
           // console.log(data)
 
@@ -189,11 +197,11 @@ export class HttpService {
     return this.http.get<any>(`${this.baseUrl}/sales/analytics/${id}/${year}/${role}`, {headers: this.getHeaders()});
   }
 
-  getUserSalesAnalytics(id:any, year:any): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/sales/user/${id}/${year}`, {headers: this.getHeaders()});
-  }
   getUserSalesDateAnalytics(id:any, date:any): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/sales/user/date/${id}/${date}`, {headers: this.getHeaders()});
+  }
+  getUserSalesDateAnalyticsAsAdmin(date:any): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/sales/admin/date/${date}`, {headers: this.getHeaders()});
   }
   getallyears(): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/all/years`, {headers: this.getHeaders()});
@@ -230,6 +238,11 @@ export class HttpService {
   updatepassword(body: any, id:any) {
     this.sharedservice.infoFunc('alert alert-info', 'updating profile... ', true, true, true)
     return this.http.post<any>(`${this.baseUrl}/update/password/${id}`, body, {headers: this.getHeaders()})
+  }
+
+  getbranches(){
+    // this.sharedservice.infoFunc('alert alert-info', 'fetching branches... ', true, true, true)
+    return this.http.get<any>(`${this.baseUrl}/branches`, {headers: this.getHeaders()})
   }
   
 }

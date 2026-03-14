@@ -19,6 +19,10 @@ export class UsersComponent {
 
   users$!: Observable<any>
   users:any = []
+  branches:any = []
+
+  showPassword = false
+  showCPassword = false
 
   constructor(
     private httpservice: HttpService,
@@ -30,19 +34,21 @@ export class UsersComponent {
 
   ngOnInit() {
     this.users$ = this.httpservice.getUsers()
-    // .subscribe({
-    //   next: data => { 
-    //     this.users = data.users
-    //     this.users$ = of(this.users)
-    //     console.log(data)
-    //     setTimeout(() => {
-    //         this.datatableservice.initiateDataTable();
-    //     }, 2000);
-        
-    //   },
-    //   error: _error => {}
-    // });
-    // this.httpservice.getUsers()
+    this.httpservice.getbranches()
+    .subscribe({
+      next: data => { 
+        console.log(data)
+        this.branches = data
+      },
+      error: _error => {}
+    });
+    this.httpservice.getUsers()
+    .subscribe({
+      next: data => {
+        console.log(data);
+      },
+      error: _error => {}
+    })
     // Ensure the value is a boolean on every change
   }
 
@@ -53,6 +59,7 @@ export class UsersComponent {
     'role': '',
     'user_account': '',
     'status': [false],
+    'branch': '',
   }
 
   userid: any;
@@ -63,16 +70,18 @@ export class UsersComponent {
     'phone_number': ['', Validators.required],
     'role': ['', Validators.required],
     'user_account': ['', Validators.required],
-    'status': [false]
+    'status': [false],
+    'branch': [''],
   })
 
-  userClicked(id: any, name: string, email: string, phone_number: string, role: string, user_account: string) {
+  userClicked(id: any, name: string, email: string, phone_number: string, role: string, user_account: string, branch_id: number) {
     this.updateUserFrm.controls.name.setValue(name)
     this.updateUserFrm.controls.email.setValue(email)
     this.updateUserFrm.controls.phone_number.setValue(phone_number)
     this.updateUserFrm.controls.role.setValue(role)
     this.updateUserFrm.controls.user_account.setValue(user_account)
     this.userid = id
+    this.updateUserFrm.controls.branch.setValue(`${branch_id}`)
   }
 
   newUserFrm = this.formbuilder.group({
@@ -80,6 +89,7 @@ export class UsersComponent {
     'email': ['', Validators.compose([Validators.required, Validators.email])],
     'phone_number': ['', Validators.required],
     'role': ['', Validators.required],
+    'branch': ['', Validators.required],
     'user_account': ['', Validators.required],
     'status': [false],
     'password': ['', Validators.required],

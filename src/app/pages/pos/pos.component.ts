@@ -222,8 +222,8 @@ export class PosComponent {
   submitSalesFrm(evt: Event){
     evt.preventDefault()
 
-    // this.newSalesFrm.get('status')?.enable();
-    // this.newSalesFrm.get('payment_status')?.enable();
+    this.newSalesFrm.get('status')?.enable();
+    this.newSalesFrm.get('payment_status')?.enable();
     console.log(this.newSalesFrm)
     console.log(this.newSalesFrm.value)
 
@@ -234,8 +234,8 @@ export class PosComponent {
       this.httpservice.addNewSale(this.newSalesFrm.value, this.receiptContent)
       .subscribe({
         next: data => {
-          this.newSalesFrm.get('status')?.disable();
-          this.newSalesFrm.get('payment_status')?.disable();
+          // this.newSalesFrm.get('status')?.disable();
+          // this.newSalesFrm.get('payment_status')?.disable();
           // 
           this.newSalesFrm.controls.reference?.setValue(`${data.sale.reference}`)
           this.sharedservice.infoFunc('alert alert-success', data.message, false, false, false) 

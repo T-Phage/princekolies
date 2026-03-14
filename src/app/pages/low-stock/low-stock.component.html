@@ -95,12 +95,12 @@
                                     <th>Category</th>
                                     <th>Price</th>
                                     <th>Qty</th>
-                                    <th>Created by</th>
-                                    <th class="no-sort">Action</th>
+                                    <!-- <th>Created by</th> -->
+                                    <th *ngIf="role != 'Attendant'" class="no-sort">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let product of products_low$ | async">
+                                <tr *ngFor="let product of products_low">
                                     <td>
                                         <label class="checkboxs">
                                             <input type="checkbox">
@@ -111,8 +111,8 @@
                                     <td>{{ product.category_id }}</td>
                                     <td>Ghc {{product.price}}</td>
                                     <td>{{ product.quantity }}</td>
-                                    <td>{{ product.createdby }}</td>
-                                    <td class="action-table-data">
+                                    <!-- <td>{{ product.createdby }}</td> -->
+                                    <td *ngIf="role != 'Attendant'" class="action-table-data">
                                         <div class="edit-delete-action">
                                             <a (click)="productClicked(product.id,product.name,product.description,product.barcode,product.price,product.category_,product.quantity,product.quantity_alert,product.manufactured_date,product.expiry_date)" class="me-2 p-2" data-bs-toggle="modal" data-bs-target="#update-product" href="javascript:void(0);">
                                                 <i data-feather="edit" class="feather-edit"></i>
@@ -204,12 +204,12 @@
                                     <th>Category</th>
                                     <th>Price</th>
                                     <th>Qty</th>
-                                    <th>Created by</th>
-                                    <th class="no-sort">Action</th>
+                                    <!-- <th>Created by</th> -->
+                                    <th *ngIf="role != 'Attendant'" class="no-sort">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let product of products_out$ | async">
+                                <tr *ngFor="let product of products_out">
                                     <td>
                                         <label class="checkboxs">
                                             <input type="checkbox">
@@ -220,8 +220,8 @@
                                     <td>{{ product.category_id }}</td>
                                     <td>Ghc {{product.price}}</td>
                                     <td>{{ product.quantity }}</td>
-                                    <td>{{ product.createdby }}</td>
-                                    <td class="action-table-data">
+                                    <!-- <td>{{ product.createdby }}</td> -->
+                                    <td *ngIf="role != 'Attendant'" class="action-table-data">
                                         <div class="edit-delete-action">
                                             <a (click)="productClicked(product.id,product.name,product.description,product.barcode,product.price,product.category_,product.quantity,product.quantity_alert,product.manufactured_date,product.expiry_date)" class="me-2 p-2" data-bs-toggle="modal" data-bs-target="#update-product" href="javascript:void(0);">
                                                 <i data-feather="edit" class="feather-edit"></i>
@@ -364,13 +364,12 @@
                                     </div>
                                 </div>
                                 
-                                <div class="col-lg-6 col-sm-6 col-12">
+                                <!-- <div class="col-lg-6 col-sm-6 col-12">
                                     <div class="input-blocks">
                                         <label>Barcode</label>
                                         <input type="text" formControlName="barcode" class="form-control">
-                                         
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="col-lg-6 col-sm-6 col-12">
                                     <div class="mb-3">
                                         <label class="form-label">Price</label>
