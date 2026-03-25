@@ -49,7 +49,7 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="input-blocks mb-5">
                         <label>Status</label>
-                        <select formControlName="status" class="form-control">
+                        <select (change)="statusChange()" formControlName="status" class="form-control">
                             <option>Choose</option>
                             <option selected value="Completed">Completed</option>
                             <option value="Pending">Pending</option>
@@ -76,7 +76,13 @@
                 <div class="col-lg-3 col-sm-6 col-12">
                     <div class="input-blocks mb-5">
                         <label>Amount Received</label>
-                        <input id="received" (keyup)="calcBalance($event)"  type="text" class="form-control">
+                        <input formControlName="amount_paid" id="received" (keyup)="calcBalance($event)"  type="text" class="form-control">
+                        <div
+                            *ngIf="(newSalesFrm.get('amount_paid')?.invalid && newSalesFrm.get('amount_paid')?.touched) || submitted">
+                            <div *ngIf="newSalesFrm.controls['amount_paid'] && newSalesFrm.controls['amount_paid'].errors"
+                                class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;">field is
+                                required.</div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 col-12">

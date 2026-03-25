@@ -113,7 +113,7 @@ export class ReturnsComponent {
       this.items.push(this.formBuilder.group({
         'product': [product, Validators.required],
         'product_id': [product_id, Validators.required],
-        'barcode': [barcode, Validators.required],
+        'barcode': [barcode],
         'quantity': [quantity, Validators.compose([Validators.min(1)])],
         'return_price': [parseFloat(purchase_price), Validators.compose([Validators.required])],
         'unit_cost': [parseFloat(unit_cost)],
@@ -186,22 +186,22 @@ export class ReturnsComponent {
           1,
           this.selectedProduct.price,
           this.selectedProduct.price,
-          this.selectedProduct.barcode,
+          this.selectedProduct.barcode || '',
         );
       }
     }
 
-    @HostListener('window:keypress', ['$event'])
-    handleKeyDown(event: KeyboardEvent) {
-      if (event.key === 'Enter') {
-        event.preventDefault(); // Prevent form submission
-        this.barcodeData = this.inputBuffer; // Finalize barcode data
-        this.inputBuffer = ''; // Clear the buffer
-        this.onBarcodeScanned(this.barcodeData);
-      } else {
-        this.inputBuffer += event.key; // Capture the scanned key
-      }
-    }
+    // @HostListener('window:keypress', ['$event'])
+    // handleKeyDown(event: KeyboardEvent) {
+    //   if (event.key === 'Enter') {
+    //     event.preventDefault(); // Prevent form submission
+    //     this.barcodeData = this.inputBuffer; // Finalize barcode data
+    //     this.inputBuffer = ''; // Clear the buffer
+    //     this.onBarcodeScanned(this.barcodeData);
+    //   } else {
+    //     this.inputBuffer += event.key; // Capture the scanned key
+    //   }
+    // }
   
     onBarcodeScanned(barcode: string) {
       console.log('Scanned barcode:', barcode);
@@ -279,6 +279,8 @@ export class ReturnsComponent {
       evt.preventDefault()
   
       this.submitted = true
+      console.log(this.returnSalesFrm)
+      console.log(this.returnSalesFrm.value)
   
       if (this.returnSalesFrm.valid && this.returnSalesFrm.controls.items_returned.length >= 1){
         // console.log(this.returnSalesFrm.value)

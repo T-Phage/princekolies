@@ -15,7 +15,7 @@
             </div>
             <button (click)="refresh()" type="button" data-toggle="tooltip" class="btn btn-white-outline d-none d-md-inline-block"
                 data-bs-toggle="tooltip" data-bs-placement="top" title="Refresh"><i data-feather="rotate-ccw"
-                    class="feather-16"></i></button>
+                    class="feather-rotate-ccw"></i></button>
             <!-- <a href="ja" class="d-none d-lg-inline-block" data-bs-toggle="tooltip" data-bs-placement="top"
                 title="Collapse" id="collapse-header"><i data-feather="chevron-up" class="feather-16"></i></a> -->
         </div>
@@ -320,6 +320,7 @@
                                     <th>Quantity</th>
                                     <th>Unit Cost</th>
                                     <th>Total Cost</th>
+                                    <th>Quantity At Date</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -331,98 +332,16 @@
                                     </td>
                                     <td>{{product.unit_cost | currency : 'GHc '}}</td>
                                     <td>{{product.grand_total | currency : 'GHc '}}</td>
+                                    <td>{{product.quantity_at_date}}</td>
                                 </tr>
                                 
                             </tbody>
                         </table>
                     </div>
                 </div>
-                <!-- <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-borderless recent-transactions">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Reference</th>
-                                    <th>Status</th>
-                                    <th>Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let recentSale of recentSales; let i=index">
-                                    <td>{{i+1}}</td>
-                                    <td> {{recentSale.reference}}</td>
-                                    <td>
-                                        <span  class="badge badge-bgsuccess" *ngIf="recentSale.payment_status == 'Paid'">{{recentSale.payment_status}}</span>
-                                        <span  class="badge badge-bgdanger" *ngIf="recentSale.payment_status == 'Unpaid'">{{recentSale.payment_status}}</span>
-                                    </td>
-                                    <td>{{recentSale.grand_total | currency : 'GHc '}}</td>
-                                </tr>
-                                
-                            </tbody>
-                        </table>
-                    </div>
-                </div> -->
+                
             </div>
         </div>
-    </div>
-
-    <div *ngIf="manager"  class="row sales-board">
-        <div class="col-md-12 col-lg-12 col-sm-12 col-12">
-            <div class="card flex-fill default-cover">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="card-title mb-0">Sales Analytics</h5>
-                    <div class="graph-sets">
-                        <div class="dropdown dropdown-wraper">
-                            <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="dropdownMenuButton"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                                {{year}}
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <li *ngFor="let item of years$ | async;">
-                                    <a (click)="yearChange($event)" href="javascript:void(0);" class="dropdown-item">{{item}}</a>
-                                </li>
-                                
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div id="sales-analysis" class="chart-set">
-                        <canvas id="MyChart" width="400" height="100" aria-label="Hello ARIA World" role="img">{{chart}}</canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- <div class="col-md-12 col-lg-5 col-sm-12 col-12">
-
-            <div class="card default-cover">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="card-title mb-0">Sales by Countries</h5>
-                    <div class="graph-sets">
-                        <div class="dropdown dropdown-wraper">
-                            <button class="btn btn-white btn-sm dropdown-toggle d-flex align-items-center" type="button"
-                                id="dropdown-country-sales" data-bs-toggle="dropdown" aria-expanded="false">This
-                                Week</button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdown-country-sales">
-                                <li>
-                                    <a href="javascript:void(0);" class="dropdown-item">This Month</a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);" class="dropdown-item">This Year</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div id="sales_db_world_map" style="height: 265px;"></div>
-                    <p class="sales-range"><span class="text-success"><i data-feather="chevron-up"
-                                class="feather-16"></i>48%&nbsp;</span>increase compare to last week</p>
-                </div>
-            </div>
-
-        </div> -->
     </div>
 </div>
 

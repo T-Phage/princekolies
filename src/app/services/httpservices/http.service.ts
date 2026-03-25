@@ -116,7 +116,7 @@ export class HttpService {
 
   getProducts(page: number, perPage: number): Observable<any> {
     // console.log("getting products", this.appToken)
-    return this.http.get<any>(`${this.baseUrl}/products?page=${page}&per_page=${perPage}`, {headers: this.getHeaders()}) 
+    return this.http.get<any>(`${this.baseUrl}/products`, {headers: this.getHeaders()}) 
   }
 
   getProductsExpiring(page: number, perPage: number): Observable<any> {
@@ -193,8 +193,8 @@ export class HttpService {
     return this.http.get<any>(`${this.baseUrl}/analytics`, {headers: this.getHeaders()} );
   }
 
-  getSalesAnalytics(id:any, year:any, role:any): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/sales/analytics/${id}/${year}/${role}`, {headers: this.getHeaders()});
+  getSalesAnalytics(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/sales/analytics`, {headers: this.getHeaders()});
   }
 
   getUserSalesDateAnalytics(id:any, date:any): Observable<any> {
@@ -243,6 +243,27 @@ export class HttpService {
   getbranches(){
     // this.sharedservice.infoFunc('alert alert-info', 'fetching branches... ', true, true, true)
     return this.http.get<any>(`${this.baseUrl}/branches`, {headers: this.getHeaders()})
+  }
+
+  getExpenses(){
+    return this.http.get<any>(`${this.baseUrl}/expenses`, {headers: this.getHeaders()})
+  }
+
+  postExpenses(){
+    return this.http.post<any>(`${this.baseUrl}/expenses`, {headers: this.getHeaders()})
+  }
+
+  postExpenseCategory(){
+    return this.http.post<any>(`${this.baseUrl}/expense/category`, {headers: this.getHeaders()})
+  }
+
+  getExpenseCategory(){
+    return this.http.get<any>(`${this.baseUrl}/expense/category`, {headers: this.getHeaders()})
+  }
+
+  // restock
+  postRestock(body: any){
+    return this.http.post<any>(`${this.baseUrl}/restock`, body, {headers: this.getHeaders()})
   }
   
 }

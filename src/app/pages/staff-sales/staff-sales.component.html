@@ -2,7 +2,7 @@
     <div class="welcome d-lg-flex align-items-center justify-content-between">
         <div class="d-flex align-items-center welcome-text">
             <h3 class="d-flex align-items-center"><img src="assets/images/hi.svg" alt="img">&nbsp;Hi {{username}},
-            </h3>&nbsp;<h6>here's what's happening with {{name}}'s dashboard today.</h6>
+            </h3>&nbsp;<h6>here's what's happening with <strong>{{name}}</strong>'s dashboard today.</h6>
         </div>
         <div class="d-flex align-items-center">
             <div class="position-relative daterange-wraper me-2">
@@ -17,7 +17,7 @@
             </div>
             <button type="button" data-toggle="tooltip" class="btn btn-white-outline d-none d-md-inline-block"
                 data-bs-toggle="tooltip" data-bs-placement="top" title="Refresh"><i data-feather="rotate-ccw"
-                    class="feather-16"></i></button>
+                    class="feather-rotate-ccw"></i></button>
             <!-- <a href="ja" class="d-none d-lg-inline-block" data-bs-toggle="tooltip" data-bs-placement="top"
                 title="Collapse" id="collapse-header"><i data-feather="chevron-up" class="feather-16"></i></a> -->
         </div>
@@ -152,6 +152,7 @@
                                     <th>Quantity</th>
                                     <th>Unit Cost</th>
                                     <th>Total Cost</th>
+                                    <th>Quantity At Date</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -163,6 +164,7 @@
                                     </td>
                                     <td>{{product.unit_cost | currency : 'GHc '}}</td>
                                     <td>{{product.grand_total | currency : 'GHc '}}</td>
+                                    <td>{{product.quantity_at_date}}</td>
                                 </tr>
                                 
                             </tbody>

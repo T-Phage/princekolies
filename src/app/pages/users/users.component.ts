@@ -37,7 +37,7 @@ export class UsersComponent {
     this.httpservice.getbranches()
     .subscribe({
       next: data => { 
-        console.log(data)
+        // console.log(data)
         this.branches = data
       },
       error: _error => {}
@@ -45,7 +45,7 @@ export class UsersComponent {
     this.httpservice.getUsers()
     .subscribe({
       next: data => {
-        console.log(data);
+        // console.log(data);
       },
       error: _error => {}
     })

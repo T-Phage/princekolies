@@ -112,6 +112,7 @@ export class StaffSalesComponent {
     this.years$ = this.httpservice.getallyears()
     this.httpservice.getUserSalesDateAnalytics(this.id, this.today.toISOString()).subscribe({
       next: data => {
+        console.log(data)
         this.salescount = data.salesCount
         this.todayCashAmount = data.cashSalesTotal
         this.momo = data.momo;

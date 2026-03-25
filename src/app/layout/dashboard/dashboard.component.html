@@ -131,6 +131,8 @@
                                     [routerLink]="['/dashboard/add-product']"><i
                                         data-feather=""></i><span>Create
                                         Product</span></a></li>
+                            <li *ngIf="manager" [className]="router.url == '/dashboard/restock'? 'active': '' "><a [routerLink]="['/dashboard/restock']"><i data-feather=""></i><span>Restock
+                                        Products</span></a></li>
                             <li [className]="router.url == '/dashboard/products/expiry'? 'active': '' "><a [routerLink]="['/dashboard/products/expiry']"><i data-feather=""></i><span>Expired
                                         Products</span></a></li>
                             <li [className]="router.url == '/dashboard/low-stocks'? 'active': '' "><a
@@ -168,6 +170,15 @@
                             
                         </ul>
                     </li>
+                    <!-- <li *ngIf="manager" class="submenu-open">
+                        <h6 class="submenu-hdr">Finance and Accounts</h6>
+                        <ul>
+                            <li [className]="router.url == '/dashboard/expenses'? 'active': '' "><a [routerLink]="['/dashboard/expenses']"><i
+                                        ></i><span>Expenses</span></a></li>
+                            <li [className]="router.url == '/dashboard/expense-category'? 'active': '' "><a [routerLink]="['/dashboard/expense-category']"><i
+                                        ></i><span>Expense Categories</span></a></li>
+                        </ul>
+                    </li> -->
                 </ul>
             </div>
         </div>
@@ -197,6 +208,8 @@
                                     [routerLink]="['/dashboard/add-product']"><i
                                         ></i><span>Create
                                         Product</span></a></li>
+                            <li *ngIf="manager" [className]="router.url == '/dashboard/restock'? 'active': '' "><a [routerLink]="['/dashboard/restock']"><i data-feather=""></i><span>Restock
+                                    Products</span></a></li>
                             <li (click)="toggleMenu()" [className]="router.url == '/dashboard/products/expiry'? 'active': '' "><a [routerLink]="['/dashboard/products/expiry']"><i data-feather=""></i><span>Expired
                                         Products</span></a></li>
                             <li (click)="toggleMenu()" [className]="router.url == '/dashboard/low-stocks'? 'active': '' "><a
@@ -234,6 +247,15 @@
                             
                         </ul>
                     </li>
+                    <!-- <li *ngIf="manager" class="submenu-open">
+                        <h6 class="submenu-hdr">Finance and Accounts</h6>
+                        <ul>
+                            <li (click)="toggleMenu()" [className]="router.url == '/dashboard/expenses'? 'active': '' "><a [routerLink]="['/dashboard/expenses']"><i
+                                        ></i><span>Expenses</span></a></li>
+                            <li (click)="toggleMenu()" [className]="router.url == '/dashboard/expense-category'? 'active': '' "><a [routerLink]="['/dashboard/expense-category']"><i
+                                        ></i><span>Expense Categories</span></a></li>
+                        </ul>
+                    </li> -->
                 </ul>
             </div>
         </div>

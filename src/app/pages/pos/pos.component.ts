@@ -24,7 +24,7 @@ export class PosComponent {
 
   @ViewChild('receiptContent') receiptContent!: ElementRef;  
 
-  products$!: Observable<any>;
+  // products$!: Observable<any>;
 
   products: any[] = []
 
@@ -127,7 +127,7 @@ export class PosComponent {
     'reference': [''],
     'status': ['Completed', Validators.required],
     'grand_total': ['', Validators.required],
-    // 'amount_paid': [0.0, Validators.required],
+    'amount_paid': [0.0],
     'payment_status': ['Paid',],
     'payment_method':['Cash', Validators.required],
     'biller': [sessionStorage.getItem('id')],
@@ -135,6 +135,17 @@ export class PosComponent {
   })
 
   submitted = false
+
+  statusChange(){
+    console.log('status changed')
+    if (this.newSalesFrm.controls.status.value == 'Completed'){
+      this.newSalesFrm.get('amount_paid')?.setValidators([])
+      console.log('completed')
+    } else {
+      this.newSalesFrm.get('amount_paid')?.setValidators([Validators.required])
+      console.log('other')
+    }
+  }
 
   // Remove an item at the given index from the FormArray
   removeItem(index: number): void {
@@ -259,8 +270,8 @@ export class PosComponent {
           console.error('error :', error)
           this.sharedservice.infoFunc('alert alert-danger', msg, false, false, false)
           setTimeout(() => this.sharedservice.infoFunc('', '', false, false, false),4000)
-          this.newSalesFrm.get('status')?.disable();
-          this.newSalesFrm.get('payment_status')?.disable();
+          // this.newSalesFrm.get('status')?.disable();
+          // this.newSalesFrm.get('payment_status')?.disable();
         }
       })
       // this.printReceipt();

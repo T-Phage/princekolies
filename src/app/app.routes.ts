@@ -15,6 +15,9 @@ import { SalesComponent } from './pages/sales/sales.component';
 import { StaffSalesComponent } from './pages/staff-sales/staff-sales.component';
 import { UpdatePasswordComponent } from './pages/update-password/update-password.component';
 import { UsersComponent } from './pages/users/users.component';
+import { ExpensesComponent } from './pages/expenses/expenses.component';
+import { ExpensesCategoryComponent } from './pages/expenses-category/expenses-category.component';
+import { RestockComponent } from './pages/restock/restock.component';
 
 export const routes: Routes = [
     {
@@ -25,6 +28,7 @@ export const routes: Routes = [
             {path: 'products/expiry', component: ExpiryComponent},
             {path: 'category', component: CategoryComponent},
             {path: 'add-product', component: AddproductComponent},
+            {path: 'restock', component: RestockComponent},
             {path: 'low-stocks', component: LowStockComponent},
             {path: 'sales', component: SalesComponent},
             {path: 'overview-dashboard', component: OverviewDashboardComponent},
@@ -35,6 +39,8 @@ export const routes: Routes = [
             {path: 'update-password', component: UpdatePasswordComponent},
             {path: 'returns', component: ReturnsComponent},
             {path: 'staff-sales/:id/:name', component: StaffSalesComponent},
+            {path: 'expenses', component: ExpensesComponent},
+            {path: 'expense-category', component: ExpensesCategoryComponent}
         ]
     },
     { path: 'auth/login', component: LoginComponent },

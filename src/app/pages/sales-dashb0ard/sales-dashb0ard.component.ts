@@ -88,7 +88,7 @@ export class SalesDashb0ardComponent {
     // this.httpservice.getUserSalesDateAnalytics(sessionStorage.getItem('id'), new Date(this.selectedDate).toISOString().split('T')[0]).subscribe({
     this.httpservice.getUserSalesDateAnalyticsAsAdmin(new Date(this.selectedDate).toISOString().split('T')[0]).subscribe({
       next: data => {
-        console.log(data)
+        // console.log(data)
         // console.log(data.salesCount)
         // console.log(data.cashSalesTotal)
         // console.log(data.momo)
@@ -121,12 +121,11 @@ export class SalesDashb0ardComponent {
     console.log('selected date:',this.selectedDate);
 
     this.years$ = this.httpservice.getallyears()
-    this.httpservice.getSalesAnalytics(sessionStorage.getItem('id'), this.year, sessionStorage.getItem('role')).subscribe({
+    this.httpservice.getSalesAnalytics().subscribe({
       next: data => {
         // this.loading = false;
         console.log(data)
         this.salesa = data.monthlySales
-        this.recentSales = data.recentSales 
         this.salescount = data.todaySales
         this.todayCashAmount = data.todayCashAmount
         this.percentageIncrease = data.percentage_increase
