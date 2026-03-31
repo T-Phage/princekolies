@@ -30,67 +30,66 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-12 col-sm-6 col-12">
-                    <!-- <div class="input-blocks">
-                        <label>Product Barcode</label>
-                        <div class="input-groupicon select-code">
-                            <input id="" (input)="inpProductChange($event);" type="text" list="list-barcode"
-                                placeholder="scan product bar code">
-                            <div class="addonset">
-                                <img src="assets/images/qrcode-scan.svg" alt="img">
+                <div class="col-lg-12 col-12">
+                    <div class="input-blocks mb-1">
+                        <h6>Payment Methods</h6>
+                        <div class="row px-0">
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="input-blocks mb-0">
+                                    <label>Cash</label>
+                                    <input formControlName="cash" id="received" (keyup)="calcBalance($event)"  type="text" class="form-control">
+                                    <div
+                                        *ngIf="(newSalesFrm.get('cash')?.invalid && newSalesFrm.get('cash')?.touched) || submitted">
+                                        <div *ngIf="newSalesFrm.controls['cash'] && newSalesFrm.controls['cash'].errors"
+                                            class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;">field is
+                                            required.</div>
+                                    </div>
+                                </div>
                             </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="input-blocks mb-0">
+                                    <label>Momo</label>
+                                    <input formControlName="momo" id="received" (keyup)="calcBalance($event)"  type="text" class="form-control">
+                                    <div
+                                        *ngIf="(newSalesFrm.get('momo')?.invalid && newSalesFrm.get('momo')?.touched) || submitted">
+                                        <div *ngIf="newSalesFrm.controls['momo'] && newSalesFrm.controls['momo'].errors"
+                                            class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;">field is
+                                            required.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="input-blocks mb-0">
+                                    <label>Bank</label>
+                                    <input (keyup)="calcBalance($event)" formControlName="bank" id="received" (keyup)="calcBalance($event)"  type="text" class="form-control">
+                                    <div 
+                                        *ngIf="(newSalesFrm.get('bank')?.invalid && newSalesFrm.get('bank')?.touched) || submitted">
+                                        <div *ngIf="newSalesFrm.controls['bank'] && newSalesFrm.controls['bank'].errors"
+                                            class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;">field is
+                                            required.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6 col-12">
+                                <div class="input-blocks mb-0">
+                                    <label>Amount Received</label>
+                                    <input formControlName="amount_paid" id="received"  type="text" class="form-control">
+                                    <div
+                                        *ngIf="(newSalesFrm.get('amount_paid')?.invalid && newSalesFrm.get('amount_paid')?.touched) || submitted">
+                                        <div *ngIf="newSalesFrm.controls['amount_paid'] && newSalesFrm.controls['amount_paid'].errors"
+                                            class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;">field is
+                                            required.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
                         </div>
-                        <datalist id="list-barcode">
-                            <option class="option" *ngFor="let product of products">{{product.barcode}}
-                            </option>
-                        </datalist>
-                    </div> -->
-                </div>
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="input-blocks mb-5">
-                        <label>Status</label>
-                        <select (change)="statusChange()" formControlName="status" class="form-control">
-                            <option>Choose</option>
-                            <option selected value="Completed">Completed</option>
-                            <option value="Pending">Pending</option>
-                        </select>
+
                     </div>
+                    
                 </div>
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="input-blocks mb-5">
-                        <label>Payment Method</label>
-                        <select formControlName="payment_method" class="form-control">
-                            <option>Choose</option>
-                            <option selected value="Cash">Cash</option>
-                            <option value="Momo">Momo</option>
-                            <option value="Bank">Bank</option>
-                        </select>
-                        <div
-                            *ngIf="(newSalesFrm.get('payment_method')?.invalid && newSalesFrm.get('payment_method')?.touched) || submitted">
-                            <div *ngIf="newSalesFrm.controls['payment_method'] && newSalesFrm.controls['payment_method'].errors"
-                                class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;">field is
-                                required.</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="input-blocks mb-5">
-                        <label>Amount Received</label>
-                        <input formControlName="amount_paid" id="received" (keyup)="calcBalance($event)"  type="text" class="form-control">
-                        <div
-                            *ngIf="(newSalesFrm.get('amount_paid')?.invalid && newSalesFrm.get('amount_paid')?.touched) || submitted">
-                            <div *ngIf="newSalesFrm.controls['amount_paid'] && newSalesFrm.controls['amount_paid'].errors"
-                                class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;">field is
-                                required.</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6 col-12">
-                    <div class="input-blocks mb-5">
-                        <label>Balance</label>
-                        <input id="balance" readonly type="text" class="form-control">
-                    </div>
-                </div>
+
+                
             </div>
             <div class="table-responsive no-pagination">
                 <table class="table">
@@ -143,6 +142,11 @@
                             <li>
                                 <h4>Grand Total</h4>
                                 <h5>{{newSalesFrm.get('grand_total')?.value |
+                                    currency:'GHc':'symbol':'1.2-2'}}</h5>
+                            </li>
+                            <li>
+                                <h4>Balance</h4>
+                                <h5>{{newSalesFrm.get('balance')?.value |
                                     currency:'GHc':'symbol':'1.2-2'}}</h5>
                             </li>
                         </ul>

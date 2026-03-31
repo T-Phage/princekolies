@@ -20,6 +20,8 @@ declare var $: any;
 export class SalesDashb0ardComponent {
   $sales!: Observable<any>;
 
+  errorLoading:boolean = false;
+
   salesa:any;
   public chart: any;
   recentSales:any[] = [];
@@ -89,11 +91,6 @@ export class SalesDashb0ardComponent {
     this.httpservice.getUserSalesDateAnalyticsAsAdmin(new Date(this.selectedDate).toISOString().split('T')[0]).subscribe({
       next: data => {
         // console.log(data)
-        // console.log(data.salesCount)
-        // console.log(data.cashSalesTotal)
-        // console.log(data.momo)
-        // console.log(data.cash)
-        // console.log(data.bank)
         this.salescount = data.salesCount
         this.todayCashAmount = data.cashSalesTotal
         this.momo = data.momo;
@@ -105,6 +102,8 @@ export class SalesDashb0ardComponent {
       error: error => {
         let msg = error.error.message
         console.log('error :', error)
+        this.loading = false;
+        this.errorLoading = true;
       },
       complete: (()=>{
         this.loading = false;
@@ -144,6 +143,8 @@ export class SalesDashb0ardComponent {
       error: error => {
         let msg = error.error.message
         console.error('error :', error)
+        this.loading = false;
+        this.errorLoading = true;
       },
       complete: (() => {
         this.loading = false;

@@ -93,8 +93,14 @@ export class PosComponent {
           this.products = data
         },
         error: error => {
+          this.loadingService.hide();
           this.errorLoading = true;
-          // console.error('error :', error)
+
+          console.log('error :', error)
+          if (error.status == 401){
+            alert('Your session has expired, you will be redirected to log in');
+            this.router.navigate(['/auth/login'])
+          }
         },
         complete: () => {
           this.loadingService.hide();
@@ -127,9 +133,13 @@ export class PosComponent {
     'reference': [''],
     'status': ['Completed', Validators.required],
     'grand_total': ['', Validators.required],
-    'amount_paid': [0.0],
+    'amount_paid': [0.0, Validators.required],
     'payment_status': ['Paid',],
-    'payment_method':['Cash', Validators.required],
+    'payment_method':[''],
+    'balance': [0.0, Validators.compose([Validators.required, Validators.pattern(this.sharedservice.amount)])],
+    'cash': [0.0, Validators.compose([Validators.required, Validators.pattern(this.sharedservice.amount)])],
+    'momo': [0.0, Validators.compose([Validators.required, Validators.pattern(this.sharedservice.amount)])],
+    'bank':[0.0, Validators.compose([Validators.required, Validators.pattern(this.sharedservice.amount)])],
     'biller': [sessionStorage.getItem('id')],
     'items': this.formBuilder.array([]),
   })
@@ -167,12 +177,29 @@ export class PosComponent {
   // calculate balance
   calcBalance(e: Event){
 
+    // this.newSalesFrm.value.balance = parseFloat(res.toFixed(2));
+    
+    var bank = parseFloat(`${this.newSalesFrm.value.bank}`)
+    var momo = parseFloat(`${this.newSalesFrm.value.momo}`)
+    var cash = parseFloat(`${this.newSalesFrm.value.cash}`)
+    var amount = momo + bank + cash
+
+    console.log(momo, bank, cash)
+
+
     let inp = parseFloat((e.target as HTMLInputElement).value)
-    let res = inp - parseFloat(`${this.newSalesFrm.get('grand_total')?.value}`)
-
-    let sel = document.getElementById('balance') as HTMLInputElement
-
-    sel.value = res.toFixed(2);
+    // let res = inp - parseFloat(`${this.newSalesFrm.get('grand_total')?.value}`)
+    let res = amount - parseFloat(`${this.newSalesFrm.get('grand_total')?.value}`)    
+    
+    this.newSalesFrm.get('balance')?.setValue(parseFloat(res.toFixed(2)))
+    this.newSalesFrm.get('amount_paid')?.setValue(parseFloat(amount.toFixed(2)))
+    if (parseFloat(`${res.toFixed(2)}`) >= 0){
+      this.newSalesFrm.get('status')?.setValue('Completed');
+      this.newSalesFrm.get('payment_status')?.setValue('Paid');
+    } else {
+      this.newSalesFrm.get('status')?.setValue('Pending');
+      this.newSalesFrm.get('payment_status')?.setValue('Unpaid');
+    }
   }
 
   // Function to calculate the grand total
@@ -184,6 +211,16 @@ export class PosComponent {
 
     // Update the grand_total form control if necessary
     this.newSalesFrm.get('grand_total')?.setValue(grandTotal.toFixed(2));
+
+    var bank = parseFloat(`${this.newSalesFrm.value.bank}`)
+    var momo = parseFloat(`${this.newSalesFrm.value.momo}`)
+    var cash = parseFloat(`${this.newSalesFrm.value.cash}`)
+    var amount = momo + bank + cash
+    // console.log(momo, bank, cash)
+    // console.log(amount)
+    console.log(parseFloat(`${this.newSalesFrm.get('grand_total')?.value}`))
+    var balance = amount - parseFloat(`${this.newSalesFrm.get('grand_total')?.value}`)
+    this.newSalesFrm.get('balance')?.setValue(parseFloat(balance.toFixed(2)));
   }
 
 

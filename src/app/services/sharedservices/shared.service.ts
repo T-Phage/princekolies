@@ -10,7 +10,7 @@ export class SharedService {
     private router: Router,
   ) { }
 
-  amount = /^[1-9]\d*(\.\d{0,2})?$/
+  amount = /^[0-9]\d*(\.\d{0,2})?$/
   quantity = /^[1-99999]?$/
 
   responses = {

@@ -33,6 +33,7 @@ export class UsersComponent {
   ) { }
 
   ngOnInit() {
+    this.httpservice.httpself()
     this.users$ = this.httpservice.getUsers()
     this.httpservice.getbranches()
     .subscribe({

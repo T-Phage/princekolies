@@ -53,14 +53,14 @@ export class ProductsComponent {
       .subscribe({
         next: data => {
           this.products = data
-
+          // console.log(data)
           // Initialize DataTable after data loads
           setTimeout(() => {
             this.initDataTable();
-          }, 2000);
+          }, 950);
         },
         error: _error => {
-
+          console.log(_error);
         }
       })
   }

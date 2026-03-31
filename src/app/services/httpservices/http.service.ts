@@ -44,13 +44,18 @@ export class HttpService {
   }
 
   httpself() {
+    console.log('self')
     this.http.get<any>(`${this.baseUrl}/self`, {headers: this.getHeaders(),}).subscribe({
         next: data => {
-          console.log(data)
+          console.log('self')
+          // console.log(data)
         },
         error: error => {
-
-        }
+          console.log(error)
+        },
+        complete() {
+          
+        },
       });
   }
 
@@ -72,7 +77,7 @@ export class HttpService {
     // }
     try {
 
-      console.log("something is happening")
+      // console.log("something is happening")
       this.http.post<any>(`${this.baseUrl}/auth/login`, body, {headers: this.getHeaders(),}).subscribe({
         next: data => {
           this.sharedservice.infoFunc('alert alert-success', 'user authenticated', false, false, false)
@@ -90,9 +95,11 @@ export class HttpService {
           this.role = data.role;
 
           // console.log(data)
-
-          if(data.user.role == "Manager"){
+          if(data.user.role == "Business_Owner"){
             this.router.navigate(['/dashboard/overview-dashboard'])
+          }
+          else if(data.user.role == "Manager"){
+            this.router.navigate(['/dashboard/sales-dashboard'])
           } else {
             this.router.navigate(['/dashboard/pos'])
           }

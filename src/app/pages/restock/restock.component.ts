@@ -94,21 +94,34 @@ export class RestockComponent {
     .subscribe({
       next: data =>{
         console.log(data)
-        this.sharedservice.infoFunc('alert alert-success', data.message, false, false, false) 
+        this.sharedservice.infoFunc('alert alert-success', data.message, false, false, false)
+        // Reset the form after submission
+        this.resetToFirstItem();
+        this.submitted = false; 
       },
       error: err => {
         console.log(err);
         console.log(err.error);
         console.log(err.error.error);
         this.sharedservice.infoFunc('alert alert-danger', err.error.error, false, false, false) 
+        setTimeout(() => {
+          this.sharedservice.infoFunc('', '', false, false, false) 
+        }, 4500);
       },
       complete: ()=> {
         // this.sharedservice.infoFunc('alert alert-info', 'updating stocks', true, true, true)
         setTimeout(() => {
           this.sharedservice.infoFunc('', '', false, false, false) 
-        }, 4000);
+        }, 3000);
       }
     })
+  }
+
+  resetToFirstItem() {
+    while (this.restockForm.controls.items.length > 1) {
+      this.restockForm.controls.items.removeAt(1); // Continually removes the "new" second item until only index 0 remains
+    }
+    this.items.at(0).reset(); // Optional: reset the values of the first item
   }
 
   ngOnInit(): void {

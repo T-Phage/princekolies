@@ -15,6 +15,7 @@ import { HttpService } from '../../services/httpservices/http.service';
 export class DashboardComponent {
 
   manager:boolean = false;
+  owner: boolean = false;
   username = `${sessionStorage.getItem('username')}`
   userrole = `${sessionStorage.getItem('role')}`
 
@@ -36,6 +37,10 @@ export class DashboardComponent {
     let role = `${sessionStorage.getItem('role')}`
     if(role == 'Manager'){
         this.manager = true;
+    }
+
+    if (role == 'Business_Owner'){
+      this.owner = true;
     }
   }
 

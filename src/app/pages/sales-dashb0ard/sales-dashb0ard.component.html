@@ -346,3 +346,7 @@
 </div>
 
 <div *ngIf="loading" style="background:#0000000d;z-index:9999;position:fixed;top:0;left:0;display:flex;width:100vw;height:100vh;cursor:progress;"></div>
+
+<div *ngIf="errorLoading" class="loadingError">
+    <div>Loading failed. <button (click)="refresh()">Click to retry</button></div>
+</div>

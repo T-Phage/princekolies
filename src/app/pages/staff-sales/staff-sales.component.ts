@@ -3,7 +3,8 @@ import { Chart } from 'chart.js';
 import { Observable } from 'rxjs';
 import { HttpService } from '../../services/httpservices/http.service';
 import { CommonModule, CurrencyPipe } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { SharedService } from '../../services/sharedservices/shared.service';
 
 @Component({
   selector: 'app-staff-sales',
@@ -80,6 +81,8 @@ export class StaffSalesComponent {
   constructor(
     private httpservice: HttpService,
     private route: ActivatedRoute,
+    private router: Router,
+    private sharedservice: SharedService,
   ){
     let role = `${sessionStorage.getItem('role')}`
     if(role == 'Manager'){
@@ -90,6 +93,9 @@ export class StaffSalesComponent {
       let jsonUser = JSON.parse(user)
       this.username = jsonUser.name
     }    
+  }
+  refresh() {
+    this.sharedservice.refreshComponentFunc(this.router.url);
   }
   id:any;
   name: any;
@@ -110,7 +116,7 @@ export class StaffSalesComponent {
 
     // let date = new Date()[]
     this.years$ = this.httpservice.getallyears()
-    this.httpservice.getUserSalesDateAnalytics(this.id, this.today.toISOString()).subscribe({
+    this.httpservice.getUserSalesDateAnalytics(this.id, this.today.toISOString().split('T')[0]).subscribe({
       next: data => {
         console.log(data)
         this.salescount = data.salesCount
@@ -126,9 +132,9 @@ export class StaffSalesComponent {
       error: error => {
         let msg = error.error.message
         console.error('error :', error)
+        this.loading = false
       },
       complete: ()=>{
-        this.loading = false
       }
     })
   }
