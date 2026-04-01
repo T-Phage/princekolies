@@ -98,6 +98,7 @@ export class SalesDashb0ardComponent {
         this.bankCashIn = data.bank;
         this.percentageIncrease = data.percentage_increase
         this.productSold = data.productsSold;
+        this.loading = false;
       },
       error: error => {
         let msg = error.error.message
@@ -117,13 +118,13 @@ export class SalesDashb0ardComponent {
   }
 
   ngOnInit(){
-    console.log('selected date:',this.selectedDate);
+    // console.log('selected date:',this.selectedDate);
 
     this.years$ = this.httpservice.getallyears()
     this.httpservice.getSalesAnalytics().subscribe({
       next: data => {
         // this.loading = false;
-        console.log(data)
+        // console.log(data)
         this.salesa = data.monthlySales
         this.salescount = data.todaySales
         this.todayCashAmount = data.todayCashAmount
@@ -135,8 +136,8 @@ export class SalesDashb0ardComponent {
         this.cashIn = data.cash;
         this.bankCashIn = data.bank;
         this.productSold = data.productsSold;
-
-        console.log(data.recentSales)
+        this.loading = false;
+        // console.log(data.recentSales)
         // console.log(dara)
          if(this.manager){this.createChart()}
       },

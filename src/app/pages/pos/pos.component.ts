@@ -49,6 +49,30 @@ export class PosComponent {
     this.sharedservice.refreshComponentFunc(url)
   }
 
+  // creditChange(e: Event){
+  //   var customerInfo = document.getElementsByClassName('customer-info') as HTMLCollection
+  //   let checked = (e.target as HTMLInputElement).checked
+  //   console.log(checked)
+  //   if(checked){
+  //     this.newSalesFrm.value.payment_status = 'Unpaid';
+  //     // this.newSalesFrm
+  //     this.newSalesFrm.get('customer_phone')?.setValidators([Validators.required]);
+  //     this.newSalesFrm.get('customer_name')?.setValidators([Validators.required]);
+  //     this.newSalesFrm.get('customer_business_name')?.setValidators([Validators.required]);
+  //     this.newSalesFrm.get('customer_address')?.setValidators([Validators.required]);
+      
+  //     customerInfo[0].classList.add('show')
+  //   }else{
+  //     this.newSalesFrm.value.payment_status = 'Paid';
+      
+  //     this.newSalesFrm.get('customer_phone')?.setValidators([])
+  //     this.newSalesFrm.get('customer_name')?.setValidators([])
+  //     this.newSalesFrm.get('customer_business_name')?.setValidators([])
+  //     this.newSalesFrm.get('customer_address')?.setValidators([])
+  //     customerInfo[0].classList.remove('show')
+  //   }
+  // } 
+
   // formats: BarcodeFormat[] = [BarcodeFormat.QR_CODE, BarcodeFormat.EAN_13, BarcodeFormat.UPC_A];
   // scannedCode: string | null = null;
   // hasTorch: boolean = false;
@@ -130,6 +154,9 @@ export class PosComponent {
 
   newSalesFrm = this.formBuilder.group({
     'customer_name': ['_'],
+    // 'customer_address': [''],
+    // 'customer_phone': [''],
+    // 'customer_business_name': [''],
     'reference': [''],
     'status': ['Completed', Validators.required],
     'grand_total': ['', Validators.required],
