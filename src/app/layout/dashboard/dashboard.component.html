@@ -155,9 +155,12 @@
                                         ></i><span>Sales</span></a>
                             </li>
                             
+                            <!-- <li [className]="router.url == '/dashboard/debtors'? 'active': '' "><a [routerLink]="['/dashboard/debtors']"><i
+                                        ></i><span>Debtors</span></a></li> -->
+
                             <li [className]="router.url == '/dashboard/pos'? 'active': '' "><a [routerLink]="['/dashboard/pos']"><i
                                         ></i><span>POS</span></a></li>
-
+                            
                             <!-- <li [className]="router.url == '/dashboard/returns'? 'active': '' "><a [routerLink]="['/dashboard/returns']"><i
                                 ></i><span>Returns</span></a></li> -->
                         </ul>
@@ -231,6 +234,9 @@
                                     [routerLink]="['/dashboard/sales']"><i
                                         ></i><span>Sales</span></a>
                             </li>
+                            
+                             <!-- <li (click)="toggleMenu()" [className]="router.url == '/dashboard/debtors'? 'active': '' "><a [routerLink]="['/dashboard/debtors']"><i
+                                        ></i><span>Debtors</span></a></li> -->
                             
                             <li (click)="toggleMenu()" [className]="router.url == '/dashboard/pos'? 'active': '' "><a [routerLink]="['/dashboard/pos']"><i
                                         ></i><span>POS</span></a></li>

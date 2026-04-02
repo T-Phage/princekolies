@@ -9,6 +9,7 @@ import { ErrormodalComponent } from '../../components/errormodal/errormodal.comp
 // import { BarcodeFormat } from '@zxing/library';
 import { LoadingService } from '../../services/loadingservice/loading.service';
 import { Router } from '@angular/router';
+import { SwalservicesService } from '../../services/swal/swalservices.service';
 
 declare const window: any;
 
@@ -27,11 +28,15 @@ export class PosComponent {
   // products$!: Observable<any>;
 
   products: any[] = []
+  customers: any[] = [];
 
   selectedProduct: any;
+  selectedCustomer: any;
   username:any;
 
   errorLoading: boolean= false;
+
+  oncredit: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -40,6 +45,7 @@ export class PosComponent {
     private printservice: PrintService,
     public loadingService: LoadingService,
     public router: Router,
+    private swalService: SwalservicesService,
   ) {
     this.username = sessionStorage.getItem('username')
    }
@@ -49,29 +55,48 @@ export class PosComponent {
     this.sharedservice.refreshComponentFunc(url)
   }
 
-  // creditChange(e: Event){
-  //   var customerInfo = document.getElementsByClassName('customer-info') as HTMLCollection
-  //   let checked = (e.target as HTMLInputElement).checked
-  //   console.log(checked)
-  //   if(checked){
-  //     this.newSalesFrm.value.payment_status = 'Unpaid';
-  //     // this.newSalesFrm
-  //     this.newSalesFrm.get('customer_phone')?.setValidators([Validators.required]);
-  //     this.newSalesFrm.get('customer_name')?.setValidators([Validators.required]);
-  //     this.newSalesFrm.get('customer_business_name')?.setValidators([Validators.required]);
-  //     this.newSalesFrm.get('customer_address')?.setValidators([Validators.required]);
+  creditChange(e: Event){
+    var customerInfo = document.getElementsByClassName('customer-info') as HTMLCollection
+    let checked = (e.target as HTMLInputElement).checked
+    console.log(checked)
+    this.oncredit = checked;
+    if(checked){
+      this.newSalesFrm.get('payment_status')?.setValue('Unpaid');
+      // this.newSalesFrm
+      this.newSalesFrm.get('customer_name')?.setValidators([Validators.required]);
+      this.newSalesFrm.get('customer_name')?.updateValueAndValidity();
+      // 
+      this.newSalesFrm.get('customer_phone')?.setValidators([Validators.required]);
+      this.newSalesFrm.get('customer_phone')?.updateValueAndValidity();
+      // 
+      this.newSalesFrm.get('customer_business_name')?.setValidators([Validators.required]);
+      this.newSalesFrm.get('customer_business_name')?.updateValueAndValidity();
+      // 
+      this.newSalesFrm.get('customer_address')?.setValidators([Validators.required]);
+      this.newSalesFrm.get('customer_address')?.updateValueAndValidity();
       
-  //     customerInfo[0].classList.add('show')
-  //   }else{
-  //     this.newSalesFrm.value.payment_status = 'Paid';
+      customerInfo[0].classList.add('show')
+    }else{
+      this.newSalesFrm.get('payment_status')?.setValue('Paid');
       
-  //     this.newSalesFrm.get('customer_phone')?.setValidators([])
-  //     this.newSalesFrm.get('customer_name')?.setValidators([])
-  //     this.newSalesFrm.get('customer_business_name')?.setValidators([])
-  //     this.newSalesFrm.get('customer_address')?.setValidators([])
-  //     customerInfo[0].classList.remove('show')
-  //   }
-  // } 
+      this.newSalesFrm.get('customer_name')?.setValidators([])
+      this.newSalesFrm.get('customer_name')?.setValue('')
+      this.newSalesFrm.get('customer_name')?.updateValueAndValidity();
+      //
+      this.newSalesFrm.get('customer_phone')?.setValidators([])
+      this.newSalesFrm.get('customer_phone')?.setValue('')
+      this.newSalesFrm.get('customer_phone')?.updateValueAndValidity();
+      // 
+      this.newSalesFrm.get('customer_business_name')?.setValidators([])
+      this.newSalesFrm.get('customer_business_name')?.setValue('');
+      this.newSalesFrm.get('customer_business_name')?.updateValueAndValidity();
+      // 
+      this.newSalesFrm.get('customer_address')?.setValidators([]);
+      this.newSalesFrm.get('customer_address')?.setValue('');
+      this.newSalesFrm.get('customer_address')?.updateValueAndValidity();
+      customerInfo[0].classList.remove('show')
+    }
+  } 
 
   // formats: BarcodeFormat[] = [BarcodeFormat.QR_CODE, BarcodeFormat.EAN_13, BarcodeFormat.UPC_A];
   // scannedCode: string | null = null;
@@ -110,6 +135,17 @@ export class PosComponent {
   ngOnInit(): void {
     // console.log(this.newSalesFrm.value)
     this.loadingService.show()
+    this.httpservice.getAllCustomers()
+      .subscribe({
+        next: data => {
+          console.log(data)
+          this.customers = data
+        },
+        error: error => {
+          
+        }
+      });
+
     this.httpservice.getProducts(1, 10)
       .subscribe({
         next: data => {
@@ -153,17 +189,20 @@ export class PosComponent {
   }
 
   newSalesFrm = this.formBuilder.group({
-    'customer_name': ['_'],
-    // 'customer_address': [''],
-    // 'customer_phone': [''],
-    // 'customer_business_name': [''],
+    'customer_id': [''],
+    'customer_name': [''],
+    'customer_address': [''],
+    'customer_phone': [''],
+    'customer_business_name': [''],
+    'identity_number': [''],
+    'identification_type': [''],
     'reference': [''],
     'status': ['Completed', Validators.required],
     'grand_total': ['', Validators.required],
     'amount_paid': [0.0, Validators.required],
     'payment_status': ['Paid',],
     'payment_method':[''],
-    'balance': [0.0, Validators.compose([Validators.required, Validators.pattern(this.sharedservice.amount)])],
+    'balance': [0.0, Validators.compose([Validators.required])], // Validators.pattern(this.sharedservice.amount)])],
     'cash': [0.0, Validators.compose([Validators.required, Validators.pattern(this.sharedservice.amount)])],
     'momo': [0.0, Validators.compose([Validators.required, Validators.pattern(this.sharedservice.amount)])],
     'bank':[0.0, Validators.compose([Validators.required, Validators.pattern(this.sharedservice.amount)])],
@@ -180,7 +219,7 @@ export class PosComponent {
       console.log('completed')
     } else {
       this.newSalesFrm.get('amount_paid')?.setValidators([Validators.required])
-      console.log('other')
+      // console.log('other')
     }
   }
 
@@ -277,6 +316,26 @@ export class PosComponent {
     }
   }
 
+  selectCustomer(evt: any){
+    console.log('click')
+    console.log(this.customers)
+    const inputValue = evt.target.value;
+    console.log(inputValue)
+    console.log(inputValue.toString().split(' | ')[0])
+    this.selectedCustomer = this.customers.find(customer => customer.name === inputValue);
+    
+    console.log(this.selectedCustomer)
+
+    // this.newSalesFrm.get('customer_name')?.setValue(this.selectedCustomer.name)
+    this.newSalesFrm.get('customer_phone')?.setValue(this.selectedCustomer.phone)
+    this.newSalesFrm.get('customer_business_name')?.setValue(this.selectedCustomer.business_name)
+    this.newSalesFrm.get('customer_address')?.setValue(this.selectedCustomer.address)
+    this.newSalesFrm.get('customer_id')?.setValue(this.selectedCustomer.id)
+    this.newSalesFrm.get('identification_type')?.setValue(this.selectedCustomer.identification_type)
+    this.newSalesFrm.get('identity_number')?.setValue(this.selectedCustomer.identity_number)
+    this.newSalesFrm.get('customer_id')?.setValue(this.selectedCustomer.id)
+  }
+
   isProductExpired(expiryDate:Date) {
     if (expiryDate == null || undefined){
       return false
@@ -297,20 +356,31 @@ export class PosComponent {
   submitSalesFrm(evt: Event){
     evt.preventDefault()
 
-    this.newSalesFrm.get('status')?.enable();
-    this.newSalesFrm.get('payment_status')?.enable();
+    // this.newSalesFrm.get('status')?.enable();
+    // this.newSalesFrm.get('payment_status')?.enable();
     console.log(this.newSalesFrm)
     console.log(this.newSalesFrm.value)
 
     this.submitted = true
+
+    console.log(this.newSalesFrm.get('balance')!.value)
+    console.log(this.oncredit)
+    if((this.newSalesFrm.get('balance')!.value ?? 0) < 0 && !this.oncredit ){
+      // alert('Customer details are required for credit buys')
+      this.swalService.fireWarning('Customer details are required for credit buys')
+      return
+    }
+    if(parseFloat(`${this.newSalesFrm.get('grand_total')!.value}`) < 0 && (!this.oncredit)) {
+      // alert('Amount paid by customer is less the grand total. \n Kindly get customer details')
+      this.swalService.fireWarning('Amount paid by customer is less the grand total. \n Kindly get customer details')
+    }
 
     if (this.newSalesFrm.valid && this.newSalesFrm.controls.items.length >= 1){
       // console.log(this.newSalesFrm.value)
       this.httpservice.addNewSale(this.newSalesFrm.value, this.receiptContent)
       .subscribe({
         next: data => {
-          // this.newSalesFrm.get('status')?.disable();
-          // this.newSalesFrm.get('payment_status')?.disable();
+          
           // 
           this.newSalesFrm.controls.reference?.setValue(`${data.sale.reference}`)
           this.sharedservice.infoFunc('alert alert-success', data.message, false, false, false) 
@@ -321,12 +391,17 @@ export class PosComponent {
           setTimeout(()=>{
             // console.log(this.newSalesFrm.controls.reference)
             printIt(ctn)
-          }, 4000)
+          }, 1000)
 
           setTimeout(() => {
             this.newSalesFrm.controls.items.clear();
-          }, 6000);
-          
+            this.newSalesFrm.reset();
+            this.submitted = false;
+            this.newSalesFrm.get('bank')?.setValue(0.0)
+            this.newSalesFrm.get('cash')?.setValue(0.0)
+            this.newSalesFrm.get('momo')?.setValue(0.0)
+            this.newSalesFrm.get('amount_paid')?.setValue(0.0)
+          }, 2000);
           
         },
         error: error => {
@@ -334,13 +409,11 @@ export class PosComponent {
           console.error('error :', error)
           this.sharedservice.infoFunc('alert alert-danger', msg, false, false, false)
           setTimeout(() => this.sharedservice.infoFunc('', '', false, false, false),4000)
-          // this.newSalesFrm.get('status')?.disable();
-          // this.newSalesFrm.get('payment_status')?.disable();
+          
         }
       })
       // this.printReceipt();
     }
   }
 
-  
 }

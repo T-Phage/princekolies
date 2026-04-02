@@ -18,6 +18,7 @@ import { UsersComponent } from './pages/users/users.component';
 import { ExpensesComponent } from './pages/expenses/expenses.component';
 import { ExpensesCategoryComponent } from './pages/expenses-category/expenses-category.component';
 import { RestockComponent } from './pages/restock/restock.component';
+import { DebtorsComponent } from './pages/debtors/debtors.component';
 
 export const routes: Routes = [
     {
@@ -31,6 +32,7 @@ export const routes: Routes = [
             {path: 'restock', component: RestockComponent},
             {path: 'low-stocks', component: LowStockComponent},
             {path: 'sales', component: SalesComponent},
+            {path: 'debtors', component: DebtorsComponent},
             {path: 'overview-dashboard', component: OverviewDashboardComponent},
             {path: 'sales-dashboard', component: SalesDashb0ardComponent},
             {path: 'users', component: UsersComponent},

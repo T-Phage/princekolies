@@ -24,7 +24,7 @@ export class SharedService {
 
   togglesideNav = true
   toggleFunc(){
-    alert("origin")
+    // alert("origin")
     this.togglesideNav = !this.togglesideNav
   }
 

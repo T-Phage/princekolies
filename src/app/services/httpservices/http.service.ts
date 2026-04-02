@@ -272,5 +272,13 @@ export class HttpService {
   postRestock(body: any){
     return this.http.post<any>(`${this.baseUrl}/restock`, body, {headers: this.getHeaders()})
   }
+
+  getAllCustomers(){
+    return this.http.get<any>(`${this.baseUrl}/business/customers`, {headers: this.getHeaders()})
+  }
+
+  getAllDebtors(){
+    return this.http.get<any>(`${this.baseUrl}/unpaid/sales`, {headers: this.getHeaders()})
+  }
   
 }

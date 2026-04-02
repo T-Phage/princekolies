@@ -27,18 +27,18 @@
                         </datalist>
                     </div>
                 </div>
-                <!-- <div class="col-lg-2 col-sm-6 col-12" style="display: flex;flex-direction: column;justify-content: center;align-items: center;">
+                <div class="col-lg-2 col-sm-6 col-12" style="display: flex;flex-direction: column;justify-content: center;align-items: center;">
                     <div class="input-blocks">
                         <label>Credit</label>
                         <input (change)="creditChange($event);" value="Credit" type="checkbox">
                     </div>
-                </div> -->
+                </div>
             </div>
-            <!-- <div class="row customer-info accordion-collapse collapse" id="collapseOne" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+            <div class="row customer-info accordion-collapse collapse" id="collapseOne" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                 <div class="col-lg-6 col-sm-6 col-12">
                     <div class="input-blocks">
                         <label>Customer Name</label>
-                        <input formControlName="customer_name" type="text" class="form-control">
+                        <input (change)="selectCustomer($event)" formControlName="customer_name" type="text" class="form-control" list="list-customers">
                         <div
                             *ngIf="(newSalesFrm.get('customer_name')?.invalid && newSalesFrm.get('customer_name')?.touched) || submitted">
                             <div *ngIf="newSalesFrm.controls['customer_name'] && newSalesFrm.controls['customer_name'].errors"
@@ -46,6 +46,11 @@
                                 required.</div>
                         </div>
                     </div>
+                    <datalist id="list-customers">
+                            <option class="option" *ngFor="let customer of customers">
+                                {{customer.name}}
+                            </option>
+                    </datalist>
                 </div>
                 <div class="col-lg-6 col-sm-6 col-12">
                     <div class="input-blocks">
@@ -59,9 +64,48 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-lg-6 col-sm-6 col-12">
+                    <div class="input-blocks">
+                        <label>Customer Address</label>
+                        <input formControlName="customer_address" type="text" class="form-control">
+                        <div
+                            *ngIf="(newSalesFrm.get('customer_address')?.invalid && newSalesFrm.get('customer_address')?.touched) || submitted">
+                            <div *ngIf="newSalesFrm.controls['customer_address'] && newSalesFrm.controls['customer_address'].errors"
+                                class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;">field is
+                                required.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6 col-12">
+                    <div class="input-blocks">
+                        <label>Customer Business Name</label>
+                        <input formControlName="customer_business_name" type="text" class="form-control">
+                        <div
+                            *ngIf="(newSalesFrm.get('customer_business_name')?.invalid && newSalesFrm.get('customer_business_name')?.touched) || submitted">
+                            <div *ngIf="newSalesFrm.controls.customer_business_name.errors?.['required']"
+                                class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;">field is
+                                required.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6 col-12">
+                    <div class="input-blocks">
+                        <label>Identification Type</label>
+                        <select formControlName="identification_type" class="form-control">
+                            <option value="National ID Card">National ID Card</option>
+                            <option value="Passport">Passport</option>
+                            <option value="License">License</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6 col-12">
+                    <div class="input-blocks">
+                        <label>Identification Number</label>
+                        <input formControlName="identity_number" type="text" class="form-control">
+                    </div>
+                </div>
+            </div>
             
-
-            </div> -->
             <div class="row">
                 <div class="col-lg-12 col-12">
                     <div class="input-blocks mb-1">
