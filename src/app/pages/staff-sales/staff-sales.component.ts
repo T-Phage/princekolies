@@ -67,7 +67,7 @@ export class StaffSalesComponent {
       },
       error: error => {
         let msg = error.error.message
-        console.error('error :', error)
+        console.log('error :', error)
       },
       complete: ()=>{
         this.loading = false
@@ -126,6 +126,7 @@ export class StaffSalesComponent {
         this.bankCashIn = data.bank;
         this.percentageIncrease = data.percentage_increase
         this.productSold = data.productsSold;
+        this.loading = false
         // console.log(data.recentSales)
         //  if(this.manager){this.createChart()}
       },
@@ -135,6 +136,7 @@ export class StaffSalesComponent {
         this.loading = false
       },
       complete: ()=>{
+        this.loading = false
       }
     })
   }

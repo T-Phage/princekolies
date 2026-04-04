@@ -13,7 +13,6 @@ export class ValidationService {
 
   togglesideNav:boolean = true
   toggleFunc(){
-    alert("origin")
     this.togglesideNav = !this.togglesideNav
   }
 
