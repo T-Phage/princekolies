@@ -143,11 +143,12 @@ export class CategoryComponent {
           this.sharedservices.infoFunc('alert alert-success', 'category created', false, false, false)
           // console.log(data)
           $('.datanewcat').DataTable().destroy()
-          this.categories$ = this.httpservices.getCategories(1, 10)
+          // this.categories$ = this.httpservices.getCategories(1, 10)
           this.httpservices.getCategories(1, 10)
             .subscribe({
               next: data => {
                 this.categories = data
+                this.dataTableInit();
               },
               error: error => {}
             })
@@ -155,27 +156,27 @@ export class CategoryComponent {
           this.sharedservices.infoFunc('alert alert-success', 'category created', false, false, false)
           setTimeout(()=>{
             this.sharedservices.infoFunc('', '', false, false, false)
-            $('.datanewcat').DataTable({
-            "bFilter": true,
-          // "sDom": 'fBtlpi',
-            "dom": 'pftil',
-            "ordering": true,
-            "language": {
-              search: ' ',
-              sLengthMenu: '_MENU_',
-              searchPlaceholder: "Search",
-              info: "_START_ - _END_ of _TOTAL_ items",
-              paginate: {
-                next: ' <i class="fa fa-angle-right"></i>',
-                previous: '<i class="fa fa-angle-left"></i> '
-              },
-            },
-            initComplete: (_settings: any, _json: any) => {
-              $('.dataTables_filter').appendTo('#tableSearch');
-              $('.dataTables_filter').appendTo('.search-input');
-              $('#info').appendTo('#info')
-            },
-          })
+          //   $('.datanewcat').DataTable({
+          //   "bFilter": true,
+          //   "sDom": 'fBtlpi',
+          //   // "dom": 'pftil',
+          //   "ordering": true,
+          //   "language": {
+          //     search: ' ',
+          //     sLengthMenu: '_MENU_',
+          //     searchPlaceholder: "Search",
+          //     info: "_START_ - _END_ of _TOTAL_ items",
+          //     paginate: {
+          //       next: ' <i class="fa fa-angle-right"></i>',
+          //       previous: '<i class="fa fa-angle-left"></i> '
+          //     },
+          //   },
+          //   initComplete: (_settings: any, _json: any) => {
+          //     $('.dataTables_filter').appendTo('#tableSearch');
+          //     $('.dataTables_filter').appendTo('.search-input');
+          //     $('#info').appendTo('#info')
+          //   },
+          // })
         }, 2000)
         },
         error: error => {
@@ -258,18 +259,21 @@ export class CategoryComponent {
       error: (error) => {
         console.error('error:', error);
       }
+    
     });
   }
 
   ngOnInit() {
     this.role = sessionStorage.getItem('role') || '';
-    // this.loadCategories()
-    this.categories$ = this.httpservices.getCategories(1, 10);
 
     this.httpservices.getCategories(1, 10)
     .subscribe({
       next: data => {
         this.categories = data
+        setTimeout(()=>{
+          this.dataTableInit();
+
+        }, 250)
       },
       error: error => {}
     })
@@ -366,32 +370,17 @@ export class CategoryComponent {
   }
 
   refreshData(){
-    this.categories$ = this.httpservices.getCategories(1, 10)
     $('.datanewcat').DataTable().destroy();
-    setTimeout(()=> {
-      $('.datanewcat').DataTable({
-        "bFilter": true,
-        // "sDom": 'fBtlpi',
-        "dom": 'pftil',
-        "ordering": true,
-        "language": {
-          search: ' ',
-          emptyTable: "No data available in table",
-          infoEmpty: "",
-          sLengthMenu: '_MENU_',
-          searchPlaceholder: "Search",
-          info: "_START_ - _END_ of _TOTAL_ items",
-          paginate: {
-            next: ' <i class=" fa fa-angle-right"></i>',
-            previous: '<i class="fa fa-angle-left"></i> '
-          },
-        },
-        initComplete: (_settings: any, _json: any) => {
-          $('.dataTables_filter').appendTo('#tableSearch');
-          $('.dataTables_filter').appendTo('.search-input');
-        },
-      }); 
-    },3000)
+    this.httpservices.getCategories(1, 10)
+    .subscribe({
+      next: data => {
+        this.categories = data
+        setTimeout(()=> {
+          this.dataTableInit(); 
+        },3000)
+      },
+      error: error => {}
+    })
   }
 
   ngAfterViewInit() {
@@ -402,39 +391,63 @@ export class CategoryComponent {
       // this.products$.subscribe({
       //   next: data => {
       //     if(data){
-      this.zone.runOutsideAngular(() => {
-        setTimeout(() => {
-          const preloader = document.getElementById('global-loader') as HTMLDivElement;
-          if (preloader) {
-            preloader.style.display = 'none';
-          }
-          $('.datanewcat').DataTable({
+      // this.zone.runOutsideAngular(() => {
+      //   setTimeout(() => {
+      //     const preloader = document.getElementById('global-loader') as HTMLDivElement;
+      //     if (preloader) {
+      //       preloader.style.display = 'none';
+      //     }
+      //     $('.datanewcat').DataTable({
+      //       "bFilter": true,
+      //       // "sDom": 'fBtlpi',
+      //       "dom": 'pftil',
+      //       "ordering": true,
+      //       "language": {
+      //         emptyTable: "No data available ",
+      //         infoEmpty: "",
+      //         search: ' ',
+      //         sLengthMenu: '_MENU_',
+      //         searchPlaceholder: "Search",
+      //         info: "_START_ - _END_ of _TOTAL_ items",
+      //         paginate: {
+      //           next: ' <i class=" fa fa-angle-right"></i>',
+      //           previous: '<i class="fa fa-angle-left"></i> '
+      //         },
+      //       },
+      //       initComplete: (_settings: any, _json: any) => {
+      //         $('.dataTables_filter').appendTo('#tableSearch');
+      //         $('.dataTables_filter').appendTo('.search-input');
+  
+      //       },
+      //     });  // Initialize jQuery DataTable outside Angular’s zone
+      //   }, 2000)
+      // }
+      // );
+    
+  }
+
+  dataTableInit(){
+    $('.datanewcat').DataTable({
             "bFilter": true,
-            // "sDom": 'fBtlpi',
-            "dom": 'pftil',
+            "sDom": 'fBtlpi',
+            // "dom": 'pftil',
             "ordering": true,
             "language": {
-              emptyTable: "No data available ",
-              infoEmpty: "",
               search: ' ',
               sLengthMenu: '_MENU_',
               searchPlaceholder: "Search",
               info: "_START_ - _END_ of _TOTAL_ items",
               paginate: {
-                next: ' <i class=" fa fa-angle-right"></i>',
+                next: ' <i class="fa fa-angle-right"></i>',
                 previous: '<i class="fa fa-angle-left"></i> '
               },
             },
             initComplete: (_settings: any, _json: any) => {
               $('.dataTables_filter').appendTo('#tableSearch');
               $('.dataTables_filter').appendTo('.search-input');
-  
+              $('#info').appendTo('#info')
             },
-          });  // Initialize jQuery DataTable outside Angular’s zone
-        }, 2000)
-      }
-      );
-    
+    });
   }
 
   ngOnDestroy(): void {

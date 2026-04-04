@@ -30,8 +30,6 @@ export class ProductsComponent {
   totalProducts = 0;
   categories$!: Observable<any>
 
-  products$!: Observable<any>;
-
   role:string = '';
 
   constructor(
@@ -46,7 +44,6 @@ export class ProductsComponent {
   
   ngOnInit() {
     this.role = sessionStorage.getItem('role') || '';
-    this.products$ = this.httpservice.getProducts(this.currentPage, this.perPage);
     this.categories$ = this.httpservice.getCategories(1, 10)
 
     this.httpservice.getProducts(this.currentPage, this.perPage)
@@ -57,10 +54,14 @@ export class ProductsComponent {
           // Initialize DataTable after data loads
           setTimeout(() => {
             this.initDataTable();
-          }, 950);
+          }, 200);
         },
         error: _error => {
           console.log(_error);
+          this.initDataTable();
+          if(_error.error.staus === 401){
+            this.httpservice.httpLogout()
+          }
         }
       })
   }
@@ -123,44 +124,13 @@ export class ProductsComponent {
         .subscribe({
           next: data => {
             this.sharedservice.infoFunc('alert alert-success', 'product deleted', false, false, false)
-            console.log(data)
+            // console.log(data)
             $('.datanew').DataTable().destroy()
-            this.products$ = this.httpservice.getProducts(1, 10);
             this.categories$ = this.httpservice.getCategories(1, 10);
             // this.users$.
             setTimeout(()=>this.sharedservice.infoFunc('', '', false, false, false),4000)
             setTimeout(() =>{ 
-
-              $('.datanew').DataTable({
-                "bFilter": true,
-                // "sDom": 'fBtlpi',
-                "dom": 'pftil',
-                "ordering": true,
-                "language": {
-                  search: ' ',
-                  emptyTable: "No data available in table",
-                  infoEmpty: "",
-                  sLengthMenu: '_MENU_',
-                  searchPlaceholder: "Search",
-                  info: "_START_ - _END_ of _TOTAL_ items",
-                  paginate: {
-                    next: ' <i class="fa fa-angle-right"></i>',
-                    previous: '<i class="fa fa-angle-left"></i> '
-                  },
-                },
-                initComplete: (_settings: any, _json: any) => {
-                  $('.dataTables_filter').appendTo('#tableSearch');
-                  $('.dataTables_filter').appendTo('.search-input');
-                  $('#info').appendTo('#info')
-                },
-              
-              })
-              // $('#delete-units').modal('hide')
-              // $('#delete-units').modal('hide').on('hidden.bs.modal', function () {
-              //   $('body').removeClass('modal-open'); // Ensure body scroll is enabled
-              //   $('body').css('overflow', 'auto');
-              //   $('.modal-backdrop').remove(); // Remove leftover backdrop
-              // });
+                this.initDataTable();
             }, 2000)
             this.hide = false;
             // setTimeout(()=>this.sharedservice.refreshComponentFunc('dashboard/users'), 2000)
@@ -186,11 +156,10 @@ export class ProductsComponent {
           $('.datanew').DataTable().destroy()
           // $('.datanew ').empty()
           this.sharedservice.infoFunc('alert alert-success', 'product updated', false, false, false) 
-          this.products$ = this.httpservice.getProducts(this.currentPage, this.perPage);
           this.categories$ = this.httpservice.getCategories(1, 10)
           
           // Reset form and product ID
-          this.resetForm();
+          // this.resetForm();
           
           setTimeout(()=> {
             this.sharedservice.infoFunc('','', false,false,false)
@@ -355,7 +324,6 @@ export class ProductsComponent {
   refreshData(){
     // location.reload();
     this.sharedservice.refreshComponentFunc('dashboard/products');
-    // this.products$ = this.httpservice.getProducts(1, 10);
     // this.categories$ = this.httpservice.getCategories(1, 10);
     // $('.datanew').DataTable().destroy();
     // setTimeout(()=> {
@@ -387,9 +355,6 @@ export class ProductsComponent {
   // ngAfterViewInit(): void {
   //   // Hide preloader once the view is fully initialized
 
-  //   // this.products$.subscribe({
-  //   //   next: data => {
-  //   //     if(data){
   //   this.zone.runOutsideAngular(() => {
   //     setTimeout(() => {
   //       const preloader = document.getElementById('global-loader') as HTMLDivElement;
@@ -436,7 +401,8 @@ export class ProductsComponent {
 
       $('.datanew').DataTable({
         bFilter: true,
-        dom: 'pftil',
+        // dom: 'pftil',
+        "sDom": 'fBtlpi',
         ordering: true,
         language: {
           emptyTable: "No data available in table",

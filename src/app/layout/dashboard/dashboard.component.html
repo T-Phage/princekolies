@@ -161,8 +161,8 @@
                             <li [className]="router.url == '/dashboard/pos'? 'active': '' "><a [routerLink]="['/dashboard/pos']"><i
                                         ></i><span>POS</span></a></li>
                             
-                            <!-- <li [className]="router.url == '/dashboard/returns'? 'active': '' "><a [routerLink]="['/dashboard/returns']"><i
-                                ></i><span>Returns</span></a></li> -->
+                            <li [className]="router.url == '/dashboard/returns'? 'active': '' "><a [routerLink]="['/dashboard/returns']"><i
+                                ></i><span>Returns</span></a></li>
                         </ul>
                     </li>
                     <li *ngIf="manager || owner" class="submenu-open">
@@ -241,8 +241,8 @@
                             <li (click)="toggleMenu()" [className]="router.url == '/dashboard/pos'? 'active': '' "><a [routerLink]="['/dashboard/pos']"><i
                                         ></i><span>POS</span></a></li>
 
-                            <!-- <li (click)="toggleMenu()" [className]="router.url == '/dashboard/returns'? 'active': '' "><a [routerLink]="['/dashboard/returns']"><i
-                                ></i><span>Returns</span></a></li> -->
+                            <li (click)="toggleMenu()" [className]="router.url == '/dashboard/returns'? 'active': '' "><a [routerLink]="['/dashboard/returns']"><i
+                                ></i><span>Returns</span></a></li>
                         </ul>
                     </li>
                     <li *ngIf="manager || owner" class="submenu-open">
