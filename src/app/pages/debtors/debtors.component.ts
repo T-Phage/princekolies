@@ -7,11 +7,12 @@ import { CommonModule, CurrencyPipe } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SharedService } from '../../services/sharedservices/shared.service';
 import { ErrormodalComponent } from '../../components/errormodal/errormodal.component';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-debtors',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ErrormodalComponent],
+  imports: [RouterLink, CommonModule, ReactiveFormsModule, ErrormodalComponent],
   templateUrl: './debtors.component.html',
   styleUrl: './debtors.component.css',
   providers: [CurrencyPipe],
@@ -39,6 +40,7 @@ export class DebtorsComponent {
     phone: '',
     items: [],
   }
+  canAddBedtor: boolean = false;
 
   constructor(
     private httpService: HttpService,
@@ -47,7 +49,20 @@ export class DebtorsComponent {
     private swalService: SwalservicesService,
     private sharedservice: SharedService,
     private router: Router,
-  ) { }
+  ) { 
+    let role = sessionStorage.getItem('role');
+    if(role == 'Business_Owner' || role == 'Manager'){
+      this.canAddBedtor = true;
+    }
+  }
+
+  refreshData() {
+    const table = document.querySelector('.debtorsnew') as HTMLElement;
+    if (table) {
+      $(table).DataTable().destroy();
+    }
+    this.sharedservice.refreshComponentFunc(this.router.url);
+  }
 
   debtorClicked(customer_id:any,sale_id:any,customer_name:any,reference:any,status:any,grand_total:any,payment_status:any,amount_paid:any,biller:any,items:any,phone:any,identity_type:any,identity_number:any){
     this.clickedDebtor.customer_id = customer_id
@@ -64,7 +79,7 @@ export class DebtorsComponent {
     this.clickedDebtor.identity_number = identity_number
     this.clickedDebtor.items = JSON.parse(items);
 
-    console.log(this.clickedDebtor)
+    // console.log(this.clickedDebtor)
     this.editPaymentFrm.get('customer_id')?.setValue(this.clickedDebtor.customer_id)
     this.editPaymentFrm.get('sale_id')?.setValue(this.clickedDebtor.sale_id);
     this.editPaymentFrm.get('reference')?.setValue(this.clickedDebtor.reference);
@@ -85,7 +100,6 @@ export class DebtorsComponent {
     evt.preventDefault();
     this.sharedservice.infoFunc('alert alert-info', 'Processing payment...', true, true, true);
     this.submitted = true;
-    console.log(this.editPaymentFrm)
     if(!this.editPaymentFrm.valid){
       this.swalService.fireWarning("Please fill all required fields with valid values")
       this.sharedservice.infoFunc('', '', false, false, false);
@@ -138,12 +152,12 @@ export class DebtorsComponent {
     this.httpService.getAllDebtors()
     .subscribe({
       next: (res) => {
-        console.log(res.unpaidSales)
+        // console.log(res.unpaidSales)
         this.debtors = res.unpaidSales
         this.datatableService.initiateDataTable('.debtorsnew')
       },
       error: (err) => {
-        console.log(err)
+        // console.log(err)
         if(err.error.staus === 401){
           this.httpService.httpLogout()
         }

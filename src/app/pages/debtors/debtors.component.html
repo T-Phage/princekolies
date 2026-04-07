@@ -5,34 +5,17 @@
             <h6>Manage your debtors</h6>
         </div>
     </div>
+    <div class="page-btn">
+        <a *ngIf="canAddBedtor"  [routerLink]="['/dashboard/new-debtor']" class="btn btn-added"><i data-feather="plus-circle" class="me-2"></i>
+            Input Debtor</a>
+    </div>
+    &nbsp;
     <ul class="table-top-head">
-        <li >
-            <a data-bs-toggle="tooltip" data-bs-placement="top" title="Pdf" disabled><img
-                    src="assets/images/pdf.svg" alt="img"></a>
-        </li>
-        <li>
-            <a  data-bs-toggle="tooltip" data-bs-placement="top" title="Excel"><img
-                    src="assets/images/excel.svg" alt="img"></a>
-        </li>
-        <li>
-            <a data-bs-toggle="tooltip" data-bs-placement="top" title="Print">
-                <!-- <i data-feather="printer" class="feather-rotate-ccw"></i> -->
-                <img src="assets/images/printer.svg">
-            </a>
-        </li>
-        <li>
+        <li (click)="refreshData()">
             <a data-bs-toggle="tooltip" data-bs-placement="top" title="Refresh"><i data-feather="rotate-ccw"
                     class="feather-rotate-ccw"></i></a>
         </li>
-        <!-- <li>
-            <a data-bs-toggle="tooltip" data-bs-placement="top" title="Collapse" id="collapse-header"><i
-                    data-feather="chevron-up" class="feather-chevron-up"></i></a>
-        </li> -->
     </ul>
-    <div class="page-btn">
-        <!-- <a ><i data-feather="plus-circle" class="me-2"></i>Add
-            New Product</a> -->
-    </div>
 </div>
 
 <div class="card table-list-card">
@@ -42,9 +25,7 @@
                 <div class="search-input">
                     <a href class="btn btn-searchset"><i data-feather="search" class="feather-search"></i></a>
                 </div>
-            </div>
-            
-      
+            </div>      
         </div>
 
         <div class="table-responsive">

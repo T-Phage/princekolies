@@ -74,6 +74,12 @@ export class PosComponent {
       // 
       this.newSalesFrm.get('customer_address')?.setValidators([Validators.required]);
       this.newSalesFrm.get('customer_address')?.updateValueAndValidity();
+      // 
+      this.newSalesFrm.get('identification_type')?.setValidators([Validators.required]);
+      this.newSalesFrm.get('identification_type')?.updateValueAndValidity();
+      // 
+      this.newSalesFrm.get('identity_number')?.setValidators([Validators.required]);
+      this.newSalesFrm.get('identity_number')?.updateValueAndValidity();
       
       customerInfo[0].classList.add('show')
     }else{
@@ -94,6 +100,15 @@ export class PosComponent {
       this.newSalesFrm.get('customer_address')?.setValidators([]);
       this.newSalesFrm.get('customer_address')?.setValue('');
       this.newSalesFrm.get('customer_address')?.updateValueAndValidity();
+      //
+      this.newSalesFrm.get('identification_type')?.setValidators([]);
+      this.newSalesFrm.get('identification_type')?.setValue('');
+      this.newSalesFrm.get('identification_type')?.updateValueAndValidity();
+      // 
+      this.newSalesFrm.get('identity_number')?.setValidators([]);
+      this.newSalesFrm.get('identity_number')?.setValue('');
+      this.newSalesFrm.get('identity_number')?.updateValueAndValidity();
+
       customerInfo[0].classList.remove('show')
     }
   } 
@@ -133,12 +148,11 @@ export class PosComponent {
   // }
 
   ngOnInit(): void {
-    // console.log(this.newSalesFrm.value)
+    
     this.loadingService.show()
     this.httpservice.getAllCustomers()
       .subscribe({
         next: data => {
-          console.log(data)
           this.customers = data
         },
         error: error => {
@@ -158,7 +172,8 @@ export class PosComponent {
 
           console.log('error :', error)
           if (error.status == 401){
-            alert('Your session has expired, you will be redirected to log in');
+            // alert('Your session has expired, you will be redirected to log in');
+            this.swalService.fireError('Your session has expired, you will be redirected to log in')
             this.router.navigate(['/auth/login'])
           }
         },
@@ -173,7 +188,7 @@ export class PosComponent {
   }
 
   addAlias(product:string, product_id: number, quantity: number, purchase_price: any, unit_cost:any, barcode: string) {
-      // console.log(this.isProductExists(barcode))
+      // 
       // if(!this.isProductExists(barcode)){
         this.items.push(this.formBuilder.group({
           'product': [product, Validators.required],
@@ -196,6 +211,7 @@ export class PosComponent {
     'customer_business_name': [''],
     'identity_number': [''],
     'identification_type': [''],
+    'customer_email': ['', Validators.email],
     'reference': [''],
     'status': ['Completed', Validators.required],
     'grand_total': ['', Validators.required],
@@ -213,10 +229,8 @@ export class PosComponent {
   submitted = false
 
   statusChange(){
-    console.log('status changed')
     if (this.newSalesFrm.controls.status.value == 'Completed'){
       this.newSalesFrm.get('amount_paid')?.setValidators([])
-      console.log('completed')
     } else {
       this.newSalesFrm.get('amount_paid')?.setValidators([Validators.required])
       // console.log('other')
@@ -345,7 +359,7 @@ export class PosComponent {
     const expiration = new Date(expiryDate);
     expiration.setHours(0, 0, 0, 0); // Reset time to midnight
     return expiration < today;
-}
+  }
 
   // Custom validation to check if a product already exists in the array
   isProductExists(name: string): boolean {
@@ -358,20 +372,18 @@ export class PosComponent {
 
     // this.newSalesFrm.get('status')?.enable();
     // this.newSalesFrm.get('payment_status')?.enable();
-    console.log(this.newSalesFrm)
-    console.log(this.newSalesFrm.value)
+    // console.log(this.newSalesFrm)
+    // console.log(this.newSalesFrm.value)
 
     this.submitted = true
 
     console.log(this.newSalesFrm.get('balance')!.value)
     console.log(this.oncredit)
     if((this.newSalesFrm.get('balance')!.value ?? 0) < 0 && !this.oncredit ){
-      // alert('Customer details are required for credit buys')
       this.swalService.fireWarning('Customer details are required for credit buys')
       return
     }
     if(parseFloat(`${this.newSalesFrm.get('grand_total')!.value}`) < 0 && (!this.oncredit)) {
-      // alert('Amount paid by customer is less the grand total. \n Kindly get customer details')
       this.swalService.fireWarning('Amount paid by customer is less the grand total. \n Kindly get customer details')
     }
 

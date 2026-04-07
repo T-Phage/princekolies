@@ -1,0 +1,461 @@
+<div class="page-header">
+    <div class="add-item d-flex">
+        <div class="page-title">
+            <h4>Credit Buy</h4>
+            <h6>Create an existing unpaid sale</h6>
+        </div>
+    </div>
+    <ul class="table-top-head">
+        <li>
+            <div class="page-btn">
+                <a [routerLink]="['/dashboard/debtors']" class="btn btn-secondary"><i data-feather="arrow-left" class="me-2"></i>
+                    Back to Debtors List</a>
+            </div>
+        </li>
+        <!-- <li>
+            <a data-bs-toggle="tooltip" data-bs-placement="top" title="Collapse" id="collapse-header"><i data-feather="chevron-up" class="feather-chevron-up"></i></a>
+        </li> -->
+    </ul>
+</div>
+
+<form [formGroup]="newdebtorFrm" (submit)="submitDebtor($event)">
+    <div class="card">
+        <div class="card-body add-product pb-0">
+            <div class="accordion-card-one accordion" id="accordionExample">
+                <div class="accordion-item">
+                    <div class="accordion-header" id="headingOne">
+                        <div class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+                            aria-controls="collapseOne">
+                            <div class="addproduct-icon">
+                                <h5><i data-feather="info" class="add-info"></i><span>Customer
+                                        Information</span></h5>
+                                <a href="javascript:void(0);"><i data-feather="chevron-down"
+                                        class="chevron-down-add"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                        data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+
+                            <div class="row">
+                                <div class="col-lg-6 col-sm-6 col-12">
+                                    <div class="mb-3 add-product">
+                                        <label class="form-label">Name</label>
+                                        <input type="text" formControlName="customer_name" class="form-control" list="list-customers" (change)="selectCustomer($event)">
+                                        <div *ngIf="(newdebtorFrm.get('customer_name')?.invalid && newdebtorFrm.get('customer_name')?.touched) || submitted">
+                                            <div *ngIf="newdebtorFrm.controls.customer_name.errors?.['required']" class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;">product name field is required.</div>
+                                        </div>
+                                    </div>
+                                    <datalist id="list-customers">
+                                            <option class="option" *ngFor="let customer of customers">
+                                                {{customer.name}}
+                                            </option>
+                                    </datalist>
+                                </div>
+
+                                <div class="col-lg-6 col-sm-6 col-12">
+                                    <div class="mb-3 add-product">
+                                        <label class="form-label">Busines Name</label>
+                                        <input type="text" formControlName="customer_business_name" class="form-control">
+                                        <div *ngIf="(newdebtorFrm.get('customer_business_name')?.invalid && newdebtorFrm.get('customer_business_name')?.touched) || submitted">
+                                            <div *ngIf="newdebtorFrm.controls.customer_business_name.errors?.['required']" class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;">business name field is required.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4 col-sm-6 col-12">
+                                    <div class="mb-3 add-product">
+                                        <label class="form-label">Phone</label>
+                                        <input type="text" formControlName="customer_phone" class="form-control">
+                                        <div *ngIf="(newdebtorFrm.get('customer_phone')?.invalid && newdebtorFrm.get('customer_phone')?.touched) || submitted">
+                                            <div *ngIf="newdebtorFrm.controls.customer_phone.errors?.['required']" class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;">phone field is required.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-sm-6 col-12">
+                                    <div class="mb-3 add-product">
+                                        <label class="form-label">Address</label>
+                                        <input type="text" formControlName="customer_address" class="form-control">
+                                        <div *ngIf="(newdebtorFrm.get('customer_address')?.invalid && newdebtorFrm.get('customer_address')?.touched) || submitted">
+                                            <div *ngIf="newdebtorFrm.controls.customer_address.errors?.['required']" class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;">address field is required.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-sm-6 col-12">
+                                    <div class="mb-3 add-product">
+                                        <label class="form-label">Email</label>
+                                        <input type="email" formControlName="customer_email" class="form-control">
+                                        <div *ngIf="(newdebtorFrm.get('customer_email')?.invalid && newdebtorFrm.get('customer_email')?.touched) || submitted">
+                                            <div *ngIf="newdebtorFrm.controls.customer_email.errors?.['email']" class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;">Please enter a valid email address.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4 col-sm-6 col-12">
+                                    <div class="mb-3 add-product">
+                                        <label class="form-label">ID Type</label>
+                                        <select formControlName="identification_type" class="form-control">
+                                            <option value="National ID Card">National ID Card</option>
+                                            <option value="Passport">Passport</option>
+                                            <option value="License">License</option>
+                                        </select>
+                                    </div>
+                                    <div *ngIf="(newdebtorFrm.get('identification_type')?.invalid && newdebtorFrm.get('identification_type')?.touched) || submitted">
+                                        <div *ngIf="newdebtorFrm.controls.identification_type.errors?.['required']" class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;">ID type is required.</div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-sm-6 col-12">
+                                    <div class="mb-3 add-product">
+                                        <label class="form-label">ID Number</label>
+                                        <input type="text" formControlName="identity_number" class="form-control">
+                                    </div>
+                                    <div *ngIf="(newdebtorFrm.get('identity_number')?.invalid && newdebtorFrm.get('identity_number')?.touched) || submitted">
+                                        <div *ngIf="newdebtorFrm.controls.identity_number.errors?.['required']" class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;">ID number is required.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-card-one accordion" id="accordionExample2">
+                <div class="accordion-item">
+                    <div class="accordion-header" id="headingTwo">
+                        <div class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapseTwo"
+                            aria-controls="collapseTwo">
+                            <div class="text-editor add-list">
+                                <div class="addproduct-icon list icon">
+                                    <h5><i data-feather="life-buoy" class="add-info"></i><span>
+                                        Products Purchased
+                                    </span></h5>
+                                    <a href="javascript:void(0);"><i data-feather="chevron-down"
+                                            class="chevron-down-add"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo"
+                        data-bs-parent="#accordionExample2">
+                        <div class="accordion-body">
+                            <div class="tab-content" id="pills-tabContent">
+                                <div class="tab-pane fade show active" id="pills-home" role="tabpanel"
+                                    aria-labelledby="pills-home-tab">
+                                    <div class="row">
+                                        <div class="col-lg-9 col-sm-6 col-12">
+                                            <div class="input-blocks">
+                                                <label>Product Name</label>
+                                                <div class="input-groupicon select-code">
+                                                    <input id="" (input)="inpProductNameChange($event);" type="text" list="list-timezone"
+                                                        placeholder="search product by name">
+                                                    <!-- <div class="addonset">
+                                                        <img src="assets/images/qrcode-scan.svg" alt="img">
+                                                    </div> -->
+                                                </div>
+                                                <datalist id="list-timezone">
+                                                    <option class="option" *ngFor="let product of products">{{product.name}}
+                                                    </option>
+                                                </datalist>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-10 table-responsive no-pagination">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Product</th>
+                                                        <th>Unit Price</th>
+                                                        <th>Quantity</th>
+                                                        <th>Purchase Price</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody formArrayName="items">
+
+                                                    <tr *ngFor="let item of items.controls; let i=index" [formGroupName]="i">
+                                                        <td>{{item.value.product}}</td>
+                                                        <td>{{item.value.unit_cost | currency:'GHc':'symbol':'1.2-2' }}</td>
+                                                        <td>
+                                                            <div class="input-blocks">
+                                                                <input class="for-control" (input)="calculateTotal(i)" min="1" type="number"
+                                                                    formControlName="quantity">
+                                                            </div>
+                                                        </td>
+                                                        <td>{{item.value.purchase_price | currency:'GHc':'symbol':'1.2-2'}}</td>
+                                                        <td>
+                                                            <button type="button" class="btn btn-danger"><i
+                                                                    class="fa fa-trash"></i></button>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6 ms-auto">
+                                            <div class="total-order w-100 max-widthauto m-auto mb-4">
+                                                <ul>
+                                                    <li>
+                                                        <h4>Grand Total</h4>
+                                                        <h5>{{newdebtorFrm.get('grand_total')?.value |
+                                                            currency:'GHc':'symbol':'1.2-2'}}</h5>
+                                                    </li>
+                                                    <li>
+                                                        <h4>Balance</h4>
+                                                        <h5>{{newdebtorFrm.get('balance')?.value |
+                                                            currency:'GHc':'symbol':'1.2-2'}}</h5>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-card-one accordion" id="accordionExample4">
+                <div class="accordion-item">
+                    <div class="accordion-header" id="headingFour">
+                        <div class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapseFour"
+                            aria-controls="collapseFour">
+                            <div class="text-editor add-list">
+                                <div class="addproduct-icon list">
+                                    <h5><i data-feather="list" class="add-info"></i><span>
+                                            Payments</span></h5>
+                                    <a href="javascript:void(0);"><i data-feather="chevron-down"
+                                            class="chevron-down-add"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="collapseFour" class="accordion-collapse collapse show" aria-labelledby="headingFour"
+                        data-bs-parent="#accordionExample4">
+                        <div class="accordion-body">
+                            <div class="text-editor add-list add">
+                                <div class="row">
+                                    <div class="col-lg-3 col-sm-6 col-12">
+                                        <div class="input-blocks">
+                                            <label>Cash</label>
+                                            <input formControlName="cash" id="received" (keyup)="calcBalance($event)"  type="text" class="form-control">
+                                            <div
+                                                *ngIf="(newdebtorFrm.get('cash')?.invalid && newdebtorFrm.get('cash')?.touched) || submitted">
+                                                <div *ngIf="newdebtorFrm.controls['cash'] && newdebtorFrm.controls['cash'].errors"
+                                                    class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;">field is
+                                                    required.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-sm-6 col-12">
+                                        <div class="input-blocks">
+                                            <label>Momo</label>
+                                            <input formControlName="momo" id="received" (keyup)="calcBalance($event)"  type="text" class="form-control">
+                                            <div
+                                                *ngIf="(newdebtorFrm.get('momo')?.invalid && newdebtorFrm.get('momo')?.touched) || submitted">
+                                                <div *ngIf="newdebtorFrm.controls['momo'] && newdebtorFrm.controls['momo'].errors"
+                                                    class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;">field is
+                                                    required.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-sm-6 col-12">
+                                        <div class="input-blocks">
+                                            <label>Bank</label>
+                                            <input (keyup)="calcBalance($event)" formControlName="bank" id="received" (keyup)="calcBalance($event)"  type="text" class="form-control">
+                                            <div 
+                                                *ngIf="(newdebtorFrm.get('bank')?.invalid && newdebtorFrm.get('bank')?.touched) || submitted">
+                                                <div *ngIf="newdebtorFrm.controls['bank'] && newdebtorFrm.controls['bank'].errors"
+                                                    class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;">field is
+                                                    required.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-sm-6 col-12">
+                                        <div class="input-blocks">
+                                            <label>Amount Received</label>
+                                            <input formControlName="amount_paid" id="received"  type="text" class="form-control">
+                                            <div
+                                                *ngIf="(newdebtorFrm.get('amount_paid')?.invalid && newdebtorFrm.get('amount_paid')?.touched) || submitted">
+                                                <div *ngIf="newdebtorFrm.controls['amount_paid'] && newdebtorFrm.controls['amount_paid'].errors"
+                                                    class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;">field is
+                                                    required.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-3 col-sm-6 col-12">
+                                        <div class="input-blocks">
+                                            <label>Sale Date</label>
+                                            <input formControlName="sale_date" id="received"  type="date" class="form-control">
+                                            <div
+                                                *ngIf="(newdebtorFrm.get('sale_date')?.invalid && newdebtorFrm.get('sale_date')?.touched) || submitted">
+                                                <div *ngIf="newdebtorFrm.controls['sale_date'] && newdebtorFrm.controls['sale_date'].errors"
+                                                    class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;">field is
+                                                    required.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <div style="display: flex;justify-content:center;">
+        <app-errormodal></app-errormodal>
+    </div>
+    <div class="col-lg-12">
+        <div class="btn-addproduct mb-4">
+            <button type="button" [disabled]="sharedservice.responses.disabled"
+                class="btn btn-cancel me-2">Cancel</button>
+            <button type="submit" [disabled]="sharedservice.responses.disabled" class="btn btn-submit">Save
+                Product</button>
+        </div>
+    </div>
+</form>
+
+<!-- receipt.component.html -->
+<div style="display: none;" id="receipt" #debtoreceipt>
+    <div class="page-content">
+        <div class="page-header text-blue-d2 text-center " style="display: flex;justify-content:center;color: #000;">
+            <h4 class="page-title text-center">Princekolies Poultry Ent.</h4>
+            <!-- <h1 class="page-title text-secondary-d1">
+                Invoice
+                <small class="page-info">
+                    <i class="fa fa-angle-double-right text-80"></i>
+                    ID: # {{newSalesFrm.controls.reference.value}}
+                </small>
+            </h1> -->
+        </div>
+
+        <div class="px-0 mt-0">
+            <div class="row mt-0 mb-4">
+                <div class="col-12 col-lg-12">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="text-center" style="display: flex;justify-content:center;color: #000;">
+                                <!-- <i class="fa fa-book fa-2x text-success-m2 mr-1"></i> -->
+                                <span class="text-default-d3 text-center">0502893903/</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- .row -->
+
+                    <hr class="row brc-default-l1 mx-n1 mb-4" />
+
+                    <div class="row">
+                        <div class="col-sm-12 col-12">
+                            <div>
+                                <span class="text-sm text-grey-m2 align-middle">Attendant: </span>
+                                <span class="text-600 text-110 text-black align-middle">{{username}}</span>
+                            </div>
+
+                            <div *ngIf="newdebtorFrm.controls.customer_name.value">
+                                <span class="text-sm text-black align-middle">Customer: </span>
+                                <span class="text-600 text-110 text-black align-middle">{{newdebtorFrm.controls.customer_name.value}}</span>
+                            </div>
+                            <br/>
+                            <div *ngIf="newdebtorFrm.controls.payment_status.value =='Unpaid'" class="my-2">
+                                <span class="text-90">Status:</span> 
+                                <span class="text-600 text-110 text-black align-middle">{{newdebtorFrm.controls.payment_status.value}}</span>
+                            </div>
+                        
+                        </div>
+
+                        <div class="text-95 align-self-start d-sm-flex justify-content-end">
+                            <hr class="d-sm-none" />
+                            <div class="text-grey-m2">
+                                <div class="mt-1 mb-2 text-secondary-m1 text-600 text-125">
+                                    Invoice
+                                </div>
+
+                                <div class="my-2">
+                                    <!-- <i class="fa fa-circle text-blue-m2 text-xs mr-1"></i>  -->
+                                    <span class="text-600 text-90">ID:</span> # {{newdebtorFrm.controls.reference.value}}
+                                </div>
+
+                                <div class="my-2">
+                                    <!-- <i class="fa fa-circle text-blue-m2 text-xs mr-1"></i>  -->
+                                    <span class="text-600 text-90">Issue Date:</span> {{ currentDate | date: 'shortDate' }}
+                                </div>
+
+                                <!-- <div class="my-2">
+                                    <i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> 
+                                    <span class="text-600 text-90">Status:</span> 
+                                    <span class="badge badge-warning badge-pill px-25">{{newdebtorFrm.controls.payment_status.value}}</span>
+                                </div> -->
+                            </div>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <hr/>
+                    <div class="mt-4">
+                        <div class="row table-responsive">
+                            <table class="table table-striped table-borderless border-0">
+                                <thead>
+                                    <tr class="text-black">
+                                        <th>#</th>
+                                        <th>Item</th>
+                                        <th>Quantity</th>
+                                        <th>Price</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-0 text-black" style="color: #000;font-size: 0.813rem" *ngFor="let item of items.controls; let i=index" >
+                                        <td>{{ i+1 }}</td>
+                                        <td>{{ item.value.product }}</td>
+                                        <td>{{ item.value.quantity }}</td>
+                                        <td>{{ item.value.unit_cost | currency: 'Ghc'}}</td>
+                                        <td>{{ item.value.purchase_price | currency: 'Ghc' }}</td>
+                                      </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <hr>
+
+                        <br>
+                        <br>
+
+                        <div class="row mt-3" style="display: flex;justify-content:end;">
+                            <div class="" style="display:flex;flex-direction:column;">
+                                <div style="display: grid;grid-template-columns:5fr 5fr">
+                                    <span>SubTotal</span>
+                                    <span >{{ newdebtorFrm.controls.grand_total.value | currency: 'Ghc' }}</span>
+                                </div>
+                                <div style="display: grid;grid-template-columns:5fr 5fr">
+                                    <span>Total</span> 
+                                    <span>{{ newdebtorFrm.controls.grand_total.value | currency: 'Ghc' }}</span>
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr />
+
+                        <div>
+                            <span class="text-secondary-d1 text-105 text-center">Thank you</span>
+                        
+                        </div>
+                    </div>
+                    <br/>
+                    <br/>
+                    <hr/>
+                    <hr/>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>

@@ -7,20 +7,20 @@
         </div>
     </div>
     <ul class="table-top-head">
-        <li>
+        <!-- <li>
             <a (click)="exportTableToPDF()" data-bs-toggle="tooltip" data-bs-placement="top" title="Pdf"><img src="assets/images/pdf.svg"
                     alt="img"></a>
-        </li>
-        <li>
+        </li> -->
+        <!-- <li>
             <a (click)="exportToExcel()" data-bs-toggle="tooltip" data-bs-placement="top" title="Excel"><img src="assets/images/excel.svg"
                     alt="img"></a>
-        </li>
-        <li>
+        </li> -->
+        <!-- <li>
             <a (click)="printTable()" data-bs-toggle="tooltip" data-bs-placement="top" title="Print">
-                <!-- <i data-feather="printer" class="feather-rotate-ccw"></i> -->
+                <i data-feather="printer" class="feather-rotate-ccw"></i>
                  <img src="assets/images/printer.svg">
             </a>
-        </li>
+        </li> -->
         <li>
             <a (click)="refreshData()" data-bs-toggle="tooltip" data-bs-placement="top" title="Refresh"><i data-feather="rotate-ccw"
                     class="feather-rotate-ccw"></i></a>
@@ -50,10 +50,8 @@
             
         </div>
 
-
-
-        <div *ngIf="manager" class="table-responsive">
-            <table class="table datanew" id="table">
+        <div class="table-responsive">
+            <table class="table returnstable" id="table">
                 <thead>
                     <tr>
                         <th class="no-sort">
@@ -73,7 +71,8 @@
                     </tr>
                 </thead>
                 <tbody class="sales-list">
-                    <tr *ngFor="let sale of sales$ | async">
+                    
+                    <tr *ngFor="let sale of sales">
                         <td>
                             <label class="checkboxs">
                                 <input type="checkbox">
@@ -101,11 +100,11 @@
                                         data-bs-target="#sales-details-new"><i data-feather="eye"
                                             class="info-img"></i>Sale Detail</a>
                                 </li>
-                                <li (click)="saleClicked(sale.customer_name,sale.reference,sale.status,sale.grand_total,sale.payment_status,sale.amount_paid,sale.biller, sale.items_returned)">
+                                <!-- <li (click)="saleClicked(sale.customer_name,sale.reference,sale.status,sale.grand_total,sale.payment_status,sale.amount_paid,sale.biller, sale.items_returned)">
                                     <a href="javascript:void(0);" class="dropdown-item" data-bs-toggle="modal"
                                     data-bs-target="#delete-units"><i data-feather="trash" class="info-img"></i>
                                         Delete</a>
-                                </li>
+                                </li> -->
                             </ul>
                         </td>
                     </tr>
@@ -126,7 +125,7 @@
                             <h4> Product Return</h4>
                         </div>
                         <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
+                            <span>&times;</span>
                         </button>
                     </div>
                     <div class="card">
@@ -275,28 +274,17 @@
                             <div class="page-title modal-datail">
                                 <h4>Sale Detail : {{clickedSale.reference}}</h4>
                             </div>
-                            <div class="page-btn">
+                            <!-- <div class="page-btn">
                                 <a href="javascript(void);" class="btn btn-added" data-bs-dismiss="modal"
                                     ><i data-feather="plus-circle" class="me-2"></i>
                                     Return Product Item</a>
-                            </div>
+                            </div> -->
                         </div>
                         <ul class="table-top-head">
-                            <!-- <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="Pdf"><i data-feather="edit"
-                                        class="action-edit sales-action"></i></a>
-                            </li>  -->
-                             <li>
-                                <a data-bs-toggle="tooltip" data-bs-placement="top" title="Pdf"><img
-                                        src="assets/images/pdf.svg" alt="img"></a>
-                            </li>
-                            <li>
-                                <a (click)="exportToExcel()" click data-bs-toggle="tooltip" data-bs-placement="top" title="Excel"><img
-                                        src="assets/images/excel.svg" alt="img"></a>
-                            </li>
-                            <li>
-                                <a (click)="printTable()" data-bs-toggle="tooltip" data-bs-placement="top" title="Print"><i
-                                        data-feather="printer" class="feather-rotate-ccw"></i></a>
+                        
+                            <li data-bs-toggle="tooltip">
+                                <a data-bs-placement="top" title="Close"><i
+                                    data-bs-dismiss="modal" data-feather="close" class="feather-close">&times;</i></a>
                             </li>
                         </ul>
                     </div>
@@ -325,7 +313,6 @@
                                     </div>
                                     <h5 class="order-text">Order Summary</h5>
                                     <div class="table-responsive no-pagination">
-                                        <!-- <table class="table  datanew"> -->
                                         <table class="table">
                                             <thead>
                                                 <tr>
@@ -467,7 +454,7 @@
                                     </div>
                                 </div>
                                 <div class="table-responsive no-pagination">
-                                    <table class="table  datanew">
+                                    <table class="table ">
                                         <thead>
                                             <tr>
                                                 <th>Product</th>

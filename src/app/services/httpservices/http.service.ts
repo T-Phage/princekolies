@@ -3,6 +3,7 @@ import { ElementRef, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { SharedService } from '../sharedservices/shared.service';
+import { SwalservicesService } from '../swal/swalservices.service';
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +24,7 @@ export class HttpService {
     private http: HttpClient,
     private sharedservice: SharedService,
     private router: Router,
+    private swalservices: SwalservicesService
   ) { }
 
   httpLogout() {
@@ -34,7 +36,7 @@ export class HttpService {
           this.router.navigate(['/auth/login'])
         },
         error: error => {
-          alert("wht")
+          this.swalservices.fireWarning("invalid auth credentials. redirecting to login...")
           this.appToken = '';
           sessionStorage.clear();
           localStorage.clear();

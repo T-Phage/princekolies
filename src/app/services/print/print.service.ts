@@ -143,6 +143,8 @@ export class PrintService {
             <hr/>
             <hr/>
             <hr/>
+            <hr/>
+            <hr/>
             ...
           </body>
           </html>
@@ -155,7 +157,7 @@ export class PrintService {
         WindowPrt.print();
         setTimeout(() => {
           WindowPrt.close()
-        }, 1000)
+        }, 900)
         WindowPrt.close();
       }, 500); 
       

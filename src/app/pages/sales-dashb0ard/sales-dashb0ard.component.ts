@@ -54,6 +54,7 @@ export class SalesDashb0ardComponent {
   selectedDate:any = this.today.toISOString().split('T')[0]; // Format as YYYY-MM-DD for input[type="date"]
   
   manager:boolean = false;
+  owner:boolean = false;
   userrole = `${sessionStorage.getItem('role')}`
 
   loading: boolean = true;
@@ -66,6 +67,9 @@ export class SalesDashb0ardComponent {
     let role = `${sessionStorage.getItem('role')}`
     if(role == 'Manager'){
         this.manager = true;
+    }
+    if(role == 'Business_Owner'){
+      this.owner = true;
     }
     let user = sessionStorage.getItem('user')
     if (user != null || user != undefined){
