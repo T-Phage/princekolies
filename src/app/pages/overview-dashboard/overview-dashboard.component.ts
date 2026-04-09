@@ -32,9 +32,13 @@ export class OverviewDashboardComponent {
   out_of_stock: number = 0;
   userscount: number = 0;
   totalPaidSalesForWeek:number = 0
+  totalSalesAmountForWeek:number = 0
+  totalSalesAmountForMonth:number = 0
+  totalPaidSalesForMonth:number = 0
   recentProducts:any[] = [];
   expiringproducts:any[] = [];
   monthlyCashSales:any;
+  totalPaidSalesCash:number = 0;
 
   session_off:boolean = false;
 
@@ -44,7 +48,10 @@ export class OverviewDashboardComponent {
   products:any[] = [];
   totalPrice: number = 0;
 
+  username = '';
+
   ngOnInit(): void {
+    this.username = sessionStorage.getItem('username') || '';
     this.httpservice.getProducts(1, 10).subscribe((products) => {
       this.totalPrice = this.calculateTotal(products);
       // console.log(this.totalPrice)
@@ -68,6 +75,10 @@ export class OverviewDashboardComponent {
         this.recentProducts = data.recentProducts
         this.expiringproducts = data.products_expired
         this.monthlyCashSales = data.monthlyCashSales
+        this.totalSalesAmountForWeek = data.totalSalesAmountForWeek
+        this.totalSalesAmountForMonth = data.totalSalesAmountForMonth
+        this.totalPaidSalesForMonth = data.totalPaidSalesForMonth
+        this.totalPaidSalesCash = data.totalPaidSalesCash
 
         this.createChart()
       },

@@ -112,9 +112,21 @@
                                 <label class="form-label">Category</label>
                                 <input type="text" formControlName="name" class="form-control">
                                 <div
-                                    *ngIf="createCategoryFrm.get('name')?.invalid && createCategoryFrm.get('name')?.touched">
+                                    *ngIf="createCategoryFrm.get('name')?.invalid && createCategoryFrm.get('name')?.touched || submitted">
                                     <div class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;"
-                                        *ngIf="createCategoryFrm.get('name')?.errors!['required']">field is required.
+                                        *ngIf="createCategoryFrm.controls.name.errors?.['required']">field is required.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3" *ngIf="owner">
+                                <label class="form-label">Branch</label>
+                                <select type="text" formControlName="branch" class="form-control">
+                                    <option *ngFor="let branch of branches" [value]="branch.id">{{ branch.branch_name }}</option>
+                                </select>
+                                <div
+                                    *ngIf="createCategoryFrm.get('branch')?.invalid && createCategoryFrm.get('branch')?.touched || submitted">
+                                    <div class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;"
+                                        *ngIf="createCategoryFrm.get('branch')?.errors!['required']">field is required.
                                     </div>
                                 </div>
                             </div>

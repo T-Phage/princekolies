@@ -16,6 +16,7 @@ export class AppComponent {
 
   isOffline: boolean = false;
   manager: boolean = false;
+  owner: boolean = false;
 
   constructor(
     // private titleService: Title,
@@ -29,9 +30,13 @@ export class AppComponent {
     if (token == null){
       this.router.navigateByUrl('/auth/login')
     } else {
-      if(role == 'Manager'){
-        this.manager = true;
+      if(role == 'Business_Owner'){
+        this.owner = true;
         this.router.navigateByUrl('/dashboard/overview-dashboard')
+      }
+      else if(role == 'Manager'){
+        this.manager = true;
+        this.router.navigateByUrl('/dashboard/sales-dashboard')
       } else {
         this.router.navigateByUrl('/dashboard/pos')
       }

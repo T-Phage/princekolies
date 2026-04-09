@@ -231,8 +231,10 @@ export class PosComponent {
   statusChange(){
     if (this.newSalesFrm.controls.status.value == 'Completed'){
       this.newSalesFrm.get('amount_paid')?.setValidators([])
+      this.newSalesFrm.get('amount_paid')?.updateValueAndValidity()
     } else {
       this.newSalesFrm.get('amount_paid')?.setValidators([Validators.required])
+      this.newSalesFrm.get('amount_paid')?.updateValueAndValidity()
       // console.log('other')
     }
   }

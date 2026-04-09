@@ -92,6 +92,7 @@ export class HttpService {
           sessionStorage.setItem('role', data.user.role)
           sessionStorage.setItem('username', data.user.name)
           sessionStorage.setItem('user', JSON.stringify(data.user))
+          sessionStorage.setItem('number_of_branches', data.no_of_branches)
 
           this.appToken = data.token;
           this.role = data.role;

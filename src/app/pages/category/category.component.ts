@@ -10,6 +10,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 // import FileSaver from 'file-saver';
 import * as FileSaver from 'file-saver';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-category',
@@ -24,28 +25,35 @@ export class CategoryComponent {
     id: '',
     'name': '',
     'status': false,
+    'branch': '',
   }
 
   selectedCategoryId:any;
   
-  categories: any[] = [
-
-  ];
+  categories: any[] = [];
+  branches: any[] = [];
   categories$!: Observable<any>;
 
   role:string = '';
+  owner:boolean = false;
+  submitted:boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
     public sharedservices: SharedService,
     private httpservices: HttpService,
     private zone: NgZone,
-  ) { }
+    private router: Router,
+  ) {
+    // const letRole = sessionStorage.getItem('role');
+    
+   }
 
   createCategoryFrm = this.formBuilder.group({
     'name': ['', Validators.required],
     'status': [true, Validators.required],
     'createdby': [parseInt(`${sessionStorage.getItem('id')}`),],
+    'branch': [''],
   });
 
   updateCategoryFrm = this.formBuilder.group({
@@ -135,7 +143,7 @@ export class CategoryComponent {
   createCategoryFunc(evt: Event) {
     evt.preventDefault()
     // console.log(this.createCategoryFrm.value)
-
+    this.submitted = true;
     if (this.createCategoryFrm.valid) {
       this.httpservices.createCategory(this.createCategoryFrm.value)
       .subscribe({
@@ -143,7 +151,6 @@ export class CategoryComponent {
           this.sharedservices.infoFunc('alert alert-success', 'category created', false, false, false)
           // console.log(data)
           $('.datanewcat').DataTable().destroy()
-          // this.categories$ = this.httpservices.getCategories(1, 10)
           this.httpservices.getCategories(1, 10)
             .subscribe({
               next: data => {
@@ -154,36 +161,18 @@ export class CategoryComponent {
             })
           // this.users$.
           this.sharedservices.infoFunc('alert alert-success', 'category created', false, false, false)
+          $('.datanewcat').DataTable().destroy();
           setTimeout(()=>{
             this.sharedservices.infoFunc('', '', false, false, false)
-          //   $('.datanewcat').DataTable({
-          //   "bFilter": true,
-          //   "sDom": 'fBtlpi',
-          //   // "dom": 'pftil',
-          //   "ordering": true,
-          //   "language": {
-          //     search: ' ',
-          //     sLengthMenu: '_MENU_',
-          //     searchPlaceholder: "Search",
-          //     info: "_START_ - _END_ of _TOTAL_ items",
-          //     paginate: {
-          //       next: ' <i class="fa fa-angle-right"></i>',
-          //       previous: '<i class="fa fa-angle-left"></i> '
-          //     },
-          //   },
-          //   initComplete: (_settings: any, _json: any) => {
-          //     $('.dataTables_filter').appendTo('#tableSearch');
-          //     $('.dataTables_filter').appendTo('.search-input');
-          //     $('#info').appendTo('#info')
-          //   },
-          // })
-        }, 2000)
+            this.ngOnInit()
+            // this.sharedservices.refreshComponentFunc(this.router.url)
+          }, 2000)
         },
         error: error => {
           let msg = error.error.message
-        console.error('error :', error)
-        this.sharedservices.infoFunc('alert alert-danger', error.message, false, false, false)
-        setTimeout(() => this.sharedservices.infoFunc('', '', false, false, false), 3000)
+          console.error('error :', error)
+          this.sharedservices.infoFunc('alert alert-danger', error.error.message, false, false, false)
+          setTimeout(() => this.sharedservices.infoFunc('', '', false, false, false), 3000)
         }
       })
     }
@@ -208,31 +197,7 @@ export class CategoryComponent {
           // this.users$.
           setTimeout(() =>{ 
             this.sharedservices.infoFunc('', '', false, false, false)
-
-            $('.datanewcat').DataTable({
-              "bFilter": true,
-              // "sDom": 'fBtlpi',
-              "dom": 'pftil',
-              "ordering": true,
-              "language": {
-                search: ' ',
-                emptyTable: "No data available in table",
-                infoEmpty: "",
-                sLengthMenu: '_MENU_',
-                searchPlaceholder: "Search",
-                info: "_START_ - _END_ of _TOTAL_ items",
-                paginate: {
-                  next: ' <i class="fa fa-angle-right"></i>',
-                  previous: '<i class="fa fa-angle-left"></i> '
-                },
-              },
-              initComplete: (_settings: any, _json: any) => {
-                $('.dataTables_filter').appendTo('#tableSearch');
-                $('.dataTables_filter').appendTo('.search-input');
-                $('#info').appendTo('#info')
-              },
-            
-            })
+            this.dataTableInit();
             
           }, 1000)
           // });
@@ -250,32 +215,49 @@ export class CategoryComponent {
   }
 
 
-  loadCategories() {
-    this.httpservices.getCategories(1, 10).subscribe({
-      next: (data) => {
-        this.categories = data;
-        // console.log(data)
-      },
-      error: (error) => {
-        console.error('error:', error);
-      }
+  // loadCategories() {
+  //   this.httpservices.getCategories(1, 10).subscribe({
+  //     next: (data) => {
+  //       this.categories = data;
+  //       // console.log(data)
+  //     },
+  //     error: (error) => {
+  //       console.error('error:', error);
+  //     }
     
-    });
-  }
+  //   });
+  // }
 
   ngOnInit() {
     this.role = sessionStorage.getItem('role') || '';
-
+    if (this.role == 'Business_Owner'){
+      this.owner = true;
+      this.createCategoryFrm.get('branch')?.setValidators(Validators.required);
+      this.createCategoryFrm.get('branch')?.updateValueAndValidity();
+    }
+    this.httpservices.getbranches()
+    .subscribe({
+      next: data => {
+        this.branches = data
+      },
+      error: error => {}
+    })
+    
     this.httpservices.getCategories(1, 10)
     .subscribe({
       next: data => {
+        console.log(data)
         this.categories = data
         setTimeout(()=>{
           this.dataTableInit();
 
         }, 250)
       },
-      error: error => {}
+      error: error => {
+        if (error.status == 401){
+          // this.httpservices.logout()
+        }
+      }
     })
   }
 
@@ -391,38 +373,15 @@ export class CategoryComponent {
       // this.products$.subscribe({
       //   next: data => {
       //     if(data){
-      // this.zone.runOutsideAngular(() => {
-      //   setTimeout(() => {
-      //     const preloader = document.getElementById('global-loader') as HTMLDivElement;
-      //     if (preloader) {
-      //       preloader.style.display = 'none';
-      //     }
-      //     $('.datanewcat').DataTable({
-      //       "bFilter": true,
-      //       // "sDom": 'fBtlpi',
-      //       "dom": 'pftil',
-      //       "ordering": true,
-      //       "language": {
-      //         emptyTable: "No data available ",
-      //         infoEmpty: "",
-      //         search: ' ',
-      //         sLengthMenu: '_MENU_',
-      //         searchPlaceholder: "Search",
-      //         info: "_START_ - _END_ of _TOTAL_ items",
-      //         paginate: {
-      //           next: ' <i class=" fa fa-angle-right"></i>',
-      //           previous: '<i class="fa fa-angle-left"></i> '
-      //         },
-      //       },
-      //       initComplete: (_settings: any, _json: any) => {
-      //         $('.dataTables_filter').appendTo('#tableSearch');
-      //         $('.dataTables_filter').appendTo('.search-input');
-  
-      //       },
-      //     });  // Initialize jQuery DataTable outside Angular’s zone
-      //   }, 2000)
-      // }
-      // );
+      this.zone.runOutsideAngular(() => {
+        setTimeout(() => {
+          const preloader = document.getElementById('global-loader') as HTMLDivElement;
+          if (preloader) {
+            preloader.style.display = 'none';
+          }
+        }, 2000)
+      }
+      );
     
   }
 

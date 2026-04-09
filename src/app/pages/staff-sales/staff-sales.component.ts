@@ -52,7 +52,7 @@ export class StaffSalesComponent {
     this.selectedDate = event.target.value;
     this.httpservice.getUserSalesDateAnalytics(this.id, event.target.value).subscribe({
       next: data => {
-        console.log("woow",data)
+        // console.log("woow",data)
         // console.log("woow",data.cashSalesTotal)
         // this.salesa = data.monthlySales
         // this.recentSales = data.recentSales
