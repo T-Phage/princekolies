@@ -6,6 +6,7 @@ import { LoadingService } from '../../services/loadingservice/loading.service';
 import { FormBuilder, FormArray, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ErrormodalComponent } from '../../components/errormodal/errormodal.component';
 import { SharedService } from '../../services/sharedservices/shared.service';
+import { SwalservicesService } from '../../services/swal/swalservices.service';
 
 @Component({
   selector: 'app-restock',
@@ -27,6 +28,7 @@ export class RestockComponent {
     private formBuilder: FormBuilder,
     public loadingService: LoadingService,
     private sharedservice: SharedService,
+    private swalservices: SwalservicesService,
   ) {}
 
   restockForm = this.formBuilder.group({
@@ -52,7 +54,8 @@ export class RestockComponent {
     if (this.items.invalid) {
       this.submitted = true; // Trigger error messages for the user
       // console.error("Please fill in all required fields before adding a new row.");
-      alert("Please fill in all required fields before adding a new row.");
+      // alert("Please fill in all required fields before adding a new row.");
+      this.swalservices.fireWarning("Please fill in all required fields before adding a new row.")
       return;
     }
 
@@ -95,6 +98,7 @@ export class RestockComponent {
       next: data =>{
         console.log(data)
         this.sharedservice.infoFunc('alert alert-success', data.message, false, false, false)
+        this.swalservices.fireSuccess(data.message)
         // Reset the form after submission
         this.resetToFirstItem();
         this.submitted = false; 
@@ -103,13 +107,13 @@ export class RestockComponent {
         console.log(err);
         console.log(err.error);
         console.log(err.error.error);
+        this.swalservices.fireError(err.error.error)
         this.sharedservice.infoFunc('alert alert-danger', err.error.error, false, false, false) 
         setTimeout(() => {
           this.sharedservice.infoFunc('', '', false, false, false) 
         }, 4500);
       },
       complete: ()=> {
-        // this.sharedservice.infoFunc('alert alert-info', 'updating stocks', true, true, true)
         setTimeout(() => {
           this.sharedservice.infoFunc('', '', false, false, false) 
         }, 3000);
@@ -150,9 +154,10 @@ export class RestockComponent {
       // Patch the values into the form
       row.patchValue({
         product_id: this.selectedProduct.id,
+        price: this.selectedProduct.price,
       });
 
-      console.log(`Row ${index} updated with Product ID: ${this.selectedProduct.id}`);
+      // console.log(`Row ${index} updated with Product ID: ${this.selectedProduct.id}`);
     }
     
   }

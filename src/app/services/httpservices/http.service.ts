@@ -203,6 +203,10 @@ export class HttpService {
     return this.http.get<any>(`${this.baseUrl}/analytics`, {headers: this.getHeaders()} );
   }
 
+  getBranchAnalytics(branchId: any): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/analytics/branch/${branchId}`, {headers: this.getHeaders()} );
+  }
+
   getSalesAnalytics(): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/sales/analytics`, {headers: this.getHeaders()});
   }

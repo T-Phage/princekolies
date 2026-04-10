@@ -1,7 +1,26 @@
 <div class="content">
-    <div class="d-flex bg-white p-3 rounded align-items-center welcome-text mb-4">
-        <h4 class="d-flex align-items-center"><img src="assets/images/hi.svg" alt="img">&nbsp;Welcome {{username}},
-        </h4>&nbsp;<h6>here's what's happening with <strong></strong>with your shop.</h6>
+    <div class="welcome d-lg-flex align-items-center justify-content-between">
+        <div class="d-flex bg-white rounded align-items-center welcome-text">
+            <h4 class="d-flex align-items-center"><img src="assets/images/hi.svg" alt="img">&nbsp;Welcome {{username}},
+            </h4>&nbsp;<h6>here's what's happening with <strong></strong> your shop.</h6>
+        </div>
+        <div class="d-flex align-items-center">
+            <div class="position-relative daterange-wraper me-2">
+                <div class="input-groupicon calender-input">
+                    <select (change)="branchChange($event)" [(ngModel)]="selectedBranch" class="form-control">
+                        <option value="0">Select Branch</option>
+                        <option *ngFor="let branch of branches" [value]="branch.id">{{branch.branch_name}}</option>
+                    </select>
+                    
+                </div>
+                <i (click)="refresh()" data-feather="calendar" class="feather-14"></i>
+            </div>
+            <button (click)="refresh()" type="button" data-toggle="tooltip" class="btn btn-white-outline d-none d-md-inline-block"
+                data-bs-toggle="tooltip" data-bs-placement="top" title="Refresh"><i data-feather="rotate-ccw"
+                    class="feather-rotate-ccw"></i></button>
+            <!-- <a href="ja" class="d-none d-lg-inline-block" data-bs-toggle="tooltip" data-bs-placement="top"
+                title="Collapse" id="collapse-header"><i data-feather="chevron-up" class="feather-16"></i></a> -->
+        </div>
     </div>
 
     <div class="row">
@@ -264,4 +283,10 @@
 
 <div *ngIf="session_off" style="position:fixed;z-index:999;bottom:0;padding:8px;background:red;color:#fff;display: flex; justify-content: center; align-items: center; ">
     <div>Your session has expired</div>
+</div>
+
+<div *ngIf="loading" style="background:#0000000d;z-index:9999;position:fixed;top:0;left:0;display:flex;width:100vw;height:100vh;cursor:progress;"></div>
+
+<div *ngIf="errorLoading" class="loadingError">
+    <div>Loading failed. <button (click)="refresh()">Click to retry</button></div>
 </div>
