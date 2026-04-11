@@ -49,12 +49,10 @@ export class RestockComponent {
   // Add this to your component.ts
   addItem(evt:any) {
     console.log((evt.target as HTMLButtonElement));
-    console.log(this.items)
+    // console.log(this.items)
     // Check if the current form array is valid
     if (this.items.invalid) {
       this.submitted = true; // Trigger error messages for the user
-      // console.error("Please fill in all required fields before adding a new row.");
-      // alert("Please fill in all required fields before adding a new row.");
       this.swalservices.fireWarning("Please fill in all required fields before adding a new row.")
       return;
     }
@@ -85,7 +83,7 @@ export class RestockComponent {
   frmSubmit(evt: Event) {
     evt.preventDefault();
     this.submitted = true;
-    console.log(this.restockForm.value)
+    // console.log(this.restockForm.value)
 
     if (!this.restockForm.valid){
       return
@@ -143,9 +141,9 @@ export class RestockComponent {
 
   inpProductNameChange(evt: any, index: number){
     const inputValue = evt.target.value;
-    console.log(inputValue)
+    // console.log(inputValue)
     this.selectedProduct = this.products.find(product => product.name === inputValue);
-    console.log(this.selectedProduct)
+    // console.log(this.selectedProduct)
 
     if (this.selectedProduct) {
       // Get the specific FormGroup at this index

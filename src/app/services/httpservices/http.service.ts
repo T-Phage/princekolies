@@ -61,12 +61,16 @@ export class HttpService {
       });
   }
 
-   // Set up headers
+  // Set up headers
   private getHeaders(): HttpHeaders {
     return new HttpHeaders({
       'Authorization': `Bearer ${sessionStorage.getItem('token') || this.appToken}`, // Custom header
       'Content-Type': 'application/json', // Standard header
     });
+  }
+
+  getUserRole() {
+    return sessionStorage.getItem('role') || this.role;
   }
   
   httpLogin(body: any) {

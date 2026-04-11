@@ -270,16 +270,29 @@ export class ProductsComponent {
     // Create a new jsPDF instance
     const doc = new jsPDF();
 
+    var data = this.products
+
     // Add table content using autoTable
-    autoTable(doc, { 
-      html: '#table',
-      startY: 10,
-        theme: 'grid', // Optional: Customize theme and layout as needed
-        styles: { fontSize: 8 }
-     });
+
+    const columns = [
+        { header: "Product", dataKey: "name" },
+        { header: "Category", dataKey: "category_id" },
+        { header: "Price", dataKey: "price" },
+        { header: "Quantity", dataKey: "quantity" }
+    ];
+    autoTable(doc, {
+        columns: columns,
+        body: data,
+        foot: [[
+          { content: `Total Items: ${this.products.length}`, colSpan: 1, styles: { fontStyle: 'bold' } },
+          { content: `Feed: `, styles: { fontStyle: 'bold', halign: 'right' } },
+          { content: `Others: `, styles: { fontStyle: 'bold', halign: 'right' } }
+        ]],
+        theme: 'grid'
+    });
 
     // Save the generated PDF
-    doc.save('products_table.pdf');
+    doc.save('products_table_'+(new Date().toDateString().split('T')[0].replace(' ', '_'))+'.pdf');
   }
 
   printTable() {

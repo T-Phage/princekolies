@@ -5,6 +5,8 @@ import { HttpService } from '../../services/httpservices/http.service';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SharedService } from '../../services/sharedservices/shared.service';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 @Component({
   selector: 'app-staff-sales',
@@ -23,6 +25,7 @@ export class StaffSalesComponent {
   public chart: any;
   recentSales:any[] = [];
   productSold:any[] = [];
+  productsReceipts:any[] = [];
   username = '';
   salescount: any;
   todayCashAmount:any;
@@ -63,6 +66,7 @@ export class StaffSalesComponent {
         this.bankCashIn = data.bank;
         this.percentageIncrease = data.percentage_increase
         this.productSold = data.productsSold;
+        this.productsReceipts = data.productsReceipts
         // console.log(data.recentSales)
       },
       error: error => {
@@ -126,6 +130,7 @@ export class StaffSalesComponent {
         this.bankCashIn = data.bank;
         this.percentageIncrease = data.percentage_increase
         this.productSold = data.productsSold;
+        this.productsReceipts = data.productsReceipts
         this.loading = false
         // console.log(data.recentSales)
         //  if(this.manager){this.createChart()}
@@ -156,7 +161,7 @@ export class StaffSalesComponent {
       ]
     }
 
-    this.chart = new Chart("MyChart", {
+    this.chart = new Chart("staffChart", {
       type: 'line', //this denotes tha type of chart
 
       data: data,
@@ -199,6 +204,108 @@ export class StaffSalesComponent {
     })
   }
 
-  ngDestroy(){}
+  ngDestroy(){
+     var chartExist = Chart.getChart("staffChart"); // <canvas> id
+        if (chartExist != undefined) { 
+          chartExist.destroy(); 
+        }
+  }
+
+  private generateTableHtml(): string {
+      let tableHtml = '<table>\
+                              <thead>\
+                                  <tr>\
+                                      <th>#</th>\
+                                      <th>Invoice No.</th>\
+                                      <th>Product</th>\
+                                      <th>Unit Cost (GHc)</th>\
+                                      <th>Quantity</th>\
+                                      <th>Purchase Price (GHc)</th>\
+                                      <th>Amount Received (GHc)</th>\
+                                      <th>Sale Cost (GHc)</th>\
+                                  </tr>\
+                              </thead>\
+                              <tbody>';
+      this.productsReceipts.forEach((product, index) => {
+        tableHtml += `<tr>
+                          <td> ${index+1}
+                          <td> ${product.receipt_no}</td>
+                          <td> ${product.product}</td>
+                          <td> ${product.unit_cost}</td>
+                          <td> ${product.quantity}</td>
+                          <td> ${product.purchase_price}</td>
+                          <td> ${product.amount_received}</td>
+                          <td> ${product.grand_total }</td>
+                      </tr>`;
+      });
+      tableHtml += `<tr>
+                        <td colspan="5"></td>
+                        <td>Total</td>
+                        <td>${this.todayCashAmount}</td>
+                    </tr>`;
+      tableHtml += `<tr>
+                        <td colspan="5"></td>
+                        <td>Cash</td>
+                        <td>${this.cashIn}</td>
+                    </tr>`;
+      tableHtml += '</tbody></table>';
+      return tableHtml;
+    }
+  
+    exportTableToPDF() {
+      // Create a new jsPDF instance
+      const doc = new jsPDF();
+  
+      var data = this.productsReceipts
+  
+      const columns = [
+          { header: "Invoice No.", dataKey: "receipt_no"},
+          { header: "Product", dataKey:"product"},
+          { header: "Unit Cost", dataKey: "unit_cost"},
+          { header: "Quantity", dataKey: "quantity"},
+          { header: "Purchase Price", dataKey: "purchase_price"},
+          { header: "Amount Received", dataKey: "amount_received"},
+          { header: "Sale Cost", dataKey: "grand_total"}
+      ];
+      autoTable(doc, {
+          columns: columns,
+          body: data,
+          foot: [[
+            { content: `Total Items: ${this.productsReceipts.length}`, colSpan: 1, styles: { fontStyle: 'bold' } },
+            { content: `Total Price: ${this.todayCashAmount}`, colSpan:1, styles: {fontStyle: 'bold'} },
+            { content: `Momo: ${this.momo}`, colSpan:1, styles: {fontStyle: 'bold'} },
+            { content: `Cash: ${this.cashIn}`, colSpan:1, styles: {fontStyle: 'bold'} },
+            // { content: `Feed: `, styles: { fontStyle: 'bold', halign: 'right' } },
+            // { content: `Others: `, styles: { fontStyle: 'bold', halign: 'right' } }
+          ]],
+          theme: 'grid'
+      });
+  
+      // Save the generated PDF
+      doc.save('princekolies_sales_'+(this.username)+'_'+(this.selectedDate)+'.pdf');
+    }
+    printTable() {
+      const printWindow = window.open('', '_blank');  // Open a new window
+      if (printWindow) {
+        const tableHtml = this.generateTableHtml();  // Generate the table HTML
+        printWindow.document.write(`
+          <html>
+            <head>
+              <title>Print Product Table</title>
+              <style>
+                table { border-collapse: collapse; width: 100%; }
+                th, td { border: 1px solid black; padding: 8px; text-align: left; }
+                th { background-color: #f2f2f2; }
+              </style>
+            </head>
+            <body onload="window.print(); window.close();">
+              <h2>Product Table</h2>
+              ${tableHtml}
+            </body>
+          </html>
+        `);
+        printWindow.document.close();  // Close the document to finish loading
+      }
+    }
 
 }
