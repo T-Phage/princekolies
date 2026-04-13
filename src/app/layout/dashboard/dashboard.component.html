@@ -115,9 +115,12 @@
                         <h6 class="submenu-hdr">Main</h6>
                         <ul>
                             
-                            <li *ngIf="manager || owner" [className]="router.url == '/dashboard/overview-dashboard'? 'active': '' "><a [routerLink]="['/dashboard/overview-dashboard']">Overview</a></li>
+                            <li *ngIf="owner" [className]="router.url == '/dashboard/overview-dashboard'? 'active': '' "><a [routerLink]="['/dashboard/overview-dashboard']">Overview</a></li>
                             <li [className]="router.url == '/dashboard/sales-dashboard'? 'active': '' "><a [routerLink]="['/dashboard/sales-dashboard']">
                                 <span>Sales Dashboard</span>
+                            </a></li>
+                            <li  *ngIf="owner" [className]="router.url == '/dashboard/owner/sales-analytics'? 'active': '' "><a [routerLink]="['/dashboard/owner/sales-analytics']">
+                                <span>Sales Analytics</span>
                             </a></li>
                         </ul>
                     </li>
@@ -195,9 +198,12 @@
                         <h6 class="submenu-hdr">Main</h6>
                         <ul>
                             
-                            <li *ngIf="manager || owner" (click)="toggleMenu()" [className]="router.url == '/dashboard/overview-dashboard'? 'active': '' "><a [routerLink]="['/dashboard/overview-dashboard']">Overview</a></li>
+                            <li *ngIf="owner" (click)="toggleMenu()" [className]="router.url == '/dashboard/overview-dashboard'? 'active': '' "><a [routerLink]="['/dashboard/overview-dashboard']">Overview</a></li>
                             <li (click)="toggleMenu()" [className]="router.url == '/dashboard/sales-dashboard'? 'active': '' "><a [routerLink]="['/dashboard/sales-dashboard']">
                                 <span>Sales Dashboard</span>
+                            </a></li>
+                            <li  *ngIf="owner" (click)="toggleMenu()" [className]="router.url == '/dashboard/owner/sales-analytics'? 'active': '' "><a [routerLink]="['/dashboard/owner/sales-analytics']">
+                                <span>Sales Analytics</span>
                             </a></li>
                         </ul>
                     </li>

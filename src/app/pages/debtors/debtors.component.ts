@@ -42,6 +42,8 @@ export class DebtorsComponent {
   }
   canAddBedtor: boolean = false;
 
+  userrole = this.httpService.getUserRole()
+
   constructor(
     private httpService: HttpService,
     private fb: FormBuilder,
@@ -154,7 +156,7 @@ export class DebtorsComponent {
       next: (res) => {
         // console.log(res.unpaidSales)
         this.debtors = res.unpaidSales
-        this.datatableService.initiateDataTable('.debtorsnew')
+        this.datatableService.initiateDataTable('.debtorsnew', 15)
       },
       error: (err) => {
         // console.log(err)

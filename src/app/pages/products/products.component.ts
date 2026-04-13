@@ -337,72 +337,7 @@ export class ProductsComponent {
   refreshData(){
     // location.reload();
     this.sharedservice.refreshComponentFunc('dashboard/products');
-    // this.categories$ = this.httpservice.getCategories(1, 10);
-    // $('.datanew').DataTable().destroy();
-    // setTimeout(()=> {
-    //   $('.datanew').DataTable({
-    //     "bFilter": true,
-    //     // "sDom": 'fBtlpi',
-    //     "dom": 'pftil',
-    //     "ordering": true,
-    //     "language": {
-    //       search: ' ',
-    //       emptyTable: "No data available in table",
-    //       infoEmpty: "",
-    //       sLengthMenu: '_MENU_',
-    //       searchPlaceholder: "Search",
-    //       info: "_START_ - _END_ of _TOTAL_ items",
-    //       paginate: {
-    //         next: ' <i class=" fa fa-angle-right"></i>',
-    //         previous: '<i class="fa fa-angle-left"></i> '
-    //       },
-    //     },
-    //     initComplete: (_settings: any, _json: any) => {
-    //       $('.dataTables_filter').appendTo('#tableSearch');
-    //       $('.dataTables_filter').appendTo('.search-input');
-    //     },
-    //   }); 
-    // },3000)
   }
-
-  // ngAfterViewInit(): void {
-  //   // Hide preloader once the view is fully initialized
-
-  //   this.zone.runOutsideAngular(() => {
-  //     setTimeout(() => {
-  //       const preloader = document.getElementById('global-loader') as HTMLDivElement;
-  //       if (preloader) {
-  //         preloader.style.display = 'none';
-  //       }
-  //       $('.datanew').DataTable({
-  //         "bFilter": true,
-  //         // "sDom": 'fBtlpi',
-  //         "dom": 'pftil',
-  //         "ordering": true,
-  //         "language": {
-  //           emptyTable: "No data available in table",
-  //           infoEmpty: "",
-  //           search: ' ',
-  //           sLengthMenu: '_MENU_',
-  //           searchPlaceholder: "Search",
-  //           info: "_START_ - _END_ of _TOTAL_ items",
-  //           paginate: {
-  //             next: ' <i class=" fa fa-angle-right"></i>',
-  //             previous: '<i class="fa fa-angle-left"></i> '
-  //           },
-  //         },
-  //         initComplete: (_settings: any, _json: any) => {
-  //           $('.dataTables_filter').appendTo('#tableSearch');
-  //           $('.dataTables_filter').appendTo('.search-input');
-  //         },
-  //       });  // Initialize jQuery DataTable outside Angular’s zone
-  //     }, 1000)
-  //   }
-  //   );
-  //   // }
-  //   // });
-  //   // });
-  // }
 
   initDataTable() {
     this.zone.runOutsideAngular(() => {
@@ -413,6 +348,9 @@ export class ProductsComponent {
       }
 
       $('.datanew').DataTable({
+        "pageLength": 20,
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+        "bLengthChange": true,
         bFilter: true,
         // dom: 'pftil',
         "sDom": 'fBtlpi',

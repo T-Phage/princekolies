@@ -35,6 +35,8 @@ export class ReturnsComponent {
 
     manager:boolean = false;
     owner:boolean = false;
+
+    userRole = this.httpservice.getUserRole();
   
     // formats: BarcodeFormat[] = [BarcodeFormat.QR_CODE, BarcodeFormat.EAN_13, BarcodeFormat.UPC_A];
     scannedCode: string | null = null;
@@ -89,7 +91,7 @@ export class ReturnsComponent {
         next: data => {
           this.sales = data
           // console.log(this.sales)
-          this.dataTableservice.initiateDataTable('.returnstable')
+          this.dataTableservice.initiateDataTable('.returnstable', 15)
         }
       })
       this.httpservice.getSales(1, 10).subscribe({

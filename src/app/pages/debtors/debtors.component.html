@@ -73,7 +73,7 @@
                                         data-bs-target="#debtors-details-new"><i data-feather="eye"
                                             class="info-img"></i>Debtor Detail</a>
                                 </li>
-                                <li (click)="debtorClicked(debtor.customer.id,debtor.id,debtor.customer.name,debtor.reference,debtor.status,debtor.grand_total,debtor.payment_status,debtor.amount_paid, debtor.biller, debtor.items, debtor.customer.phone, debtor.customer.identification_type, debtor.customer.identity_number)">
+                                <li *ngIf="userrole == 'Business_Owner'" (click)="debtorClicked(debtor.customer.id,debtor.id,debtor.customer.name,debtor.reference,debtor.status,debtor.grand_total,debtor.payment_status,debtor.amount_paid, debtor.biller, debtor.items, debtor.customer.phone, debtor.customer.identification_type, debtor.customer.identity_number)">
                                     <a href="javascript:void(0);" class="dropdown-item" data-bs-toggle="modal"
                                         data-bs-target="#edit-debtors-payment"><i data-feather="eye"
                                             class="info-img"></i>Update Payments</a>

@@ -6,13 +6,12 @@
         </div>
         <div class="d-flex align-items-center">
             <div class="position-relative daterange-wraper me-2">
-                <div class="input-groupicon calender-input">
-                    <select (change)="branchChange($event)" [(ngModel)]="selectedBranch" class="form-control">
+                <form [formGroup]="branch" class="input-groupicon calender-input">
+                    <select (change)="branchChange()" formControlName='id' class="form-control">
                         <option value="0">Select Branch</option>
                         <option *ngFor="let branch of branches" [value]="branch.id">{{branch.branch_name}}</option>
                     </select>
-                    
-                </div>
+                </form>
                 <i (click)="refresh()" data-feather="calendar" class="feather-14"></i>
             </div>
             <button (click)="refresh()" type="button" data-toggle="tooltip" class="btn btn-white-outline d-none d-md-inline-block"

@@ -20,6 +20,7 @@ import { ExpensesCategoryComponent } from './pages/expenses-category/expenses-ca
 import { RestockComponent } from './pages/restock/restock.component';
 import { DebtorsComponent } from './pages/debtors/debtors.component';
 import { NewdebtorComponent } from './pages/newdebtor/newdebtor.component';
+import { SaleanalyticsComponent } from './pages/owner/saleanalytics/saleanalytics.component';
 
 export const routes: Routes = [
     {
@@ -44,7 +45,8 @@ export const routes: Routes = [
             {path: 'staff-sales/:id/:name', component: StaffSalesComponent},
             {path: 'expenses', component: ExpensesComponent},
             {path: 'expense-category', component: ExpensesCategoryComponent},
-            {path: 'new-debtor', component: NewdebtorComponent}
+            {path: 'new-debtor', component: NewdebtorComponent},
+            {path: 'owner/sales-analytics', component: SaleanalyticsComponent},
         ]
     },
     { path: 'auth/login', component: LoginComponent },

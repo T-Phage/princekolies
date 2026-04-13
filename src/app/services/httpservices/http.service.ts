@@ -295,5 +295,9 @@ export class HttpService {
   makeSalePayment(body: any){
     return this.http.post<any>(`${this.baseUrl}/sale/edit/payment`, body, {headers: this.getHeaders()})
   }
+
+  getSalesReport(body: any) {
+    return this.http.post<any>(`${this.baseUrl}/get/sales/report`, body, {headers: this.getHeaders()})
+  }
   
 }

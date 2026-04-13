@@ -1,9 +1,11 @@
 import { Component, ElementRef, NgZone, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { FormBuilder, FormArray, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { HttpService } from '../../services/httpservices/http.service';
 import { PrintService } from '../../services/print/print.service';
 import { SharedService } from '../../services/sharedservices/shared.service';
+import { DatabaleService } from '../../services/datatable/databale.service';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { ErrormodalComponent } from '../../components/errormodal/errormodal.component';
 import * as XLSX from 'xlsx';
@@ -36,7 +38,8 @@ export class SalesComponent implements OnInit {
     private httpservice: HttpService,
     public sharedservice: SharedService,
     private printservice: PrintService,
-    private zone: NgZone,
+    private datableservice: DatabaleService,
+    private router: Router,
   ) { 
     
   }
@@ -66,7 +69,6 @@ export class SalesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.sales$ = this.httpservice.getSales(1, 10)
     this.httpservice.getProducts(1, 10)
       .subscribe({
         next: data => {
@@ -77,16 +79,16 @@ export class SalesComponent implements OnInit {
           console.error('error :', error)
         }
       });
+      
       this.httpservice.getSales(1, 10)
       .subscribe({
         next: data => {
-          this.sales = data
+          this.sales = data;
+          this.datableservice.initiateDataTable('.datasales', 25);
         },
-        error: _error => {
-
-        }
+        error: _err => {}
       })
-  }
+    }
 
   get items() {
     return this.newSalesFrm.get('items') as FormArray;
@@ -181,8 +183,7 @@ export class SalesComponent implements OnInit {
       this.httpservice.addNewSale(this.newSalesFrm.value, this.receiptContent)
       .subscribe({
         next: data => {
-          $('.datanew').DataTable().destroy()
-          // $('.datanew ').empty()
+          $('.datasales').DataTable().destroy()
           this.sharedservice.infoFunc('alert alert-success', data.message, false, false, false) 
           this.sales$ = this.httpservice.getSales(1, 10);
           this.newSalesFrm.controls.reference?.setValue(`${data.sale.reference}`)
@@ -190,7 +191,7 @@ export class SalesComponent implements OnInit {
           let ctn = this.receiptContent
           // window.location.reload() 
           setTimeout(()=> {
-            $('.datanew').DataTable({
+            $('.datasales').DataTable({
               "bFilter": true,
               // "sDom": 'fBtlpi',
               "dom": 'pftil',
@@ -310,138 +311,47 @@ export class SalesComponent implements OnInit {
     doc.save('sales_table.pdf');
   }
 
-  deleteSale(){
-    this.httpservice.deleteSale(this.clickedSale.reference)
-    .subscribe({
-      next: data => {
-        this.sharedservice.infoFunc('alert alert-success', 'record deleted', false, false, false)
+  // deleteSale(){
+  //   this.httpservice.deleteSale(this.clickedSale.reference)
+  //   .subscribe({
+  //     next: data => {
+  //       this.sharedservice.infoFunc('alert alert-success', 'record deleted', false, false, false)
       
-        $('.datanew').DataTable().destroy()
-        this.sales$ = this.httpservice.getSales(1, 10);
-        this.products$ = this.httpservice.getProducts(1, 10);
-        // this.users$.
-        setTimeout(() =>{ 
-          this.sharedservice.infoFunc('', '', false, false, false)
-
-          $('.datanew').DataTable({
-            "bFilter": true,
-            // "sDom": 'fBtlpi',
-            "dom": 'pftil',
-            "ordering": true,
-            "language": {
-              search: ' ',
-              emptyTable: "No data available in table",
-              infoEmpty: "",
-              sLengthMenu: '_MENU_',
-              searchPlaceholder: "Search",
-              info: "_START_ - _END_ of _TOTAL_ items",
-              paginate: {
-                next: ' <i class="fa fa-angle-right"></i>',
-                previous: '<i class="fa fa-angle-left"></i> '
-              },
-            },
-            initComplete: (_settings: any, _json: any) => {
-              $('.dataTables_filter').appendTo('#tableSearch');
-              $('.dataTables_filter').appendTo('.search-input');
-              $('#info').appendTo('#info')
-            },
+  //       this.products$ = this.httpservice.getProducts(1, 10);
+  //       $('.datasales').DataTable().destroy()
+  //       this.httpservice.getSales(1, 10)
+  //       .subscribe({})
+  //       setTimeout(() =>{ 
+  //         this.sharedservice.infoFunc('', '', false, false, false)
+  //         this.datableservice.initiateDataTable('.datasales', 25);
+  //       }, 100)
+  //       this.hide = false
+  //       // $('#delete-sale-units').modal('hide').on('hidden.bs.modal', function () {
+  //       //   $('body').removeClass('modal-open'); // Ensure body scroll is enabled
+  //       //   $('body').css('overflow', 'auto');
+  //       //   $('.modal-backdrop').remove(); // Remove leftover backdrop
+  //       // });
+  //     },
+  //     error: error => {
+  //       let msg = error.error.message
+  //       console.error('error :', error)
+  //       this.sharedservice.infoFunc('alert alert-danger', msg, false, false, false)
+  //       setTimeout(()=>{
+  //         this.sharedservice.infoFunc('', '', false, false, false)
           
-          })
-        }, 3000)
-        this.hide = false
-        // $('#delete-sale-units').modal('hide').on('hidden.bs.modal', function () {
-        //   $('body').removeClass('modal-open'); // Ensure body scroll is enabled
-        //   $('body').css('overflow', 'auto');
-        //   $('.modal-backdrop').remove(); // Remove leftover backdrop
-        // });
-      },
-      error: error => {
-        let msg = error.error.message
-        console.error('error :', error)
-        this.sharedservice.infoFunc('alert alert-danger', msg, false, false, false)
-        setTimeout(()=>{
-          this.sharedservice.infoFunc('', '', false, false, false)
-          
-        }, 5000)
-      }
-    })
-  }
+  //       }, 5000)
+  //     }
+  //   })
+  // }
   hide:boolean = true;
   refreshData(){
-    this.sales$ = this.httpservice.getSales(1, 10);
-    $('.datanew').DataTable().destroy();
-    setTimeout(()=> {
-      $('.datanew').DataTable({
-        "bFilter": true,
-        // "sDom": 'fBtlpi',
-        "dom": 'pftil',
-        "ordering": true,
-        "language": {
-          search: ' ',
-          emptyTable: "No data available in table",
-          infoEmpty: "",
-          sLengthMenu: '_MENU_',
-          searchPlaceholder: "Search",
-          info: "_START_ - _END_ of _TOTAL_ items",
-          paginate: {
-            next: ' <i class=" fa fa-angle-right"></i>',
-            previous: '<i class="fa fa-angle-left"></i> '
-          },
-        },
-        initComplete: (_settings: any, _json: any) => {
-          $('.dataTables_filter').appendTo('#tableSearch');
-          $('.dataTables_filter').appendTo('.search-input');
-        },
-      }); 
-    },3000)
-  }
-
-  ngAfterViewInit(): void {
-    // Hide preloader once the view is fully initialized
-
-    // this.products$.subscribe({
-    //   next: data => {
-    //     if(data){
-    this.zone.runOutsideAngular(() => {
-      setTimeout(() => {
-        const preloader = document.getElementById('global-loader') as HTMLDivElement;
-        if (preloader) {
-          preloader.style.display = 'none';
-        }
-        $('.datanew').DataTable({
-          "bFilter": true,
-          // "sDom": 'fBtlpi',
-          "dom": 'pftil',
-          "ordering": true,
-          "language": {
-            search: ' ',
-            emptyTable: "No data available in table",
-            infoEmpty: "",
-            sLengthMenu: '_MENU_',
-            searchPlaceholder: "Search",
-            info: "_START_ - _END_ of _TOTAL_ items",
-            paginate: {
-              next: ' <i class=" fa fa-angle-right"></i>',
-              previous: '<i class="fa fa-angle-left"></i> '
-            },
-          },
-          initComplete: (_settings: any, _json: any) => {
-            $('.dataTables_filter').appendTo('#tableSearch');
-            $('.dataTables_filter').appendTo('.search-input');
-
-          },
-        });  // Initialize jQuery DataTable outside Angular’s zone
-      }, 1200)
-    }
-    );
-    // }
-    // });
-    // });
+    $('.datasales').DataTable().destroy();
+    this.sharedservice.refreshComponentFunc(this.router.url)
   }
 
   ngOnDestroy(): void {
     // Destroy the DataTable to free up resources
-    $('.datanew').DataTable().destroy();
+    $('.datasales').DataTable().destroy();
   }
 
 }

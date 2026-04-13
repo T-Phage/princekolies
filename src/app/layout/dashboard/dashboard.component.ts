@@ -17,7 +17,7 @@ export class DashboardComponent {
   manager:boolean = false;
   owner: boolean = false;
   username = `${sessionStorage.getItem('username')}`
-  userrole = `${sessionStorage.getItem('role')}`
+  userrole = this.httpservice.getUserRole();
 
   togglesideNav:boolean = false
   
@@ -34,7 +34,7 @@ export class DashboardComponent {
     public validationService: ValidationService,
     public httpservice: HttpService,
   ){
-    let role = `${sessionStorage.getItem('role')}`
+    let role = this.httpservice.getUserRole();
     if(role == 'Manager'){
         this.manager = true;
     }

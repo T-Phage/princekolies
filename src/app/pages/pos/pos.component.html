@@ -280,6 +280,15 @@
                                 <span class="text-600 text-110 text-black align-middle">{{username}}</span>
                             </div>
                         
+                            <div *ngIf="newSalesFrm.controls.customer_name.value">
+                                <span class="text-sm text-black align-middle">Customer: </span>
+                                <span class="text-600 text-110 text-black align-middle">{{newSalesFrm.controls.customer_name.value}}</span>
+                            </div>
+                            <br/>
+                            <div *ngIf="newSalesFrm.controls.payment_status.value =='Unpaid'" class="my-2">
+                                <span class="text-90">Status:</span> 
+                                <span class="text-600 text-110 text-black align-middle">{{newSalesFrm.controls.payment_status.value}}</span>
+                            </div>
                         </div>
 
                         <div class="text-95 align-self-start d-sm-flex justify-content-end">

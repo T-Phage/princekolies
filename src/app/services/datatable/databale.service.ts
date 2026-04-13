@@ -9,7 +9,7 @@ export class DatabaleService {
     private zone: NgZone,
   ) { }
 
-  initiateDataTable(tableClassName:string) {
+  initiateDataTable(tableClassName:string, pageLen:number) {
     this.zone.runOutsideAngular(() => {
       setTimeout(() => {
         const preloader = document.getElementById('global-loader') as HTMLDivElement;
@@ -18,6 +18,8 @@ export class DatabaleService {
         }
         // if ($('.datanew').length > 0){
           $(tableClassName).DataTable({
+            "pageLength": pageLen,
+            // "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
             "bFilter": true,
             "sDom": 'fBtlpi',
             // "dom": 'pftil',

@@ -30,7 +30,7 @@
                     data-feather="chevron-up" class="feather-chevron-up"></i></a>
         </li> -->
     </ul>
-    <div class="page-btn">
+    <div *ngIf="userRole == 'Business_Owner'" class="page-btn">
         <a href="javascript:void(0);" class="btn btn-added" data-bs-toggle="modal" data-bs-target="#add-sales-new"><i
                 data-feather="plus-circle" class="me-2"></i> Add New Return</a>
     </div>

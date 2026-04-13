@@ -5,11 +5,12 @@ import { SharedService } from '../../services/sharedservices/shared.service';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import  Chart from 'chart.js/auto';
 import { Observable } from 'rxjs';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-overview-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './overview-dashboard.component.html',
   styleUrl: './overview-dashboard.component.css',
   schemas: [NO_ERRORS_SCHEMA],
@@ -22,6 +23,7 @@ export class OverviewDashboardComponent {
     private httpservice: HttpService,
     private sharedservice: SharedService,
     private router: Router,
+    private fb: FormBuilder,
   ){  }
 
   loading: boolean = true;
@@ -55,7 +57,11 @@ export class OverviewDashboardComponent {
   branches: any[] = [];
 
   username = '';
+  selectedBranch:any = 0;
 
+  branch = this.fb.group({
+    'id': [sessionStorage.getItem('selected_branch')],
+  })
   refresh(){
     const existingChart = Chart.getChart("MyChart"); // canvas ID
     if (existingChart) {
@@ -67,63 +73,66 @@ export class OverviewDashboardComponent {
   ngOnInit(): void {
     this.loading = false;
     this.username = sessionStorage.getItem('username') || '';
+
+    if(Number(this.branch.value.id) != 0){
+
+      this.branchChange();
+      return
+    }
     this.httpservice.getProducts(1, 10).subscribe((products) => {
       this.totalPrice = this.calculateTotal(products);
       // console.log(this.totalPrice)
     });
-    // this.httpservice.httpself();
-    this.years$ = this.httpservice.getallyears()
-    // this.sharedservice.loadScripts();
-    this.httpservice.getAnalytics().subscribe({
-      next: data => {
-        // console.log(data)      
-        this.productsLen = data.productLen
-        this.salesLen = data.salesLen
-        this.expiryLen = data.expiryLen
-        this.low_stock = data.low_stock
-        this.unpaidsales = data.unpaidsales
-        this.paidsales = data.paidsales
-        this.totalQuantity = data.totalQuantity
-        this.out_of_stock = data.out_of_stock
-        this.userscount = data.totalusers
-        this.totalPaidSalesForWeek = data.totalPaidSalesForWeek
-        this.recentProducts = data.recentProducts
-        this.expiringproducts = data.products_expired
-        this.monthlyCashSales = data.monthlyCashSales
-        this.totalSalesAmountForWeek = data.totalSalesAmountForWeek
-        this.totalSalesAmountForMonth = data.totalSalesAmountForMonth
-        this.totalPaidSalesForMonth = data.totalPaidSalesForMonth
-        this.totalPaidSalesCash = data.totalPaidSalesCash
-        this.branches = data.branches
-
-        this.createChart()
-      },
-      error: error => {
-        let msg = error.error.message
-        // console.error('error :', error)
-        // console.log(msg)
-        if (msg == 'Unauthenticated.' || error.status == 401 || msg == 'Token has expired' || msg == 'Invalid token') {
-          this.session_off = true;
-          setTimeout(()=>{
+      // this.httpservice.httpself();
+      this.years$ = this.httpservice.getallyears()
+      // this.sharedservice.loadScripts();
+      this.httpservice.getAnalytics().subscribe({
+        next: data => {
+          // console.log(data)      
+          this.productsLen = data.productLen
+          this.salesLen = data.salesLen
+          this.expiryLen = data.expiryLen
+          this.low_stock = data.low_stock
+          this.unpaidsales = data.unpaidsales
+          this.paidsales = data.paidsales
+          this.totalQuantity = data.totalQuantity
+          this.out_of_stock = data.out_of_stock
+          this.userscount = data.totalusers
+          this.totalPaidSalesForWeek = data.totalPaidSalesForWeek
+          this.recentProducts = data.recentProducts
+          this.expiringproducts = data.products_expired
+          this.monthlyCashSales = data.monthlyCashSales
+          this.totalSalesAmountForWeek = data.totalSalesAmountForWeek
+          this.totalSalesAmountForMonth = data.totalSalesAmountForMonth
+          this.totalPaidSalesForMonth = data.totalPaidSalesForMonth
+          this.totalPaidSalesCash = data.totalPaidSalesCash
+          this.branches = data.branches
+          
+          this.createChart()
+          
+          setTimeout(() => {
+            this.selectedBranch = sessionStorage.getItem('selected_branch');
+            console.log(this.selectedBranch)
+          }, 100);
+  
+        },
+        error: error => {
+          let msg = error.error.message
+          // console.error('error :', error)
+          // console.log(msg)
+          if (msg == 'Unauthenticated.' || error.status == 401 || msg == 'Token has expired' || msg == 'Invalid token') {
             this.session_off = true;
-            this.httpservice.httpLogout()
-          },300)
-          // this.sharedservice.infoFunc('alert alert-danger', 'Session expired. Please login again.', false, false, false)
+            setTimeout(()=>{
+              this.session_off = true;
+              this.httpservice.httpLogout()
+            },300)
+            // this.sharedservice.infoFunc('alert alert-danger', 'Session expired. Please login again.', false, false, false)
+          }
         }
-      }
-    })
+      })
+    // } else {
 
-    this.httpservice.getAnalytics().subscribe({
-      next: data => {
-        // console.log(data)  
-        this.salesa = data    
-        
-      },
-      error: error => {
-        let msg = error.error.message
-        // console.error('error :', error)
-      }
-    })
+    // }
   }
 
   yearChange(e: Event){
@@ -206,17 +215,18 @@ export class OverviewDashboardComponent {
 
   }
 
-  selectedBranch:any = '';
-  branchChange(evt: Event) {
+  branchChange() {
     const existingChart = Chart.getChart("MyChart"); // Use your canvas ID
     if (existingChart) {
         existingChart.destroy();
     }
+
     // Now create your new chart
-  // new Chart(document.getElementById("MyChart"), config);
-    var branch = (evt.target as HTMLSelectElement).value
+    // new Chart(document.getElementById("MyChart"), config);
+    var branch = `${this.branch.value.id}`;
+    sessionStorage.setItem('selected_branch', branch)
     // console.log((evt.target as HTMLSelectElement).value)
-    if (parseInt(branch) == 0){
+    if (parseInt(`${this.branch.value.id}`) == 0){
       // this.ngOnInit();
       return
     }
@@ -245,7 +255,7 @@ export class OverviewDashboardComponent {
         this.totalPaidSalesForMonth = data.totalPaidSalesForMonth
         this.totalPaidSalesCash = data.totalPaidSalesCash
         this.totalPrice = this.calculateTotal(data.products)
-        // this.branches = data.branches
+        this.branches = data.branches
 
         this.createChart()
       },
