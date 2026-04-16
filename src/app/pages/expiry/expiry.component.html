@@ -29,7 +29,7 @@
                     data-feather="chevron-up" class="feather-chevron-up"></i></a>
         </li> -->
     </ul>
-    <div *ngIf="role != 'Attendant'" class="page-btn">
+    <div *ngIf="role == 'Business_Owner'" class="page-btn">
         <a [routerLink]="['/dashboard/add-product']" class="btn btn-added"><i data-feather="plus-circle" class="me-2"></i>Add
             New Product</a>
     </div>
@@ -48,8 +48,16 @@
                             class="feather-search"></i></a>
                 </div>
             </div>
-            
-            
+
+            <form *ngIf="role == 'Business_Owner'" [formGroup]="branch">
+                <select formControlName="id" (change)="branchChange()" class="form-control">
+                    <option>Select branch</option>
+                    <option *ngFor="let branch of branches$ | async" [value]="branch.id">{{branch.branch_name}}</option>
+                </select>
+            </form>
+        </div>
+        <div style="display: flex;justify-content:center;">
+            <app-errormodal></app-errormodal>
         </div>
 
         <div class="card mb-0" id="filter_inputs">

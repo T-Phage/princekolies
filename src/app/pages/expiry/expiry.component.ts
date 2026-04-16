@@ -11,7 +11,8 @@ import autoTable from 'jspdf-autotable';
 import { SharedService } from '../../services/sharedservices/shared.service';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ErrormodalComponent } from '../../components/errormodal/errormodal.component';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
+import { DatabaleService } from '../../services/datatable/databale.service';
 
 @Component({
   selector: 'app-expiry',
@@ -30,6 +31,7 @@ export class ExpiryComponent {
 
   products$!: Observable<any>;
   categories$! : Observable<any>;
+  branches$! : Observable<any>;
 
   role:string = '';
 
@@ -40,25 +42,100 @@ export class ExpiryComponent {
     private zone: NgZone,
     public sharedservice: SharedService,
     private formBuilder: FormBuilder,
+    private datableservice: DatabaleService,
+    private router: Router,
   ) { }
 
-  ngOnInit() {
-    this.role = sessionStorage.getItem('role') || '';
-    this.products$ = this.httpservice.getProductsExpiring(this.currentPage, this.perPage);
-    this.categories$ = this.httpservice.getCategories(1, 10)
+  branch = this.formBuilder.group({
+    'id': [sessionStorage.getItem('selected_branch')]
+  })
 
-    this.httpservice.getProductsExpiring(this.currentPage, this.perPage)
+  branchChange() {
+    if (Number(`${this.branch.value.id}`) == 0){
+      this.sharedservice.infoFunc('', '', false, false, false);
+      return
+    }
+
+    this.sharedservice.infoFunc('alert alert-info', 'fetching branch products...  ', true, true, true);
+    $('.dataexp').DataTable().destroy()
+    sessionStorage.setItem('selected_branch', `${this.branch.value.id}`)
+    this.httpservice.getBranchProductsExpiring(this.branch.value.id)
       .subscribe({
         next: data => {
           this.products = data
-          // console.log(data)
+          // Initialize DataTable after data loads
+          setTimeout(() => {
+            this.datableservice.initiateDataTable('.dataexp', 25);
+            this.sharedservice.infoFunc('', '', false, false, false);
+          }, 200);
         },
         error: _error => {
-
+          console.log(_error);
+          // this.initDataTable();
+          if(_error.error.staus === 401){
+            this.httpservice.httpLogout()
+          }
         }
       })
   }
 
+  ngOnInit() {
+    this.sharedservice.infoFunc('alert alert-info', 'fetching branch products...  ', true, true, true);
+    this.role = sessionStorage.getItem('role') || '';
+    this.categories$ = this.httpservice.getCategories(1, 10)
+
+    if(this.role != 'Business_Owner') {
+      this.httpservice.getProductsExpiring(0,0)
+      .subscribe({
+        next: data => {
+          this.products = data
+          // console.log(data)
+          this.datableservice.initiateDataTable('.dataexp', 25);
+          setTimeout(() =>{
+            this.sharedservice.infoFunc('', '', false, false, false);
+          }, 2000);
+        },
+        error: _error => {
+          this.sharedservice.infoFunc('', '', false, false, false);
+          console.log(_error);
+          // this.initDataTable();
+          if(_error.error.staus === 401){
+            this.httpservice.httpLogout()
+          }
+        }
+      })
+      return
+    }
+    this.branches$ = this.httpservice.getbranches()
+
+    if (this.branch.value.id == null || this.branch.value.id == '0') {
+      setTimeout(() => {
+        this.sharedservice.infoFunc('alert alert-danger', 'branch not selected...  ', false, false, false);
+      }, 4500);
+
+      return
+    }
+
+    this.httpservice.getBranchProductsExpiring(this.branch.value.id)
+      .subscribe({
+        next: data => {
+          this.products = data
+          // console.log(data)
+          this.datableservice.initiateDataTable('.dataexp', 25);
+          setTimeout(() =>{
+            this.sharedservice.infoFunc('', '', false, false, false);
+          }, 2000);
+        },
+        error: _error => {
+          this.sharedservice.infoFunc('', '', false, false, false);
+          console.log(_error);
+          // this.initDataTable();
+          if(_error.error.staus === 401){
+            this.httpservice.httpLogout()
+          }
+        }
+      })
+  }
 
   printTable() {
     const printWindow = window.open('', '_blank');  // Open a new window
@@ -115,7 +192,7 @@ export class ExpiryComponent {
     };
 
     const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-    this.saveAsExcelFile(excelBuffer, 'expiry_table');
+    this.saveAsExcelFile(excelBuffer, 'expiry_table_'+(new Date().toDateString().split('T')[0]));
   }
 
   // Save the Excel file
@@ -141,43 +218,7 @@ export class ExpiryComponent {
   }
 
   refreshData(){
-    this.products$ = this.httpservice.getProductsExpiring(1, 10);
-    this.categories$ = this.httpservice.getCategories(1, 10)
-    this.httpservice.getProductsExpiring(this.currentPage, this.perPage)
-      .subscribe({
-        next: data => {
-          this.products = data
-          // console.log(data)
-        },
-        error: _error => {
-
-        }
-      })
-    $('.dataexp').DataTable().destroy();
-    setTimeout(()=> {
-      $('.dataexp').DataTable({
-        "bFilter": true,
-        // "sDom": 'fBtlpi',
-        "dom": 'pftil',
-        "ordering": true,
-        "language": {
-          search: ' ',
-          emptyTable: "No data available in table",
-          infoEmpty: "",
-          sLengthMenu: '_MENU_',
-          searchPlaceholder: "Search",
-          info: "_START_ - _END_ of _TOTAL_ items",
-          paginate: {
-            next: ' <i class=" fa fa-angle-right"></i>',
-            previous: '<i class="fa fa-angle-left"></i> '
-          },
-        },
-        initComplete: (_settings: any, _json: any) => {
-          $('.dataTables_filter').appendTo('#tableSearch');
-          $('.dataTables_filter').appendTo('.search-input');
-        },
-      }); 
-    },3000)
+    this.sharedservice.refreshComponentFunc(this.router.url);
   }
 
   date = new Date(); // or any Date value
@@ -235,56 +276,7 @@ export class ExpiryComponent {
             this.sharedservice.infoFunc('alert alert-success', 'product deleted', false, false, false)
             // console.log(data)
             $('.dataexp').DataTable().destroy()
-            this.products$ = this.httpservice.getProductsExpiring(1, 10);
-            this.categories$ = this.httpservice.getCategories(1, 10);
-            this.httpservice.getProductsExpiring(this.currentPage, this.perPage)
-              .subscribe({
-                next: data => {
-                  this.products = data
-                  // console.log(data)
-                },
-                error: _error => {
-
-                }
-              })
-            // this.users$.
-            setTimeout(() =>{ 
-              this.sharedservice.infoFunc('', '', false, false, false)
-
-              $('.dataexp').DataTable({
-                "bFilter": true,
-                // "sDom": 'fBtlpi',
-                "dom": 'pftil',
-                "ordering": true,
-                "language": {
-                  search: ' ',
-                  emptyTable: "No data available in table",
-                  infoEmpty: "",
-                  sLengthMenu: '_MENU_',
-                  searchPlaceholder: "Search",
-                  info: "_START_ - _END_ of _TOTAL_ items",
-                  paginate: {
-                    next: ' <i class="fa fa-angle-right"></i>',
-                    previous: '<i class="fa fa-angle-left"></i> '
-                  },
-                },
-                initComplete: (_settings: any, _json: any) => {
-                  $('.dataTables_filter').appendTo('#tableSearch');
-                  $('.dataTables_filter').appendTo('.search-input');
-                  $('#info').appendTo('#info')
-                },
-              
-              })
-              // $('#delete-units').modal('hide')
-              // $('#delete-units').modal('hide').on('hidden.bs.modal', function () {
-              //   $('body').removeClass('modal-open'); // Ensure body scroll is enabled
-              //   $('body').css('overflow', 'auto');
-              //   $('.modal-backdrop').remove(); // Remove leftover backdrop
-              // });
-            }, 1000)
-            // });
-            this.hide = false;
-            // setTimeout(()=>this.sharedservice.refreshComponentFunc('dashboard/users'), 2000)
+            this.ngOnInit();
           },
           error: error => {
             let msg = error.error.message
@@ -307,50 +299,8 @@ export class ExpiryComponent {
       .subscribe({
         next: data => {
           $('.dataexp').DataTable().destroy()
-          // $('.dataexp ').empty()
-          this.sharedservice.infoFunc('alert alert-success', 'product updated', false, false, false) 
-          this.products$ = this.httpservice.getProductsExpiring(this.currentPage, this.perPage);
-          this.categories$ = this.httpservice.getCategories(1, 10)
-          this.httpservice.getProductsExpiring(this.currentPage, this.perPage)
-            .subscribe({
-              next: data => {
-                this.products = data
-                // console.log(data)
-              },
-              error: _error => {
-
-              }
-            })
-
-          setTimeout(()=> this.sharedservice.infoFunc('','', false,false,false), 3500)
-          
-
-          // window.location.reload() 
-          setTimeout(()=> {
-            $('.dataexp').DataTable({
-              "bFilter": true,
-              // "sDom": 'fBtlpi',
-              "dom": 'pftil',
-              "ordering": true,
-              "language": {
-                search: ' ',
-                emptyTable: "No data available in table",
-                infoEmpty: "",
-                sLengthMenu: '_MENU_',
-                searchPlaceholder: "Search",
-                info: "_START_ - _END_ of _TOTAL_ items",
-                paginate: {
-                  next: ' <i class=" fa fa-angle-right"></i>',
-                  previous: '<i class="fa fa-angle-left"></i> '
-                },
-              },
-              initComplete: (_settings: any, _json: any) => {
-                $('.dataTables_filter').appendTo('#tableSearch');
-                $('.dataTables_filter').appendTo('.search-input');
-              },
-            }); 
-          },1000)            
-              
+          // this.ngOnInit()
+          this.sharedservice.refreshComponentFunc(this.router.url); 
         },
         error: error => {
           let msg = error.error.message
@@ -366,53 +316,10 @@ export class ExpiryComponent {
     }
   }
 
-
-
-  ngAfterViewInit(): void {
-    // Hide preloader once the view is fully initialized
-
-    // this.products$.subscribe({
-    //   next: data => {
-    //     if(data){
-    this.zone.runOutsideAngular(() => {
-      setTimeout(() => {
-        const preloader = document.getElementById('global-loader') as HTMLDivElement;
-        if (preloader) {
-          preloader.style.display = 'none';
-        }
-        $('.dataexp').DataTable({
-          "bFilter": true,
-          // "sDom": 'fBtlpi',
-          "dom": 'pftil',
-          "ordering": true,
-          "language": {
-            emptyTable: " ",
-            search: ' ',
-            sLengthMenu: '_MENU_',
-            searchPlaceholder: "Search",
-            info: "_START_ - _END_ of _TOTAL_ items",
-            paginate: {
-              next: ' <i class=" fa fa-angle-right"></i>',
-              previous: '<i class="fa fa-angle-left"></i> '
-            },
-          },
-          initComplete: (_settings: any, _json: any) => {
-            $('.dataTables_filter').appendTo('#tableSearch');
-            $('.dataTables_filter').appendTo('.search-input');
-
-          },
-        });  // Initialize jQuery DataTable outside Angular’s zone
-      }, 1000)
-    }
-    );
-    // }
-    // });
-    // });
-  }
-
   ngOnDestroy(): void {
     // Destroy the DataTable to free up resources
     $('.dataexp').DataTable().destroy();
+    this.sharedservice.infoFunc('', '', false, false, false)
   }
 
 

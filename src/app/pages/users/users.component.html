@@ -10,7 +10,7 @@
             
         </ul>
         <div class="page-btn">
-            <a href="#" class="btn btn-added" data-bs-toggle="modal" data-bs-target="#add-units"><i
+            <a *ngIf="role == 'Business_Owner'" href="#" class="btn btn-added" data-bs-toggle="modal" data-bs-target="#add-units"><i
                     data-feather="plus-circle" class="me-2"></i>Add New User</a>
         </div>
     </div>
@@ -23,6 +23,10 @@
                         <a href class="btn btn-searchset"><i data-feather="search" class="feather-search"></i></a>
                     </div>
                 </div>
+            </div>
+
+            <div style="display: flex;justify-content:center;">
+                <app-errormodal></app-errormodal>
             </div>
 
             <div class="card" id="filter_inputs">
@@ -52,11 +56,11 @@
                                 <th>Role</th>
                                 <th>Branch</th>
                                 <th>Status</th>
-                                <th class="no-sort">Action</th>
+                                <th *ngIf="role == 'Business_Owner'" class="no-sort">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let user of users$ | async">
+                            <tr *ngFor="let user of users">
                                 <td>
                                     <label class="checkboxs">
                                         <input type="checkbox">
@@ -72,7 +76,7 @@
                                     <span *ngIf="user.user_account == 'Inactive'" class="badge badge-linedanger">{{user.user_account}}</span>
                                     <span *ngIf="user.user_account == 'Active'" class="badge badge-linesuccess">{{user.user_account}}</span>
                                 </td>
-                                <td class="action-table-data">
+                                <td *ngIf="role == 'Business_Owner'" class="action-table-data">
                                     <div class="edit-delete-action">
                                         <!-- <a class="me-2 p-2 mb-0" href="javascript:void(0);">
                                             <i data-feather="eye" class="action-eye"></i>
@@ -209,7 +213,7 @@
                                     <div class="input-blocks">
                                         <label>Branch</label>
                                         <select formControlName="branch" class="form-control">
-                                            <option *ngFor="let branch of branches" [value]="branch.id">{{branch.branch_name}}</option>
+                                            <option *ngFor="let branch of branches$ | async" [value]="branch.id">{{branch.branch_name}}</option>
                                         </select>
                                     </div>
                                 </div>

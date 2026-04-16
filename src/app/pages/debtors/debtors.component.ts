@@ -8,6 +8,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SharedService } from '../../services/sharedservices/shared.service';
 import { ErrormodalComponent } from '../../components/errormodal/errormodal.component';
 import { RouterLink } from '@angular/router';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-debtors',
@@ -22,6 +23,10 @@ export class DebtorsComponent {
   debtors:any[] = []
 
   submitted : boolean = false;
+
+  branches$!: Observable<any>;
+  categories$!: Observable<any>;
+  role:string = '';
 
   // currentDate = new Date().toLocaleDateString().split('T')[0];
 
@@ -56,6 +61,14 @@ export class DebtorsComponent {
     if(role == 'Business_Owner' || role == 'Manager'){
       this.canAddBedtor = true;
     }
+  }
+
+  branch = this.fb.group({
+    'id': [sessionStorage.getItem('selected_branch')]
+  })
+
+  branchChange(){
+
   }
 
   refreshData() {
@@ -122,7 +135,8 @@ export class DebtorsComponent {
         // this.editPaymentFrm.reset()
         this.submitted = false
         this.ngOnDestroy()
-        this.ngOnInit()
+        this.ngOnInit();
+        // this.refreshData();
         // this.sharedservice.refreshComponentFunc(this.router.url)
       },
       error: (err) => {
@@ -151,20 +165,62 @@ export class DebtorsComponent {
 
   ngOnInit(): void {
     // console.log(this.currentDate)
-    this.httpService.getAllDebtors()
-    .subscribe({
-      next: (res) => {
-        // console.log(res.unpaidSales)
-        this.debtors = res.unpaidSales
-        this.datatableService.initiateDataTable('.debtorsnew', 15)
-      },
-      error: (err) => {
-        // console.log(err)
-        if(err.error.staus === 401){
-          this.httpService.httpLogout()
+    this.sharedservice.infoFunc('alert alert-info', 'fetching branch debtors...  ', true, true, true);
+    this.role = sessionStorage.getItem('role') || '';
+    this.categories$ = this.httpService.getCategories(1, 10)
+    this.branches$ = this.httpService.getbranches();
+
+    if(this.httpService.getUserRole() != 'Business_Owner') {
+      this.httpService.getAllDebtors()
+      .subscribe({
+        next: (res) => {
+          // console.log(res.unpaidSales)
+          this.debtors = res.unpaidSales
+          this.datatableService.initiateDataTable('.debtorsnew', 15)
+          setTimeout(() => {
+            this.sharedservice.infoFunc('', '', false, false, false);
+          }, 170);
+        },
+        error: (err) => {
+          // console.log(err)
+          this.sharedservice.infoFunc('alert alert-danger', 'Error fetching branch debtors...  ' + err.error.message, false, false, false);
+          if(err.error.staus === 401){
+            this.httpService.httpLogout()
+          }
         }
-      }
-    })
+      })
+
+      return;
+    }
+
+    if (this.branch.value.id == null || this.branch.value.id == '0') {
+      setTimeout(() => {
+          this.sharedservice.infoFunc('alert alert-danger', 'branch not selected...  ', false, false, false);
+      }, 4500);
+
+        return
+    }
+
+    this.httpService.getAllBranchDebtors(this.branch.value.id)
+      .subscribe({
+        next: (res) => {
+          this.debtors = res.unpaidSales
+          this.datatableService.initiateDataTable('.debtorsnew', 15)
+          setTimeout(() => {
+            this.sharedservice.infoFunc('', '', false, false, false);
+          }, 170);
+        },
+        error: (err) => {
+          // console.log(err)
+          this.sharedservice.infoFunc('alert alert-danger', 'Error fetching branch debtors...  ' + err.error.message, false, false, false);
+          setTimeout(() => {
+            this.sharedservice.infoFunc('', '', false, false, false);
+          }, 6000);
+          if(err.error.staus === 401){
+            this.httpService.httpLogout()
+          }
+        }
+      })
   }
 
   ngOnDestroy(): void {
@@ -173,5 +229,6 @@ export class DebtorsComponent {
     if (table) {
       $(table).DataTable().destroy();
     }
+    this.sharedservice.infoFunc('', '', false, false, false);
   }
 }

@@ -51,6 +51,19 @@
 
                                 <div class="col-lg-4 col-sm-6 col-12">
                                     <div class="mb-3 add-product">
+                                        <label class="form-label">Branch</label>
+                                        <select formControlName="branch" class="form-control text-uppercase">
+                                            <option [value]="null" disabled> Select Branch</option>
+                                            <option *ngFor="let branch of branches$ | async" [value]="branch.id">{{branch.branch_name}}</option>
+                                        </select>
+                                        <div *ngIf="(newProductForm.get('branch')?.invalid && newProductForm.get('branch')?.touched) || submitted">
+                                            <div *ngIf="newProductForm.controls.branch.errors?.['required']" class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;">product branch field is required.</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-4 col-sm-6 col-12">
+                                    <div class="mb-3 add-product">
                                         <div class="add-newplus">
                                             <label class="form-label">Category</label>
                                             <!-- <a href="javascript:void(0);" data-bs-toggle="modal"
@@ -60,9 +73,9 @@
                                             </a> -->
                                         </div>
                                         <!-- <select formControlName="category" class="select"> -->
-                                            <select formControlName="category_id" class="form-control">
-                                            <option>Choose</option>
-                                            <option *ngFor="let categor of categories$ | async"
+                                        <select formControlName="category_id" class="form-control">
+                                            <option [value]="null" disabled>Choose</option>
+                                            <option *ngFor="let categor of filteredCategories"
                                                 value="{{categor.id}}">{{categor.name}}</option>
                                         </select>
                                         <div *ngIf="(newProductForm.get('category_id')?.invalid && newProductForm.get('category_id')?.touched) || submitted">
@@ -114,7 +127,7 @@
                                         <div class="col-lg-4 col-sm-6 col-12">
                                             <div class="input-blocks add-product">
                                                 <label>Quantity</label>
-                                                <input formControlName="quantity" min="1" type="number" class="form-control">
+                                                <input formControlName="quantity" min="0" type="number" class="form-control">
                                                 <div *ngIf="(newProductForm.get('quantity')?.invalid && newProductForm.get('quantity')?.touched) || submitted">
                                                     <div *ngIf="newProductForm.controls.quantity.errors?.['required']" class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;">field is required.</div>
                                                     <div *ngIf="newProductForm.controls.quantity.errors?.['notPositiveInteger']" class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;">invalid input format</div>
@@ -134,7 +147,7 @@
                                         <div class="col-lg-4 col-sm-6 col-12">
                                             <div class="input-blocks add-product">
                                                 <label>Quantity Alert</label>
-                                                <input type="number" min="1" formControlName="quantity_alert" class="form-control">
+                                                <input type="number" min="0" formControlName="quantity_alert" class="form-control">
                                                 <div *ngIf="(newProductForm.get('quantity_alert')?.invalid && newProductForm.get('quantity_alert')?.touched) || submitted">
                                                     <div *ngIf="newProductForm.controls.quantity_alert.errors?.['required']" class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;">field is required.</div>
                                                     <div *ngIf="newProductForm.controls.quantity_alert.errors?.['notPositiveInteger']" class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;">invalid input format</div>

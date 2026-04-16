@@ -7,6 +7,7 @@ import { ErrormodalComponent } from '../../components/errormodal/errormodal.comp
 import { SharedService } from '../../services/sharedservices/shared.service';
 import { RouterLink } from '@angular/router';
 import { DatabaleService } from '../../services/datatable/databale.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-users',
@@ -18,11 +19,14 @@ import { DatabaleService } from '../../services/datatable/databale.service';
 export class UsersComponent {
 
   users$!: Observable<any>
+  branches$!: Observable<any>;
   users:any = []
   branches:any = []
 
   showPassword = false
   showCPassword = false
+
+  role = this.httpservice.getUserRole();
 
   constructor(
     private httpservice: HttpService,
@@ -30,25 +34,27 @@ export class UsersComponent {
     public sharedservice: SharedService,
     private datatableservice: DatabaleService,
     private zone: NgZone,
+    private router: Router,
   ) { }
 
   ngOnInit() {
     this.httpservice.httpself()
     this.users$ = this.httpservice.getUsers()
-    this.httpservice.getbranches()
-    .subscribe({
-      next: data => { 
-        // console.log(data)
-        this.branches = data
+    this.branches$ = this.httpservice.getbranches()
+
+      this.httpservice.getUsers()
+      .subscribe({
+        next: data => {
+          this.users = data
+          this.datatableservice.initiateDataTable('.datauser', 20)
       },
-      error: _error => {}
-    });
-    this.httpservice.getUsers()
-    .subscribe({
-      next: data => {
-        // console.log(data);
-      },
-      error: _error => {}
+      error: _error => {
+        // console.log(_error);
+        this.sharedservice.infoFunc('alert alert-danger', 'Error fetching users...  ' + _error.error.message, false, false, false);
+        setTimeout(() => {
+          this.sharedservice.infoFunc('', '', false, false, false);
+        }, 5000);
+      }
     })
     // Ensure the value is a boolean on every change
   }
@@ -72,7 +78,7 @@ export class UsersComponent {
     'role': ['', Validators.required],
     'user_account': ['', Validators.required],
     'status': [false],
-    'branch': [''],
+    'branch': ['', Validators.required],
   })
 
   userClicked(id: any, name: string, email: string, phone_number: string, role: string, user_account: string, branch_id: number) {
@@ -113,7 +119,7 @@ export class UsersComponent {
   }
 
   createNewUser(e: Event) {
-    console.log(this.newUserFrm.value)
+    // console.log(this.newUserFrm.value)
     // $('.datanew').DataTable().destroy()
     // this.users$ = this.httpservice.getUsers()
     // setTimeout(()=>$('.datanew').DataTable(), 2000)
@@ -126,34 +132,12 @@ export class UsersComponent {
           next: async data => {
             this.sharedservice.infoFunc('alert alert-success', 'user created', false, false, false)
             console.log(data)
-            $('.datanew').DataTable().destroy()
-            $('.datanew ').empty()
-            this.users$ = this.httpservice.getUsers()
+            $('.datauser').DataTable().destroy()
+            // this.users$ = this.httpservice.getUsers()
             // this.users$.
             setTimeout(() => {
               this.sharedservice.infoFunc('', '', false, false, false)
               this.closeModalAndRefresh();
-              //   $('.datanew').DataTable({
-              //   "bFilter": true,
-              //   // "sDom": 'fBtlpi',
-              //   "dom": 'pftil',
-              //   "ordering": true,
-              //   "language": {
-              //     search: ' ',
-              //     sLengthMenu: '_MENU_',
-              //     searchPlaceholder: "Search",
-              //     info: "_START_ - _END_ of _TOTAL_ items",
-              //     paginate: {
-              //       next: ' <i class="fa fa-angle-right"></i>',
-              //       previous: '<i class="fa fa-angle-left"></i> '
-              //     },
-              //   },
-              //   initComplete: (_settings: any, _json: any) => {
-              //     $('.dataTables_filter').appendTo('#tableSearch');
-              //     $('.dataTables_filter').appendTo('.search-input');
-              //     $('#info').appendTo('#info')
-              //   },
-              // })
             }, 1000)
             // setTimeout(()=>this.sharedservice.refreshComponentFunc('dashboard/users'), 2000)
           },
@@ -175,38 +159,12 @@ export class UsersComponent {
           next: async data => {
             this.sharedservice.infoFunc('alert alert-success', 'user updated', false, false, false)
             console.log(data)
-            $('.datanew').DataTable().destroy()
-            $('.datanew ').empty()
-            this.users$ = this.httpservice.getUsers()
+            $('.datauser').DataTable().destroy()
+            // this.users$ = this.httpservice.getUsers()
             // this.users$.
             setTimeout(() =>{ 
               this.sharedservice.infoFunc('', '', false, false, false)
-              this.closeModalAndRefresh();
-              // $('.datanew').DataTable({
-              //   "bFilter": true,
-              //   // "sDom": 'fBtlpi',
-              //   "dom": 'pftil',
-              //   "ordering": true,
-              //   "language": {
-              //     search: ' ',
-              //     emptyTable: "No data available in table",
-              //     infoEmpty: "",
-              //     sLengthMenu: '_MENU_',
-              //     searchPlaceholder: "Search",
-              //     info: "_START_ - _END_ of _TOTAL_ items",
-              //     paginate: {
-              //       next: ' <i class="fa fa-angle-right"></i>',
-              //       previous: '<i class="fa fa-angle-left"></i> '
-              //     },
-              //   },
-              //   initComplete: (_settings: any, _json: any) => {
-              //     $('.dataTables_filter').appendTo('#tableSearch');
-              //     $('.dataTables_filter').appendTo('.search-input');
-              //     $('#info').appendTo('#info')
-              //   },
-              
-              // })
-              
+              this.closeModalAndRefresh();      
             }, 1000)
             // setTimeout(()=>this.sharedservice.refreshComponentFunc('dashboard/users'), 2000)
           },
@@ -217,34 +175,33 @@ export class UsersComponent {
 
           }
         })
-
-
     }
   }
 
    closeModalAndRefresh() {
     // Get the modal element
-    const modalElement = document.getElementById('update-product');
-    if (modalElement) {
-      // Get Bootstrap modal instance and hide it
-      const modal = (window as any).bootstrap.Modal.getInstance(modalElement);
-      if (modal) {
-        modal.hide();
-      }
-    }
+    // const modalElement = document.getElementById('update-product');
+    // if (modalElement) {
+    //   // Get Bootstrap modal instance and hide it
+    //   const modal = (window as any).bootstrap.Modal.getInstance(modalElement);
+    //   if (modal) {
+    //     modal.hide();
+    //   }
 
-    // Remove modal backdrop
-    const backdrop = document.querySelector('.modal-backdrop');
-    if (backdrop) {
-      backdrop.remove();
-    }
-
-    // Restore body scroll
-    document.body.classList.remove('modal-open');
-    document.body.style.overflow = 'auto';
-
+    
+    
+    // // Remove modal backdrop
+    // const backdrop = document.querySelector('.modal-backdrop');
+    // if (backdrop) {
+    //   backdrop.remove();
+    // }
+    
+    // // Restore body scroll
+    // document.body.classList.remove('modal-open');
+    // document.body.style.overflow = 'auto';
+    
     // Refresh the component
-    this.sharedservice.refreshComponentFunc('dashboard/users');
+    this.sharedservice.refreshComponentFunc(this.router.url);
   }
   hide:boolean = true;
   deleteUser() {
@@ -253,14 +210,14 @@ export class UsersComponent {
           next: async data => {
             this.sharedservice.infoFunc('alert alert-success', 'user deleted', false, false, false)
             console.log(data)
-            $('.datanew').DataTable().destroy()
-            $('.datanew ').empty()
+            $('.datauser').DataTable().destroy()
+            $('.datauser ').empty()
             this.users$ = this.httpservice.getUsers()
             // this.users$.
             setTimeout(() =>{ 
               this.sharedservice.infoFunc('', '', false, false, false)
 
-              $('.datanew').DataTable({
+              $('.datadatausernew').DataTable({
                 "bFilter": true,
                 // "sDom": 'fBtlpi',
                 "dom": 'pftil',
@@ -310,39 +267,10 @@ export class UsersComponent {
     return null; // Invalid input, not a boolean
   }
 
-  // ngAfterViewInit() {
-  //   this.zone.runOutsideAngular(() => {
-  //     setTimeout(() => {
-  //       $('.datanew').DataTable({
-  //         "bFilter": true,
-  //         // "sDom": 'fBtlpi',
-  //         "dom": 'pftil',
-  //         "ordering": true,
-  //         "language": {
-  //           emptyTable: "No data available in table",
-  //           infoEmpty: "",
-  //           search: ' ',
-  //           sLengthMenu: '_MENU_',
-  //           searchPlaceholder: "Search",
-  //           info: "_START_ - _END_ of _TOTAL_ items",
-  //           paginate: {
-  //             next: ' <i class="fa fa-angle-right"></i>',
-  //             previous: '<i class="fa fa-angle-left"></i> '
-  //           },
-  //         },
-  //         initComplete: (_settings: any, _json: any) => {
-  //           $('.dataTables_filter').appendTo('#tableSearch');
-  //           $('.dataTables_filter').appendTo('.search-input');
-  //           $('#info').appendTo('#info')
-  //         }
-  //       })
-  //     }, 1000)
-  //   })
-  // }
-
   ngOnDestroy(): void {
     // Destroy the DataTable to free up resources
-    $('.datanew').DataTable().destroy();
+    $('.datauser').DataTable().destroy();
+    this.sharedservice.infoFunc('', '', false, false, false);
   }
 
 }

@@ -42,9 +42,15 @@
                 <div class="search-input">
                     <a href class="btn btn-searchset"><i data-feather="search" class="feather-search"></i></a>
                 </div>
-            </div>            
+            </div>   
+            
+            <form *ngIf="owner" [formGroup]="branch">
+                <select formControlName="id" (change)="branchChange()" class="form-control">
+                    <option>Select branch</option>
+                    <option *ngFor="let branch of branches$ | async" [value]="branch.id">{{branch.branch_name}}</option>
+                </select>
+            </form>
         </div>
-
 
         <div class="table-responsive">
             <table class="table datanewcat">
@@ -59,7 +65,7 @@
                         <th>Category</th>
                         <!-- <th>Created By</th> -->
                         <th>Status</th>
-                        <th *ngIf="role != 'Attendant'" class="no-sort">Action</th>
+                        <th *ngIf="role == 'Business_Owner'" class="no-sort">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -76,7 +82,7 @@
                             <span *ngIf="category.status" class="badge badge-linesuccess">Active</span>
                             <span *ngIf="!category.status" class="badge badge-linedanger">Inactive</span>
                         </td>
-                        <td *ngIf="role != 'Attendant'" class="action-table-data">
+                        <td *ngIf="role == 'Business_Owner'" class="action-table-data">
                             <div class="edit-delete-action">
                                 <a class="me-2 p-2" href="javascript:void(0);" (click)="categoryClicked(category.id, category.name, category.status)" data-bs-toggle="modal" data-bs-target="#edit-category">
                                     <i data-feather="edit" class="feather-edit"></i>
@@ -121,7 +127,7 @@
                             <div class="mb-3" *ngIf="owner">
                                 <label class="form-label">Branch</label>
                                 <select type="text" formControlName="branch" class="form-control">
-                                    <option *ngFor="let branch of branches" [value]="branch.id">{{ branch.branch_name }}</option>
+                                    <option *ngFor="let branch of branches$ | async" [value]="branch.id">{{ branch.branch_name }}</option>
                                 </select>
                                 <div
                                     *ngIf="createCategoryFrm.get('branch')?.invalid && createCategoryFrm.get('branch')?.touched || submitted">

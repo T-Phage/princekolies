@@ -29,6 +29,7 @@ export class ProductsComponent {
   perPage = 15;
   totalProducts = 0;
   categories$!: Observable<any>
+  branches$!: Observable<any>;
 
   role:string = '';
 
@@ -39,26 +40,102 @@ export class ProductsComponent {
     private zone: NgZone,
     private formBuilder: FormBuilder,
     public sharedservice: SharedService,
+
   ) { 
   }
-  
-  ngOnInit() {
-    this.role = sessionStorage.getItem('role') || '';
-    this.categories$ = this.httpservice.getCategories(1, 10)
 
-    this.httpservice.getProducts(this.currentPage, this.perPage)
+  branch = this.formBuilder.group({
+    'id': [sessionStorage.getItem('selected_branch')]
+  })
+
+  branchChange() {
+    if (Number(`${this.branch.value.id}`) == 0){
+      this.sharedservice.infoFunc('', '', false, false, false);
+      return
+    }
+
+    this.sharedservice.infoFunc('alert alert-info', 'fetching branch products...  ', true, true, true);
+    $('.datanew').DataTable().destroy()
+    sessionStorage.setItem('selected_branch', `${this.branch.value.id}`)
+    this.httpservice.getByBranchProducts(this.branch.value.id)
       .subscribe({
         next: data => {
           this.products = data
-          // console.log(data)
           // Initialize DataTable after data loads
           setTimeout(() => {
             this.initDataTable();
+            this.sharedservice.infoFunc('', '', false, false, false);
           }, 200);
         },
         error: _error => {
           console.log(_error);
           this.initDataTable();
+          if(_error.error.staus === 401){
+            this.httpservice.httpLogout()
+          }
+        }
+      })
+  }
+  
+  ngOnInit() {
+    this.sharedservice.infoFunc('alert alert-info', 'fetching branch products...  ', true, true, true);
+    this.role = sessionStorage.getItem('role') || '';
+    this.categories$ = this.httpservice.getCategories(1, 10)
+    this.branches$ = this.httpservice.getbranches()
+
+    this.role = this.httpservice.getUserRole();
+    if(this.httpservice.getUserRole() !== 'Business_Owner'){
+      this.httpservice.getProducts(0,0)
+        .subscribe({
+          next: data => {
+            this.products = data
+            this.sharedservice.infoFunc('', '', false, false, false);
+              if (data.length > 0){
+                setTimeout(() => {
+                  this.sharedservice.infoFunc('', '', false, false, false);
+                  this.initDataTable();
+                }, 170);
+                return;
+              } 
+          },
+          error: _error => {
+            this.sharedservice.infoFunc('', '', false, false, false);
+            console.log(_error);
+            // this.initDataTable();
+            if(_error.error.staus === 401){
+              this.httpservice.httpLogout()
+            }
+          }
+        })
+
+      return;
+    }
+    
+    if (this.branch.value.id == null || this.branch.value.id == '0') {
+      setTimeout(() => {
+          this.sharedservice.infoFunc('alert alert-danger', 'branch not selected...  ', false, false, false);
+      }, 4500);
+
+        return
+    }
+
+    this.httpservice.getByBranchProducts(this.branch.value.id)
+      .subscribe({
+        next: data => {
+          this.products = data
+          this.sharedservice.infoFunc('', '', false, false, false);
+            if (data.length > 0){
+              setTimeout(() => {
+                this.sharedservice.infoFunc('', '', false, false, false);
+                this.initDataTable();
+              }, 170);
+              return;
+            } 
+        },
+        error: _error => {
+          this.sharedservice.infoFunc('', '', false, false, false);
+          console.log(_error);
+          // this.initDataTable();
           if(_error.error.staus === 401){
             this.httpservice.httpLogout()
           }
@@ -75,8 +152,8 @@ export class ProductsComponent {
     'barcode': [''],
     'price': ['', Validators.compose([Validators.required, Validators.pattern(this.sharedservice.amount)])],
     'category_id': [parseInt(''), Validators.required],
-    'quantity': ['', Validators.compose([Validators.required, Validators.min(0), this.valservice.positiveIntegerValidator()])],
-    'quantity_alert': ['', Validators.compose([Validators.required, Validators.min(0), this.valservice.positiveIntegerValidator()])],
+    'quantity': ['', Validators.compose([Validators.required, Validators.min(0)])], //, this.valservice.positiveIntegerValidator()])],
+    'quantity_alert': ['', Validators.compose([Validators.required, Validators.min(0)])], //, this.valservice.positiveIntegerValidator()])],
     'manufactured_date': [this.formattedDate],
     'expiry_date': [this.formattedDate],
     'updatedby': [parseInt(`${sessionStorage.getItem('id')}`)]
@@ -125,6 +202,7 @@ export class ProductsComponent {
           next: data => {
             this.sharedservice.infoFunc('alert alert-success', 'product deleted', false, false, false)
             // console.log(data)
+
             $('.datanew').DataTable().destroy()
             this.categories$ = this.httpservice.getCategories(1, 10);
             // this.users$.
@@ -148,7 +226,8 @@ export class ProductsComponent {
   submitUpdateFrm(event:Event){
     event.preventDefault();
 
-    // console.log(this.updateProductFrm.value)
+    console.log(this.updateProductFrm.value)
+    console.log(this.updateProductFrm)
     if(this.updateProductFrm.valid){
       this.httpservice.updateProduct(this.productId, this.updateProductFrm.value)
       .subscribe({
@@ -166,32 +245,6 @@ export class ProductsComponent {
             // Close the modal and clean up backdrop
             this.closeModalAndRefresh();
           }, 2000)
-
-          // setTimeout(()=> {
-          //   $('.datanew').DataTable({
-          //     "bFilter": true,
-          //     // "sDom": 'fBtlpi',
-          //     "dom": 'pftil',
-          //     "ordering": true,
-          //     "language": {
-          //       search: ' ',
-          //       emptyTable: "No data available",
-          //       infoEmpty: "",
-          //       sLengthMenu: '_MENU_',
-          //       searchPlaceholder: "Search",
-          //       info: "_START_ - _END_ of _TOTAL_ items",
-          //       paginate: {
-          //         next: ' <i class=" fa fa-angle-right"></i>',
-          //         previous: '<i class="fa fa-angle-left"></i> '
-          //       },
-          //     },
-          //     initComplete: (_settings: any, _json: any) => {
-          //       $('.dataTables_filter').appendTo('#tableSearch');
-          //       $('.dataTables_filter').appendTo('.search-input');
-          //     },
-          //   }); 
-          // },2000)  
-              
         },
         error: error => {
           let msg = error.error.message
@@ -379,6 +432,7 @@ export class ProductsComponent {
   ngOnDestroy(): void {
     // Destroy the DataTable to free up resources
     $('.datanew').DataTable().destroy();
+    this.sharedservice.infoFunc('', '', false, false, false);
   }
 
 }

@@ -137,7 +137,7 @@ export class SalesDashb0ardComponent {
     this.httpservice.getSalesAnalytics().subscribe({
       next: data => {
         // this.loading = false;
-        console.log(data)
+        // console.log(data)
         this.salesa = data.monthlySales
         this.salescount = data.todaySales
         this.todayCashAmount = data.todayCashAmount
@@ -153,7 +153,7 @@ export class SalesDashb0ardComponent {
         this.loading = false;
         // console.log(data.recentSales)
         // console.log(dara)
-         if(this.manager){this.createChart()}
+        //  if(this.manager){this.createChart()}
       },
       error: error => {
         let msg = error.error.message

@@ -74,8 +74,7 @@ export class OverviewDashboardComponent {
     this.loading = false;
     this.username = sessionStorage.getItem('username') || '';
 
-    if(Number(this.branch.value.id) != 0){
-
+    if(parseInt(`${this.branch.value.id}`) != 0 ){
       this.branchChange();
       return
     }
@@ -84,52 +83,52 @@ export class OverviewDashboardComponent {
       // console.log(this.totalPrice)
     });
       // this.httpservice.httpself();
-      this.years$ = this.httpservice.getallyears()
-      // this.sharedservice.loadScripts();
-      this.httpservice.getAnalytics().subscribe({
-        next: data => {
-          // console.log(data)      
-          this.productsLen = data.productLen
-          this.salesLen = data.salesLen
-          this.expiryLen = data.expiryLen
-          this.low_stock = data.low_stock
-          this.unpaidsales = data.unpaidsales
-          this.paidsales = data.paidsales
-          this.totalQuantity = data.totalQuantity
-          this.out_of_stock = data.out_of_stock
-          this.userscount = data.totalusers
-          this.totalPaidSalesForWeek = data.totalPaidSalesForWeek
-          this.recentProducts = data.recentProducts
-          this.expiringproducts = data.products_expired
-          this.monthlyCashSales = data.monthlyCashSales
-          this.totalSalesAmountForWeek = data.totalSalesAmountForWeek
-          this.totalSalesAmountForMonth = data.totalSalesAmountForMonth
-          this.totalPaidSalesForMonth = data.totalPaidSalesForMonth
-          this.totalPaidSalesCash = data.totalPaidSalesCash
-          this.branches = data.branches
-          
-          this.createChart()
-          
-          setTimeout(() => {
-            this.selectedBranch = sessionStorage.getItem('selected_branch');
-            console.log(this.selectedBranch)
-          }, 100);
-  
-        },
-        error: error => {
-          let msg = error.error.message
-          // console.error('error :', error)
-          // console.log(msg)
-          if (msg == 'Unauthenticated.' || error.status == 401 || msg == 'Token has expired' || msg == 'Invalid token') {
+    this.years$ = this.httpservice.getallyears()
+      
+    this.httpservice.getAnalytics().subscribe({
+      next: data => {
+        // console.log(data)      
+        this.productsLen = data.productLen
+        this.salesLen = data.salesLen
+        this.expiryLen = data.expiryLen
+        this.low_stock = data.low_stock
+        this.unpaidsales = data.unpaidsales
+        this.paidsales = data.paidsales
+        this.totalQuantity = data.totalQuantity
+        this.out_of_stock = data.out_of_stock
+        this.userscount = data.totalusers
+        this.totalPaidSalesForWeek = data.totalPaidSalesForWeek
+        this.recentProducts = data.recentProducts
+        this.expiringproducts = data.products_expired
+        this.monthlyCashSales = data.monthlyCashSales
+        this.totalSalesAmountForWeek = data.totalSalesAmountForWeek
+        this.totalSalesAmountForMonth = data.totalSalesAmountForMonth
+        this.totalPaidSalesForMonth = data.totalPaidSalesForMonth
+        this.totalPaidSalesCash = data.totalPaidSalesCash
+        this.branches = data.branches
+        
+        this.createChart()
+        
+        setTimeout(() => {
+          this.selectedBranch = sessionStorage.getItem('selected_branch');
+          console.log(this.selectedBranch)
+        }, 100);
+
+      },
+      error: error => {
+        let msg = error.error.message
+        // console.error('error :', error)
+        // console.log(msg)
+        if (msg == 'Unauthenticated.' || error.status == 401 || msg == 'Token has expired' || msg == 'Invalid token') {
+          this.session_off = true;
+          setTimeout(()=>{
             this.session_off = true;
-            setTimeout(()=>{
-              this.session_off = true;
-              this.httpservice.httpLogout()
-            },300)
-            // this.sharedservice.infoFunc('alert alert-danger', 'Session expired. Please login again.', false, false, false)
-          }
+            this.httpservice.httpLogout()
+          },300)
+          // this.sharedservice.infoFunc('alert alert-danger', 'Session expired. Please login again.', false, false, false)
         }
-      })
+      }
+    })
     // } else {
 
     // }

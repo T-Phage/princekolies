@@ -6,7 +6,7 @@
         </div>
     </div>
     <div class="page-btn">
-        <a *ngIf="canAddBedtor"  [routerLink]="['/dashboard/new-debtor']" class="btn btn-added"><i data-feather="plus-circle" class="me-2"></i>
+        <a *ngIf="role == 'Business_Owner'"  [routerLink]="['/dashboard/new-debtor']" class="btn btn-added"><i data-feather="plus-circle" class="me-2"></i>
             Input Debtor</a>
     </div>
     &nbsp;
@@ -25,7 +25,18 @@
                 <div class="search-input">
                     <a href class="btn btn-searchset"><i data-feather="search" class="feather-search"></i></a>
                 </div>
-            </div>      
+            </div>    
+
+            <form *ngIf="role == 'Business_Owner'" [formGroup]="branch">
+                <select formControlName="id" (change)="branchChange()" class="form-control">
+                    <option>Select branch</option>
+                    <option *ngFor="let branch of branches$ | async" [value]="branch.id">{{branch.branch_name}}</option>
+                </select>
+            </form>
+        </div>
+
+        <div style="display: flex;justify-content:center;">
+            <app-errormodal></app-errormodal>
         </div>
 
         <div class="table-responsive">

@@ -11,6 +11,8 @@ import { SharedService } from '../../services/sharedservices/shared.service';
 import { ErrormodalComponent } from '../../components/errormodal/errormodal.component';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ValidationService } from '../../services/validationservices/validation.service';
+import { DatabaleService } from '../../services/datatable/databale.service';
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-low-stock',
@@ -28,6 +30,8 @@ export class LowStockComponent {
   currentPage = 1;
   perPage = 15;
 
+  branches$!: Observable<any>;
+
   low:boolean = true;
   
   role:string = '';
@@ -38,34 +42,114 @@ export class LowStockComponent {
     public sharedservice: SharedService,
     private formBuilder: FormBuilder,
     private valservice: ValidationService,
-
+    private datatableservice: DatabaleService,
+    private router: Router,
   ){}
 
-  ngOnInit(){
+  branch = this.formBuilder.group({
+    'id': [sessionStorage.getItem('selected_branch')],
+  })
+
+  branchChange() {
+    if (Number(`${this.branch.value.id}`) == 0){
+      this.sharedservice.infoFunc('', '', false, false, false);
+      return
+    }
+
+    this.sharedservice.infoFunc('alert alert-info', 'fetching branch products...  ', true, true, true);
+    $('.datanew_1').DataTable().destroy()
+    $('.datanew_2').DataTable().destroy()
+    sessionStorage.setItem('selected_branch', `${this.branch.value.id}`)
+    this.httpservice.getProductsAlert(this.branch.value.id)
+      .subscribe({
+        next: data => {
+        console.log(data);
+        this.products_low = data.low_stock
+        this.products_out = data.out_of_stock
+        this.sharedservice.infoFunc('', '', false, false, false);
+        
+          // Initialize DataTable after data loads
+          setTimeout(() => {
+            this.datatableservice.initiateDataTable('datanew_1',20)
+            this.datatableservice.initiateDataTable('datanew_2',20)
+            this.sharedservice.infoFunc('', '', false, false, false);
+          }, 200);
+        },
+        error: _error => {
+          console.log(_error);
+          if(_error.error.staus === 401){
+            this.httpservice.httpLogout()
+          }
+        }
+      })
+  }
+
+  ngOnInit(): void{
+    this.sharedservice.infoFunc('alert alert-info', 'fetching branch products...  ', true, true, true);
     this.role = sessionStorage.getItem('role') || '';
-    // this.products_out$ = this.httpservice.getStockedOutProducts(this.currentPage, this.perPage);
-    // this.products_low$ = this.httpservice.getLowStockedProducts(this.currentPage, this.perPage);
     this.categories$ = this.httpservice.getCategories(this.currentPage, this.perPage);
-    this.httpservice.getStockedOutProducts(this.currentPage, this.perPage).subscribe({
+
+    if(this.role != 'Business_Owner'){
+      this.httpservice.getStockedOutProducts(this.currentPage, this.perPage).subscribe({
+        next: data=> {
+          this.products_out = data
+          this.sharedservice.infoFunc('', '', false,false,false);
+          setTimeout(()=>{
+            this.datatableservice.initiateDataTable('.datanew_2',20)
+          }, 100)
+        },
+        error: error => {
+          this.sharedservice.infoFunc('alert alert-danger', 'out of stock products could not be fetched', false,false,false);
+        }
+      })
+      this.httpservice.getLowStockedProducts(this.currentPage, this.perPage).subscribe({
+        next: data=> {
+          this.products_low = data
+          setTimeout(()=>{
+            this.datatableservice.initiateDataTable('.datanew_1',20)
+          },100)
+        },
+        error: error => {
+          this.sharedservice.infoFunc('alert alert-danger', 'low stocked products could not be fetched', false,false,false);
+        }
+      })
+
+      return
+    }
+    this.branches$ = this.httpservice.getbranches()
+     if (this.branch.value.id == null || this.branch.value.id == '0') {
+      setTimeout(() => {
+          this.sharedservice.infoFunc('alert alert-danger', 'branch not selected...  ', false, false, false);
+      }, 4500);
+
+        return
+    }
+ 
+    this.httpservice.getProductsAlert(this.branch.value.id)
+    .subscribe({
       next: data=> {
-        this.products_out = data
-        setTimeout(()=>{
-          this.data2TableInit();
-        }, 900)
+        // console.log(data)
+        this.products_low = data.low_stock
+        this.products_out = data.out_of_stock
+        this.sharedservice.infoFunc('', '', false, false, false);
+        // setTimeout(()=>{
+        //   this.data1TableInit()
+        // },900)
+          setTimeout(() => {
+
+            this.sharedservice.infoFunc('', '', false, false, false);
+            // this.data2TableInit();
+            // this.data1TableInit();
+            this.datatableservice.initiateDataTable('.datanew_1',20)
+            this.datatableservice.initiateDataTable('.datanew_2',20)
+          }, 900);
+            
       },
       error: error => {
-
-      }
-    })
-    this.httpservice.getLowStockedProducts(this.currentPage, this.perPage).subscribe({
-      next: data=> {
-        this.products_low = data
-        setTimeout(()=>{
-          this.data1TableInit()
-        },900)
-      },
-      error: error => {
-
+        this.sharedservice.infoFunc('', '', false, false, false);
+        if(error.error.staus === 401){
+          this.httpservice.httpLogout()
+        }
       }
     })
   }
@@ -253,8 +337,8 @@ export class LowStockComponent {
           next: data => {
             this.sharedservice.infoFunc('alert alert-success', 'product deleted', false, false, false)
             // console.log(data)
-            $('.datanew-1').DataTable().destroy()
-            $('.datanew-2').DataTable().destroy()
+            $('.datanew_1').DataTable().destroy()
+            $('.datanew_2').DataTable().destroy()
             this.products_out$ = this.httpservice.getStockedOutProducts(this.currentPage, this.perPage);
             this.products_low$ = this.httpservice.getLowStockedProducts(this.currentPage, this.perPage);
             this.categories$ = this.httpservice.getCategories(this.currentPage, this.perPage);
@@ -278,55 +362,6 @@ export class LowStockComponent {
             // this.users$.
             setTimeout(() =>{ 
               this.sharedservice.infoFunc('', '', false, false, false)
-
-              $('.datanew-1').DataTable({
-                "bFilter": true,
-                // "sDom": 'fBtlpi',
-                "dom": 'pftil',
-                "ordering": true,
-                "language": {
-                  search: ' ',
-                  emptyTable: "No data available in table",
-                  infoEmpty: "",
-                  sLengthMenu: '_MENU_',
-                  searchPlaceholder: "Search",
-                  info: "_START_ - _END_ of _TOTAL_ items",
-                  paginate: {
-                    next: ' <i class="fa fa-angle-right"></i>',
-                    previous: '<i class="fa fa-angle-left"></i> '
-                  },
-                },
-                initComplete: (_settings: any, _json: any) => {
-                  $('.dataTables_filter').appendTo('#tableSearch');
-                  $('.dataTables_filter').appendTo('.search-input');
-                  $('#info').appendTo('#info')
-                },
-              
-              })
-              $('.datanew-2').DataTable({
-                "bFilter": true,
-                // "sDom": 'fBtlpi',
-                "dom": 'pftil',
-                "ordering": true,
-                "language": {
-                  search: ' ',
-                  emptyTable: "No data available in table",
-                  infoEmpty: "",
-                  sLengthMenu: '_MENU_',
-                  searchPlaceholder: "Search",
-                  info: "_START_ - _END_ of _TOTAL_ items",
-                  paginate: {
-                    next: ' <i class="fa fa-angle-right"></i>',
-                    previous: '<i class="fa fa-angle-left"></i> '
-                  },
-                },
-                initComplete: (_settings: any, _json: any) => {
-                  $('.dataTables_filter').appendTo('#tableSearch');
-                  $('.dataTables_filter').appendTo('.search-input');
-                  $('#info').appendTo('#info')
-                },
-              
-              })
               // $('#delete-units').modal('hide')
               // $('#delete-units').modal('hide').on('hidden.bs.modal', function () {
               //   $('body').removeClass('modal-open'); // Ensure body scroll is enabled
@@ -336,7 +371,7 @@ export class LowStockComponent {
             }, 1000)
             this.hide = false;
             // this.sharedservice.infoFunc('', '', false, false, false)
-            // setTimeout(()=>this.sharedservice.refreshComponentFunc('dashboard/users'), 2000)
+            // setTimeout(()=>this.sharedservice.refreshComponentFunc(), 2000)
           },
           error: error => {
             let msg = error.error.message
@@ -356,57 +391,59 @@ export class LowStockComponent {
       this.httpservice.updateProduct(this.productId, this.updateProductFrm.value)
       .subscribe({
         next: data => {
-          $('.datanew-1').DataTable().destroy()
-          $('.datanew-2').DataTable().destroy()
+          $('.datanew_1').DataTable().destroy()
+          $('.datanew_2').DataTable().destroy()
+
+          this.sharedservice.refreshComponentFunc(this.router.url)
           // $('.datanew ').empty()
-          this.sharedservice.infoFunc('alert alert-success', 'product updated', false, false, false) 
-          this.products_out$ = this.httpservice.getStockedOutProducts(this.currentPage, this.perPage);
-          this.products_low$ = this.httpservice.getLowStockedProducts(this.currentPage, this.perPage);
-          this.categories$ = this.httpservice.getCategories(this.currentPage, this.perPage);
-          this.httpservice.getStockedOutProducts(this.currentPage, this.perPage).subscribe({
-            next: data=> {
-              this.products_out = data
-            },
-            error: error => {
+          // this.sharedservice.infoFunc('alert alert-success', 'product updated', false, false, false) 
+          // this.products_out$ = this.httpservice.getStockedOutProducts(this.currentPage, this.perPage);
+          // this.products_low$ = this.httpservice.getLowStockedProducts(this.currentPage, this.perPage);
+          // this.categories$ = this.httpservice.getCategories(this.currentPage, this.perPage);
+          // this.httpservice.getStockedOutProducts(this.currentPage, this.perPage).subscribe({
+          //   next: data=> {
+          //     this.products_out = data
+          //   },
+          //   error: error => {
       
-            }
-          })
-          this.httpservice.getLowStockedProducts(this.currentPage, this.perPage).subscribe({
-            next: data=> {
-              this.products_low = data
-            },
-            error: error => {
+          //   }
+          // })
+          // this.httpservice.getLowStockedProducts(this.currentPage, this.perPage).subscribe({
+          //   next: data=> {
+          //     this.products_low = data
+          //   },
+          //   error: error => {
       
-            }
-          })
+          //   }
+          // })
           
-          setTimeout(()=> this.sharedservice.infoFunc('','', false,false,false), 3500)
+          // setTimeout(()=> this.sharedservice.infoFunc('','', false,false,false), 3500)
            
-          // window.location.reload() 
-          setTimeout(()=> {
-            $('.datanew').DataTable({
-              "bFilter": true,
-              // "sDom": 'fBtlpi',
-              "dom": 'pftil',
-              "ordering": true,
-              "language": {
-                search: ' ',
-                emptyTable: "No data available in table",
-                infoEmpty: "",
-                sLengthMenu: '_MENU_',
-                searchPlaceholder: "Search",
-                info: "_START_ - _END_ of _TOTAL_ items",
-                paginate: {
-                  next: ' <i class=" fa fa-angle-right"></i>',
-                  previous: '<i class="fa fa-angle-left"></i> '
-                },
-              },
-              initComplete: (_settings: any, _json: any) => {
-                $('.dataTables_filter').appendTo('#tableSearch');
-                $('.dataTables_filter').appendTo('.search-input');
-              },
-            }); 
-          },1000)  
+          // // window.location.reload() 
+          // setTimeout(()=> {
+          //   $('.datanew').DataTable({
+          //     "bFilter": true,
+          //     // "sDom": 'fBtlpi',
+          //     "dom": 'pftil',
+          //     "ordering": true,
+          //     "language": {
+          //       search: ' ',
+          //       emptyTable: "No data available in table",
+          //       infoEmpty: "",
+          //       sLengthMenu: '_MENU_',
+          //       searchPlaceholder: "Search",
+          //       info: "_START_ - _END_ of _TOTAL_ items",
+          //       paginate: {
+          //         next: ' <i class=" fa fa-angle-right"></i>',
+          //         previous: '<i class="fa fa-angle-left"></i> '
+          //       },
+          //     },
+          //     initComplete: (_settings: any, _json: any) => {
+          //       $('.dataTables_filter').appendTo('#tableSearch');
+          //       $('.dataTables_filter').appendTo('.search-input');
+          //     },
+          //   }); 
+          // },1000)  
 
         
         },
@@ -425,79 +462,9 @@ export class LowStockComponent {
   }
 
   refreshData(){
-    this.products_out$ = this.httpservice.getStockedOutProducts(this.currentPage, this.perPage);
-    this.products_low$ = this.httpservice.getLowStockedProducts(this.currentPage, this.perPage);
-    this.categories$ = this.httpservice.getCategories(this.currentPage, this.perPage);
-    this.httpservice.getStockedOutProducts(this.currentPage, this.perPage).subscribe({
-      next: data=> {
-        this.products_out = data
-        setTimeout(()=>{
-          this.data2TableInit();
-        }, 900)
-      },
-      error: error => {
-
-      }
-    })
-    this.httpservice.getLowStockedProducts(this.currentPage, this.perPage).subscribe({
-      next: data=> {
-        this.products_low = data
-        setTimeout(()=>{
-          this.data1TableInit()
-        },1000)
-      },
-      error: error => {
-
-      }
-    })
-    $('.datanew-1').DataTable().destroy();
-    $('.datanew-2').DataTable().destroy();
-    // setTimeout(()=> {
-    //   $('.datanew-1').DataTable({
-    //     "bFilter": true,
-    //     // "sDom": 'fBtlpi',
-    //     "dom": 'pftil',
-    //     "ordering": true,
-    //     "language": {
-    //       search: ' ',
-    //       emptyTable: "No data available in table",
-    //       infoEmpty: "",
-    //       sLengthMenu: '_MENU_',
-    //       searchPlaceholder: "Search",
-    //       info: "_START_ - _END_ of _TOTAL_ items",
-    //       paginate: {
-    //         next: ' <i class=" fa fa-angle-right"></i>',
-    //         previous: '<i class="fa fa-angle-left"></i> '
-    //       },
-    //     },
-    //     initComplete: (_settings: any, _json: any) => {
-    //       $('.dataTables_filter').appendTo('#tableSearch');
-    //       $('.dataTables_filter').appendTo('.search-input');
-    //     },
-    //   }); 
-    //   $('.datanew-2').DataTable({
-    //     "bFilter": true,
-    //     // "sDom": 'fBtlpi',
-    //     "dom": 'pftil',
-    //     "ordering": true,
-    //     "language": {
-    //       search: ' ',
-    //       emptyTable: "No data available in table",
-    //       infoEmpty: "",
-    //       sLengthMenu: '_MENU_',
-    //       searchPlaceholder: "Search",
-    //       info: "_START_ - _END_ of _TOTAL_ items",
-    //       paginate: {
-    //         next: ' <i class=" fa fa-angle-right"></i>',
-    //         previous: '<i class="fa fa-angle-left"></i> '
-    //       },
-    //     },
-    //     initComplete: (_settings: any, _json: any) => {
-    //       $('.dataTables_filter').appendTo('#tableSearch');
-    //       $('.dataTables_filter').appendTo('.search-input');
-    //     },
-    //   }); 
-    // },3000)
+    $('.datanew_1').DataTable().destroy();
+    $('.datanew_2').DataTable().destroy();
+    this.sharedservice.refreshComponentFunc(this.router.url);
   }
 
   ngAfterViewInit(){
@@ -542,35 +509,11 @@ export class LowStockComponent {
     }); 
   }
 
-  data2TableInit(){
-    $('.datanew-2').DataTable({
-      "bFilter": true,
-      // "sDom": 'fBtlpi',
-      "dom": 'pftil',
-      "ordering": true,
-      "language": {
-        emptyTable: "",
-        infoEmpty: "",
-        search: ' ',
-        sLengthMenu: '_MENU_',
-        searchPlaceholder: "Search",
-        info: "_START_ - _END_ of _TOTAL_ items",
-        paginate: {
-          next: ' <i class=" fa fa-angle-right"></i>',
-          previous: '<i class="fa fa-angle-left"></i> '
-        },
-      },
-      initComplete: (_settings: any, _json: any) => {
-        $('.dataTables_filter').appendTo('#tableSearch');
-        $('.dataTables_filter').appendTo('.search-input');
-      },
-    });  // Initialize jQuery DataTable outside Angular’s zone
-  }
-
   ngOnDestroy(): void {
     // Destroy the DataTable to free up resources
-    $('.datanew-1').DataTable().destroy();
-    $('.datanew-2').DataTable().destroy();
+    $('.datanew_1').DataTable().destroy();
+    $('.datanew_2').DataTable().destroy();
+    this.sharedservice.infoFunc('','', false,false,false)
   }
 }
 

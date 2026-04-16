@@ -97,6 +97,7 @@ export class HttpService {
           sessionStorage.setItem('username', data.user.name)
           sessionStorage.setItem('user', JSON.stringify(data.user))
           sessionStorage.setItem('number_of_branches', data.no_of_branches)
+          sessionStorage.setItem('selected_branch', '0');
 
           this.appToken = data.token;
           this.role = data.role;
@@ -132,9 +133,17 @@ export class HttpService {
     // console.log("getting products", this.appToken)
     return this.http.get<any>(`${this.baseUrl}/products`, {headers: this.getHeaders()}) 
   }
+  
+  getByBranchProducts(branchId:any) {
+    return this.http.get<any>(`${this.baseUrl}/products/${branchId}`, {headers: this.getHeaders()}) 
+  }
 
   getProductsExpiring(page: number, perPage: number): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/products/expiry?page=${page}&per_page=${perPage}`, {headers: this.getHeaders()})
+  }
+
+  getBranchProductsExpiring(branchId:any): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/products/expiry/${branchId}`, {headers: this.getHeaders()})
   }
 
   getStockedOutProducts(page: number, perPage: number): Observable<any> {
@@ -143,6 +152,10 @@ export class HttpService {
 
   getLowStockedProducts(page: number, perPage: number): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/products/stocked-low?page=${page}&per_page=${perPage}`, {headers: this.getHeaders()})
+  }
+  
+  getProductsAlert(branchId:any) {
+    return this.http.get<any>(`${this.baseUrl}/products/alert/${branchId}`, {headers: this.getHeaders()})
   }
 
   getSales(page: number, perPage: number) {
@@ -160,6 +173,10 @@ export class HttpService {
 
   getCategories(page: number, perPage: number): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/category?page=${page}&per_page=${perPage}`, {headers: this.getHeaders()});
+  }
+
+  getCategoriesByBranch(branchId: any): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/category/${branchId}`, {headers: this.getHeaders()});
   }
 
   createProduct(body: any) {
@@ -290,6 +307,10 @@ export class HttpService {
 
   getAllDebtors(){
     return this.http.get<any>(`${this.baseUrl}/unpaid/sales`, {headers: this.getHeaders()})
+  }
+
+  getAllBranchDebtors(branchId: any){
+    return this.http.get<any>(`${this.baseUrl}/unpaid/branch/sales/${branchId}`, {headers: this.getHeaders()})
   }
 
   makeSalePayment(body: any){

@@ -61,7 +61,7 @@ export class SaleanalyticsComponent {
   submitQueryFrm(evt: Event){
     evt.preventDefault()
 
-    console.log("clicked")
+    // console.log("clicked")
 
     if(!this.queryFrm.valid){
       return
@@ -92,7 +92,7 @@ export class SaleanalyticsComponent {
   }
 
   ngOnInit ():void {
-    if(parseInt(`$sessionStorage.getItem('selected_branch').value}`) != 0){
+    if(parseInt(`${sessionStorage.getItem('selected_branch')}`) != 0){
       this.queryFrm.get('branch_id')?.setValue(parseInt(`${sessionStorage.getItem('selected_branch')}`) || 0)
     }
     this.httpservice.getbranches()

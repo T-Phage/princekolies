@@ -130,11 +130,11 @@
                             <li [className]="router.url == '/dashboard/products'? 'active': '' "><a
                                     [routerLink]="['/dashboard/products']"><i
                                         ></i><span>Products</span></a></li>
-                            <li *ngIf="manager || owner" [className]="router.url == '/dashboard/add-product'? 'active': '' "><a
+                            <li *ngIf="owner" [className]="router.url == '/dashboard/add-product'? 'active': '' "><a
                                     [routerLink]="['/dashboard/add-product']"><i
                                         data-feather=""></i><span>Create
                                         Product</span></a></li>
-                            <li *ngIf="manager || owner" [className]="router.url == '/dashboard/restock'? 'active': '' "><a [routerLink]="['/dashboard/restock']"><i data-feather=""></i><span>Restock
+                            <li *ngIf="owner" [className]="router.url == '/dashboard/restock'? 'active': '' "><a [routerLink]="['/dashboard/restock']"><i data-feather=""></i><span>Restock
                                         Products</span></a></li>
                             <li [className]="router.url == '/dashboard/products/expiry'? 'active': '' "><a [routerLink]="['/dashboard/products/expiry']"><i data-feather=""></i><span>Expired
                                         Products</span></a></li>
@@ -213,11 +213,11 @@
                             <li (click)="toggleMenu()" [className]="router.url == '/dashboard/products'? 'active': '' "><a
                                     [routerLink]="['/dashboard/products']"><i
                                         ></i><span>Products</span></a></li>
-                            <li *ngIf="manager || owner" (click)="toggleMenu()" [className]="router.url == '/dashboard/add-product'? 'active': '' "><a
+                            <li *ngIf="owner" (click)="toggleMenu()" [className]="router.url == '/dashboard/add-product'? 'active': '' "><a
                                     [routerLink]="['/dashboard/add-product']"><i
                                         ></i><span>Create
                                         Product</span></a></li>
-                            <li (click)="toggleMenu()" *ngIf="manager || owner" [className]="router.url == '/dashboard/restock'? 'active': '' "><a [routerLink]="['/dashboard/restock']"><i data-feather=""></i><span>Restock
+                            <li (click)="toggleMenu()" *ngIf="owner" [className]="router.url == '/dashboard/restock'? 'active': '' "><a [routerLink]="['/dashboard/restock']"><i data-feather=""></i><span>Restock
                                     Products</span></a></li>
                             <li (click)="toggleMenu()" [className]="router.url == '/dashboard/products/expiry'? 'active': '' "><a [routerLink]="['/dashboard/products/expiry']"><i data-feather=""></i><span>Expired
                                         Products</span></a></li>

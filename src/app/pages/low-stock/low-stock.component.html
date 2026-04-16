@@ -18,9 +18,9 @@
         <li>
             <a (click)="exportTableToPDF()" data-bs-toggle="tooltip" data-bs-placement="top" title="Pdf"><img src="assets/images/pdf.svg" alt="img"></a>
         </li>
-        <li>
+        <!-- <li>
             <a (click)="exportToExcel()" data-bs-toggle="tooltip" data-bs-placement="top" title="Excel"><img src="assets/images/excel.svg" alt="img"></a>
-        </li>
+        </li> -->
         <li>
             <a (click)="printTable()" data-bs-toggle="tooltip" data-bs-placement="top" title="Print">
                 <!-- <i data-feather="printer" class="feather-rotate-ccw"></i> -->
@@ -60,6 +60,12 @@
                                         class="feather-search"></i></a>
                             </div>
                         </div>
+                        <form *ngIf="role == 'Business_Owner'" [formGroup]="branch">
+                            <select formControlName="id" (change)="branchChange()" class="form-control">
+                                <option>Select branch</option>
+                                <option *ngFor="let branch of branches$ | async" [value]="branch.id">{{branch.branch_name}}</option>
+                            </select>
+                        </form>
                         <!-- <div class="search-path">
                             <a class="btn btn-filter" id="filter_search">
                                 <i data-feather="filter" class="filter-icon"></i>
@@ -75,6 +81,9 @@
                             </select>
                         </div> -->
                     </div>
+                    <div style="display: flex;justify-content:center;">
+                        <app-errormodal></app-errormodal>
+                    </div>
 
                     <div class="card" id="filter_inputs">
                         <div class="card-body pb-0">
@@ -82,7 +91,7 @@
                     </div>
                     <!-- low -->
                     <div class="table-responsive">
-                        <table class="table  datanew-1" id="table">
+                        <table class="table datanew_1" id="table">
                             <thead>
                                 <tr>
                                     <th class="no-sort">
@@ -96,7 +105,7 @@
                                     <th>Price</th>
                                     <th>Qty</th>
                                     <!-- <th>Created by</th> -->
-                                    <th *ngIf="role != 'Attendant'" class="no-sort">Action</th>
+                                    <th *ngIf="role == 'Business_Owner'" class="no-sort">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -112,7 +121,7 @@
                                     <td>Ghc {{product.price}}</td>
                                     <td>{{ product.quantity }}</td>
                                     <!-- <td>{{ product.createdby }}</td> -->
-                                    <td *ngIf="role != 'Attendant'" class="action-table-data">
+                                    <td *ngIf="role == 'Business_Owner'" class="action-table-data">
                                         <div class="edit-delete-action">
                                             <a (click)="productClicked(product.id,product.name,product.description,product.barcode,product.price,product.category_,product.quantity,product.quantity_alert,product.manufactured_date,product.expiry_date)" class="me-2 p-2" data-bs-toggle="modal" data-bs-target="#update-product" href="javascript:void(0);">
                                                 <i data-feather="edit" class="feather-edit"></i>
@@ -141,9 +150,19 @@
                                         class="feather-search"></i></a>
                             </div>
                         </div>
+                        <form *ngIf="role == 'Business_Owner'" [formGroup]="branch">
+                            <select formControlName="id" (change)="branchChange()" class="form-control">
+                                <option>Select branch</option>
+                                <option *ngFor="let branch of branches$ | async" [value]="branch.id">{{branch.branch_name}}</option>
+                            </select>
+                        </form>
                     </div>
 
-                    <div class="card" id="filter_inputs1">
+                    <div style="display: flex;justify-content:center;">
+                        <app-errormodal></app-errormodal>
+                    </div>
+
+                    <!-- <div class="card" id="filter_inputs1">
                         <div class="card-body pb-0">
                             <div class="row">
                                 <div class="col-lg-3 col-sm-6 col-12">
@@ -187,11 +206,11 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
                     <!-- out -->
                     <div class="table-responsive">
-                        <table class="table  datanew-2" id="table1">
+                        <table class="table datanew_2" id="table1">
                             <thead>
                                 <tr>
                                     <th class="no-sort">
@@ -205,7 +224,7 @@
                                     <th>Price</th>
                                     <th>Qty</th>
                                     <!-- <th>Created by</th> -->
-                                    <th *ngIf="role != 'Attendant'" class="no-sort">Action</th>
+                                    <th *ngIf="role == 'Business_Owner'" class="no-sort">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -221,7 +240,7 @@
                                     <td>Ghc {{product.price}}</td>
                                     <td>{{ product.quantity }}</td>
                                     <!-- <td>{{ product.createdby }}</td> -->
-                                    <td *ngIf="role != 'Attendant'" class="action-table-data">
+                                    <td *ngIf="role == 'Business_Owner'" class="action-table-data">
                                         <div class="edit-delete-action">
                                             <a (click)="productClicked(product.id,product.name,product.description,product.barcode,product.price,product.category_,product.quantity,product.quantity_alert,product.manufactured_date,product.expiry_date)" class="me-2 p-2" data-bs-toggle="modal" data-bs-target="#update-product" href="javascript:void(0);">
                                                 <i data-feather="edit" class="feather-edit"></i>

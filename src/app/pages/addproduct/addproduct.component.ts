@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { HttpService } from '../../services/httpservices/http.service';
 import { SharedService } from '../../services/sharedservices/shared.service';
 import { ValidationService } from '../../services/validationservices/validation.service';
+import { SwalservicesService } from '../../services/swal/swalservices.service';
 import { CommonModule } from '@angular/common';
 import { ErrormodalComponent } from '../../components/errormodal/errormodal.component';
 import { RouterLink, RouterOutlet } from '@angular/router';
@@ -27,6 +28,7 @@ export class AddproductComponent {
     private formBuilder: FormBuilder,
     private httpservice: HttpService,
     private validationservice: ValidationService,
+    private swalservices: SwalservicesService,
   ) {
 
   }
@@ -58,19 +60,25 @@ export class AddproductComponent {
   }
 
   categories$!: Observable<any>;
+  branches$!: Observable<any>;
+  categories:any[] = [];
+  filteredCategories:any[] = [];
 
   newProductForm = this.formBuilder.group({
     'name': ['', Validators.required],
     'description': [''],
     'barcode': ['',],
+    'branch': ['0'],
     'price': ['', Validators.compose([Validators.required, Validators.pattern(this.sharedservice.amount)])],
-    'category_id': [parseInt(''), Validators.required],
-    'quantity': ['', Validators.compose([Validators.required, Validators.min(0), this.validationservice.positiveIntegerValidator()])],
-    'quantity_alert': ['', Validators.compose([Validators.required, Validators.min(0), this.validationservice.positiveIntegerValidator()])],
+    'category_id': [null, Validators.compose([Validators.required])],
+    'quantity': ['', Validators.compose([Validators.required, Validators.min(0),])],// this.validationservice.positiveIntegerValidator()])],
+    'quantity_alert': ['', Validators.compose([Validators.required, Validators.min(0), ])],//this.validationservice.positiveIntegerValidator()])],
     'manufactured_date': [''],
     'expiry_date': [''],
     'createdby': [parseInt(`${sessionStorage.getItem('id')}`)]
   })
+
+
 
   catChange(e: Event) {
 
@@ -78,6 +86,8 @@ export class AddproductComponent {
 
   createNewProduct(evt: Event) {
     evt.preventDefault()
+    console.log(this.newProductForm)
+    console.log(this.newProductForm.value)
     this.newProductForm.controls.barcode.enable()
     this.submitted = true;
 
@@ -85,16 +95,25 @@ export class AddproductComponent {
       this.httpservice.createProduct(this.newProductForm.value).subscribe({
         next: data => {
           this.sharedservice.infoFunc('alert alert-success', 'product added successfully', false, false, false)
-  
+          this.swalservices.fireSuccess('Product added successfully');
+          
           setTimeout(() => {
             this.sharedservice.infoFunc('', '', false, false, false)
-            this.newProductForm.reset();
-            this.newProductForm.controls.createdby.setValue(parseInt(`${sessionStorage.getItem('id')}`))
+            // this.newProductForm.reset({
+              this.newProductForm.get('name')?.setValue('');
+              this.newProductForm.get('description')?.setValue('');
+              this.newProductForm.get('barcode')?.setValue('');
+              this.newProductForm.get('price')?.setValue('');
+              this.newProductForm.get('quantity')?.setValue('');
+              this.newProductForm.get('quantity_alert')?.setValue('')
+            // this.newProductForm.controls.createdby.setValue(parseInt(`${sessionStorage.getItem('id')}`))
+            // this.newProductForm.controls.branch.setValue(`${sessionStorage.getItem('selected_branch')}`)
             this.submitted = false;
           }, 4000)
           
         },
         error: error => {
+          this.swalservices.fireError('An error occured. Try again...');
           let msg = error.error.message
           console.error('error :', error)
           this.sharedservice.infoFunc('alert alert-danger', msg, false, false, false)
@@ -104,8 +123,34 @@ export class AddproductComponent {
     }
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     // this.startCamera()
-    this.categories$ = this.httpservice.getCategories(1, 10);
+    this.categories$ = await this.httpservice.getCategories(1, 10);
+    this.branches$ = this.httpservice.getbranches();
+
+    this.categories$.subscribe({
+      next: data => {
+        this.categories = data
+      },
+      error: _err => {}
+    })
+
+    this.newProductForm.get('branch')?.valueChanges.subscribe(branch_id => {
+      // console.log(branch_id)
+      sessionStorage.setItem('selected_branch', `${branch_id}`)
+      this.newProductForm.get('category_id')?.setValue(null);
+       if (this.newProductForm.get('category_id')?.value == null){
+        this.newProductForm.get('category_id')?.setErrors({required: true})
+       }
+      if(branch_id) {
+        this.filteredCategories = this.categories.filter(c => c.branch_id == branch_id);
+      } else {
+        this.filteredCategories = [];
+      }
+    })
+
+    setTimeout(() => {
+      this.newProductForm.get('branch')?.setValue(`${sessionStorage.getItem('selected_branch')}`, {emitEvent: true});
+    }, 1000);
   }
 }

@@ -33,6 +33,7 @@ export class CategoryComponent {
   categories: any[] = [];
   branches: any[] = [];
   categories$!: Observable<any>;
+  branches$!: Observable<any>;
 
   role:string = '';
   owner:boolean = false;
@@ -45,15 +46,18 @@ export class CategoryComponent {
     private zone: NgZone,
     private router: Router,
   ) {
-    // const letRole = sessionStorage.getItem('role');
-    
-   }
+    // const letRole = sessionStorage.getItem('role'); 
+  }
+
+  branch = this.formBuilder.group({
+    'id': [sessionStorage.getItem('selected_branch')],
+  })
 
   createCategoryFrm = this.formBuilder.group({
     'name': ['', Validators.required],
     'status': [true, Validators.required],
     'createdby': [parseInt(`${sessionStorage.getItem('id')}`),],
-    'branch': [''],
+    'branch': [sessionStorage.getItem('selected_branch'), Validators.required],
   });
 
   updateCategoryFrm = this.formBuilder.group({
@@ -71,7 +75,6 @@ export class CategoryComponent {
     this.updateCategoryFrm.controls.name.setValue(name)
     this.updateCategoryFrm.controls.status.setValue(status)
 
-    // console.log(this.updateCategoryFrm.value)
   }
 
   submitUpdateFrm(event:Event){
@@ -84,12 +87,14 @@ export class CategoryComponent {
         next: data => {
           $('.datanewcat').DataTable().destroy()
           // $('.datanewcat ').empty()
-          this.sharedservices.infoFunc('alert alert-success', 'category updated', false, false, false) 
-          this.categories$ = this.httpservices.getCategories(1, 10)
-          this.httpservices.getCategories(1, 10)
+          this.sharedservices.infoFunc('alert alert-success', 'category updated', false, false, false)
+          this.httpservices.getCategoriesByBranch(this.branch.value.id)
             .subscribe({
               next: data => {
                 this.categories = data
+                setTimeout(() => {
+                  this.dataTableInit();
+                }, 150);
               },
               error: error => {
                 const msg = error.error.message
@@ -97,34 +102,7 @@ export class CategoryComponent {
               }
             })
 
-          setTimeout(()=> this.sharedservices.infoFunc('','', false,false,false), 3000)
-
-          // window.location.reload() 
-          setTimeout(()=> {
-            $('.datanewcat').DataTable({
-              "bFilter": true,
-              // "sDom": 'fBtlpi',
-              "dom": 'pftil',
-              "ordering": true,
-              "language": {
-                search: ' ',
-                emptyTable: "No data available in table",
-                infoEmpty: "",
-                sLengthMenu: '_MENU_',
-                searchPlaceholder: "Search",
-                info: "_START_ - _END_ of _TOTAL_ items",
-                paginate: {
-                  next: ' <i class=" fa fa-angle-right"></i>',
-                  previous: '<i class="fa fa-angle-left"></i> '
-                },
-              },
-              initComplete: (_settings: any, _json: any) => {
-                $('.dataTables_filter').appendTo('#tableSearch');
-                $('.dataTables_filter').appendTo('.search-input');
-              },
-            }); 
-          },1000)  
-              
+          setTimeout(()=> this.sharedservices.infoFunc('','', false,false,false), 3000)              
         },
         error: error => {
           let msg = error.error.message
@@ -142,7 +120,9 @@ export class CategoryComponent {
 
   createCategoryFunc(evt: Event) {
     evt.preventDefault()
-    // console.log(this.createCategoryFrm.value)
+    this.sharedservices.infoFunc('alert alert-info', 'creating category... ', false, false, false)
+    console.log(this.createCategoryFrm.value)
+    console.log(this.createCategoryFrm)
     this.submitted = true;
     if (this.createCategoryFrm.valid) {
       this.httpservices.createCategory(this.createCategoryFrm.value)
@@ -151,22 +131,13 @@ export class CategoryComponent {
           this.sharedservices.infoFunc('alert alert-success', 'category created', false, false, false)
           // console.log(data)
           $('.datanewcat').DataTable().destroy()
-          this.httpservices.getCategories(1, 10)
-            .subscribe({
-              next: data => {
-                this.categories = data
-                this.dataTableInit();
-              },
-              error: error => {}
-            })
-          // this.users$.
           this.sharedservices.infoFunc('alert alert-success', 'category created', false, false, false)
           $('.datanewcat').DataTable().destroy();
           setTimeout(()=>{
             this.sharedservices.infoFunc('', '', false, false, false)
             this.ngOnInit()
             // this.sharedservices.refreshComponentFunc(this.router.url)
-          }, 2000)
+          }, 1000)
         },
         error: error => {
           let msg = error.error.message
@@ -202,7 +173,7 @@ export class CategoryComponent {
           }, 1000)
           // });
           this.hide = false;
-          // setTimeout(()=>this.sharedservice.refreshComponentFunc('dashboard/users'), 2000)
+          // setTimeout(()=>this.sharedservicse.refreshComponentFunc('dashboard/users'), 2000)
         },
         error: error => {
           let msg = error.error.message
@@ -214,48 +185,79 @@ export class CategoryComponent {
 
   }
 
+  branchChange() {
+    if (Number(`${this.branch.value.id}`) == 0){
+      this.sharedservices.infoFunc('', '', false, false, false);
+      return
+    }
 
-  // loadCategories() {
-  //   this.httpservices.getCategories(1, 10).subscribe({
-  //     next: (data) => {
-  //       this.categories = data;
-  //       // console.log(data)
-  //     },
-  //     error: (error) => {
-  //       console.error('error:', error);
-  //     }
+    $('.datanewcat').DataTable().destroy()
+    this.sharedservices.infoFunc('alert alert-info', 'fetching branch products...  ', true, true, true);
     
-  //   });
-  // }
+    sessionStorage.setItem('selected_branch', `${this.branch.value.id}`)
+    this.httpservices.getCategoriesByBranch(this.branch.value.id)
+      .subscribe({
+        next: data => {
+          this.categories = data
+          // Initialize DataTable after data loads
+          setTimeout(() => {
+            this.dataTableInit();
+            this.sharedservices.infoFunc('', '', false, false, false);
+          }, 200);
+        },
+        error: _error => {
+          console.log(_error);
+          // this.dataTableInit(); 
+          if(_error.error.staus === 401){
+            this.httpservices.httpLogout()
+          }
+        }
+      })
+  
+  }
 
   ngOnInit() {
+    this.sharedservices.infoFunc('alert alert-info', 'fetching branch products...  ', true, true, true);
     this.role = sessionStorage.getItem('role') || '';
-    if (this.role == 'Business_Owner'){
-      this.owner = true;
-      this.createCategoryFrm.get('branch')?.setValidators(Validators.required);
-      this.createCategoryFrm.get('branch')?.updateValueAndValidity();
+    this.branches$ = this.httpservices.getbranches();
+ 
+    if(this.role != 'Business_Owner'){
+      this.httpservices.getCategories(0, 0)
+      .subscribe({
+        next: data => {
+          // console.log(data)
+          this.sharedservices.infoFunc('', '', false, false, false);
+          this.categories = data
+
+          setTimeout(()=>{
+            this.dataTableInit();
+          }, 250)
+        },
+        error: error => {
+          this.sharedservices.infoFunc('alert alert-danger', '', false, false, false);
+          if (error.status === 401){
+            this.httpservices.httpLogout()
+          }
+        }
+      })
+
+      return
     }
-    this.httpservices.getbranches()
-    .subscribe({
-      next: data => {
-        this.branches = data
-      },
-      error: error => {}
-    })
     
-    this.httpservices.getCategories(1, 10)
+    this.httpservices.getCategoriesByBranch(this.branch.value.id)
     .subscribe({
       next: data => {
-        console.log(data)
+        // console.log(data)
+        this.sharedservices.infoFunc('', '', false, false, false);
         this.categories = data
+
         setTimeout(()=>{
           this.dataTableInit();
-
         }, 250)
       },
       error: error => {
-        if (error.status == 401){
-          // this.httpservices.logout()
+        if (error.status === 401){
+          this.httpservices.httpLogout()
         }
       }
     })
@@ -353,16 +355,7 @@ export class CategoryComponent {
 
   refreshData(){
     $('.datanewcat').DataTable().destroy();
-    this.httpservices.getCategories(1, 10)
-    .subscribe({
-      next: data => {
-        this.categories = data
-        setTimeout(()=> {
-          this.dataTableInit(); 
-        },3000)
-      },
-      error: error => {}
-    })
+    this.sharedservices.refreshComponentFunc(this.router.url)
   }
 
   ngAfterViewInit() {
@@ -412,6 +405,7 @@ export class CategoryComponent {
   ngOnDestroy(): void {
     // Destroy the DataTable to free up resources
     $('.datanewcat').DataTable().destroy();
+    this.sharedservices.infoFunc('', '', false, false, false);
   }
 
 }
