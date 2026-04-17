@@ -176,10 +176,8 @@ export class DebtorsComponent {
         next: (res) => {
           // console.log(res.unpaidSales)
           this.debtors = res.unpaidSales
+          this.sharedservice.infoFunc('', '', false, false, false);
           this.datatableService.initiateDataTable('.debtorsnew', 15)
-          setTimeout(() => {
-            this.sharedservice.infoFunc('', '', false, false, false);
-          }, 170);
         },
         error: (err) => {
           // console.log(err)
@@ -204,11 +202,10 @@ export class DebtorsComponent {
     this.httpService.getAllBranchDebtors(this.branch.value.id)
       .subscribe({
         next: (res) => {
+          // console.log('heeyy', res)
           this.debtors = res.unpaidSales
           this.datatableService.initiateDataTable('.debtorsnew', 15)
-          setTimeout(() => {
-            this.sharedservice.infoFunc('', '', false, false, false);
-          }, 170);
+          this.sharedservice.infoFunc('', '', false, false, false);
         },
         error: (err) => {
           // console.log(err)

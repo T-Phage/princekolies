@@ -25,7 +25,9 @@ export class ReturnsComponent {
 
     @ViewChild('receiptContent') receiptContent!: ElementRef;  
   
+    hideBtn: boolean = true;
     products$!: Observable<any>;
+    branches$!: Observable<any>;
   
     sales: any[] = []
     all_sales: any[] = []
@@ -71,6 +73,56 @@ export class ReturnsComponent {
       biller: '',
       items: [],
     }
+
+    branch = this.formBuilder.group({
+      'id': [sessionStorage.getItem('selected_branch')]
+    });
+
+    branchChange() {
+      if (Number(`${this.branch.value.id}`) == 0){
+        this.sharedservice.infoFunc('', '', false, false, false);
+        this.hideBtn = true;
+        return
+      }
+
+    this.sharedservice.infoFunc('alert alert-info', 'fetching branch products...  ', true, true, true);
+    $('.returnstable').DataTable().destroy()
+    sessionStorage.setItem('selected_branch', `${this.branch.value.id}`)
+    this.httpservice.getByBranchProducts(this.branch.value.id)
+      .subscribe({
+        next: data => {
+          // console.log(data)
+          this.products = data
+        }
+      });
+
+    this.httpservice.getBranchSales(this.branch.value.id)
+    .subscribe({
+      next: data => {
+        // console.log(data) all_sales
+        this.all_sales = data
+      }
+    });
+    this.httpservice.getBranchSalesReturns(this.branch.value.id)
+      .subscribe({
+        next: data => {
+          this.sales = data
+          // Initialize DataTable after data loads
+          setTimeout(() => {
+            this.dataTableservice.initiateDataTable('.returnstable', 20);
+            this.sharedservice.infoFunc('', '', false, false, false);
+          }, 200);
+        },
+        error: _error => {
+          console.log(_error);
+          // this.initDataTable();
+          if(_error.error.staus === 401){
+            this.httpservice.httpLogout()
+          }
+        }
+      })
+      this.hideBtn = false;
+    }
   
     saleClicked(customer_name:any,reference:any,status:any,grand_total:any,payment_status:any,amount_paid:any,biller:any,items:any){
       this.clickedSale.customer_name = customer_name
@@ -86,27 +138,88 @@ export class ReturnsComponent {
     }
   
     ngOnInit(): void {
+      this.sharedservice.infoFunc('alert alert-info', 'fetching branch returns...  ', true, true, true);
+      this.branches$ = this.httpservice.getbranches()
+      this.userRole = this.httpservice.getUserRole();
+      if(this.userRole !== 'Business_Owner'){
       
-      this.httpservice.getSalesReturns(1, 10).subscribe({
-        next: data => {
-          this.sales = data
-          // console.log(this.sales)
-          this.dataTableservice.initiateDataTable('.returnstable', 15)
-        }
-      })
-      this.httpservice.getSales(1, 10).subscribe({
-        next: data => {
-          // console.log(data) all_sales
-          this.all_sales = data
-        }
-      })
-      this.products$ = this.httpservice.getProducts(1, 10)
-      this.httpservice.getProducts(1, 10).subscribe({
-        next: data => {
-          // console.log(data)
-          this.products = data
-        }
-      })
+        this.httpservice.getSalesReturns(1, 10).subscribe({
+          next: data => {
+            this.sales = data
+            // console.log(this.sales)
+            this.dataTableservice.initiateDataTable('.returnstable', 15)
+            this.sharedservice.infoFunc('', '', false, false, false);
+          },
+          error: err => {
+            this.sharedservice.infoFunc('alert alert-danger', 'An error occured.', false, false, false);
+          }
+        })
+        this.httpservice.getSales(1, 10).subscribe({
+          next: data => {
+            // console.log(data) all_sales
+            this.all_sales = data
+          }
+        })
+        this.httpservice.getProducts(1, 10).subscribe({
+          next: data => {
+            // console.log(data)
+            this.products = data
+          }
+        })
+
+        return;
+      }
+
+      if (this.branch.value.id == null || this.branch.value.id == '0') {
+        setTimeout(() => {
+            this.sharedservice.infoFunc('alert alert-danger', 'branch not selected...  ', false, false, false);
+        }, 4500);
+  
+          return
+      }
+
+      this.httpservice.getByBranchProducts(this.branch.value.id)
+        .subscribe({
+          next: data => {
+            // console.log(data)
+            this.products = data
+          }
+        });
+
+        this.httpservice.getBranchSales(this.branch.value.id)
+        .subscribe({
+          next: data => {
+            // console.log(data) all_sales
+            this.all_sales = data
+          }
+        });
+
+      this.httpservice.getBranchSalesReturns(this.branch.value.id)
+      .subscribe({
+          next: data => {
+            this.sales = data
+            this.sharedservice.infoFunc('', '', false, false, false);
+            
+            setTimeout(() => {
+              this.sharedservice.infoFunc('', '', false, false, false);
+              this.dataTableservice.initiateDataTable('.returnstable', 15)
+            }, 170);
+            
+          },
+          error: _error => {
+            this.sharedservice.infoFunc('','', false, false, false);
+            setTimeout(() => {
+              this.sharedservice.infoFunc('', '', false, false, false);
+            }, 4000)
+            console.log(_error);
+            // this.initDataTable();
+            if(_error.error.staus === 401){
+              this.httpservice.httpLogout()
+            }
+          }
+        })
+
+        this.hideBtn = false;
     }
   
     get items() {

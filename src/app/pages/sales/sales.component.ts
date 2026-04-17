@@ -25,6 +25,7 @@ export class SalesComponent implements OnInit {
   @ViewChild('receiptContent') receiptContent!: ElementRef;  
 
   products$!: Observable<any>;
+  branches$!: Observable<any>;
 
   sales$!: Observable<any>;
 
@@ -32,6 +33,8 @@ export class SalesComponent implements OnInit {
   products: any[] = []
 
   selectedProduct: any;
+
+  role = this.httpservice.getUserRole();
 
   constructor(
     private formBuilder: FormBuilder,
@@ -44,6 +47,10 @@ export class SalesComponent implements OnInit {
     
   }
 
+  branch = this.formBuilder.group({
+    'id': [sessionStorage.getItem('selected_branch')]
+  })
+
   clickedSale = {
     customer_name: '',
     reference: '',
@@ -53,9 +60,41 @@ export class SalesComponent implements OnInit {
     payment_status: '',
     biller: '',
     items: [],
+    returns: [],
   }
 
-  saleClicked(customer_name:any,reference:any,status:any,grand_total:any,payment_status:any,amount_paid:any,biller:any,items:any){
+  branchChange(){
+    if (Number(`${this.branch.value.id}`) == 0){
+      this.sharedservice.infoFunc('', '', false, false, false);
+      return
+    }
+
+    this.sharedservice.infoFunc('alert alert-info', 'fetching branch products...  ', true, true, true);
+    $('.datasales').DataTable().destroy()
+    sessionStorage.setItem('selected_branch', `${this.branch.value.id}`)
+
+    this.httpservice.getBranchSales(this.branch.value.id)
+      .subscribe({
+        next: data => {
+          // console.log(data)
+          this.sales = data
+            
+          this.sharedservice.infoFunc('', '', false, false, false);
+          this.datableservice.initiateDataTable('.datasales', 50);
+        
+        },
+        error: _error => {
+          this.sharedservice.infoFunc('', '', false, false, false);
+          console.log(_error);
+          // this.initDataTable();
+          if(_error.error.staus === 401){
+            this.httpservice.httpLogout()
+          }
+        }
+      })
+  }
+
+  saleClicked(customer_name:any,reference:any,status:any,grand_total:any,payment_status:any,amount_paid:any,biller:any,items:any, returns:any){
     this.clickedSale.customer_name = customer_name
     this.clickedSale.reference = reference
     this.clickedSale.status = status
@@ -64,172 +103,67 @@ export class SalesComponent implements OnInit {
     this.clickedSale.payment_status = payment_status
     this.clickedSale.biller = biller
     this.clickedSale.items = items
+    this.clickedSale.returns = returns || []
 
     // console.log(this.clickedSale)
   }
 
   ngOnInit(): void {
-    this.httpservice.getProducts(1, 10)
-      .subscribe({
-        next: data => {
-          // console.log(data)
-          this.products = data
-        },
-        error: error => {
-          console.error('error :', error)
-        }
-      });
+    this.sharedservice.infoFunc('alert alert-info', 'fetching branch sales...  ', true, true, true);
+    this.products$ = this.httpservice.getProducts(1, 10)
+    this.branches$ = this.httpservice.getbranches()
+
+    if (this.role != 'Business_Owner') {
       
       this.httpservice.getSales(1, 10)
       .subscribe({
         next: data => {
           this.sales = data;
-          this.datableservice.initiateDataTable('.datasales', 25);
+          // console.log(data)
+          this.datableservice.initiateDataTable('.datasales', 50);
         },
-        error: _err => {}
+        error: _err => {
+          this.sharedservice.infoFunc('', '', false, false, false);
+          if(_err.error.staus === 401){
+            this.httpservice.httpLogout()
+          }
+        }
       })
+      return
     }
 
-  get items() {
-    return this.newSalesFrm.get('items') as FormArray;
-  }
+    if (this.branch.value.id == null || this.branch.value.id == '0') {
+      setTimeout(() => {
+          this.sharedservice.infoFunc('alert alert-danger', 'branch not selected...  ', false, false, false);
+      }, 4500);
 
-  addAlias(product:string, product_id: number, quantity: number, purchase_price: any, unit_cost:any, barcode:any) {
-    this.items.push(this.formBuilder.group({
-      'product': [product, Validators.required],
-      'product_id': [product_id, Validators.required],
-      'barcode': [product_id, Validators.required],
-      'quantity': [quantity, Validators.compose([Validators.min(1)])],
-      'purchase_price': [parseFloat(purchase_price), Validators.compose([Validators.required])],
-      'unit_cost': [parseFloat(unit_cost)],
-    }));
-    // this.calculateTotal(this.items.length-1)
-    this.calculateGrandTotal()
-  }
+        return
+    }
 
-  newSalesFrm = this.formBuilder.group({
-    'customer_name': ['', Validators.required],
-    'reference': [''],
-    'status': ['Completed', Validators.required],
-    'grand_total': ['', Validators.required],
-    'amount_paid': [0, Validators.required],
-    'payment_status': ['Paid', Validators.compose([ Validators.required])],
-    'biller': [sessionStorage.getItem('id')],
-    'items': this.formBuilder.array([]),
-  })
+    this.httpservice.getBranchSales(this.branch.value.id)
+      .subscribe({
+        next: data => {
+          // console.log(data)
+          this.sales = data
 
-  submitted = false
-
-  // Remove an item at the given index from the FormArray
-  removeItem(index: number): void {
-    this.items.removeAt(index);
-    this.calculateGrandTotal()
-  }
-
-  // Calculate total for a specific item when quantity or price changes
-  calculateTotal(index: number): void {
-    const item = this.items.at(index);
-    const quantity = item.get('quantity')?.value;
-    const price = item.get('unit_cost')?.value;
-
-    const total = quantity * price;
-    item.get('purchase_price')?.setValue(total);
-    this.calculateGrandTotal()
+          this.sharedservice.infoFunc('', '', false, false, false);
+          this.datableservice.initiateDataTable('.datasales', 50);
+        },
+        error: _error => {
+          this.sharedservice.infoFunc('', '', false, false, false);
+          console.log(_error);
+          // this.initDataTable();
+          if(_error.error.staus === 401){
+            this.httpservice.httpLogout()
+          }
+        }
+      })
   }
 
   // Function to calculate the grand total
-  calculateGrandTotal(): void {
-    let grandTotal = this.items.controls.reduce((acc, item) => {
-      const itemTotal = item.get('purchase_price')?.value || 0;  // Get total for each item or 0 if null
-      return acc + itemTotal;  // Sum up all totals
-    }, 0);
 
-    // Update the grand_total form control if necessary
-    this.newSalesFrm.get('grand_total')?.setValue(grandTotal.toFixed(2));
-  }
-
-  inpProductChange(evt: any){
-    const inputValue = evt.target.value;
-    this.selectedProduct = this.products.find(product => product.name === inputValue);
-
-    if (this.selectedProduct) {
-      this.addAlias(
-        this.selectedProduct.name, 
-        this.selectedProduct.id, 
-        1,
-        this.selectedProduct.price,
-        this.selectedProduct.price,
-        this.selectedProduct.barcode,
-      );
-    }
-  }
-
-  // Custom validation to check if a product already exists in the array
-  isProductExists(product: string): boolean {
-    return this.items.controls.some(control => control.value.product === product);
-  }
 
   currentDate = new Date()
-  submitSalesFrm(evt: Event){
-    evt.preventDefault()
-
-    this.submitted = true
-
-    // this.newSalesFrm.controls.amount_paid.setValue(parseFloat(this.newSalesFrm.controls.amount_paid))
-    console.log(this.newSalesFrm.value)
-
-    if (this.newSalesFrm.valid && this.newSalesFrm.controls.items.length >= 1){
-      console.log(this.newSalesFrm.value)
-      this.httpservice.addNewSale(this.newSalesFrm.value, this.receiptContent)
-      .subscribe({
-        next: data => {
-          $('.datasales').DataTable().destroy()
-          this.sharedservice.infoFunc('alert alert-success', data.message, false, false, false) 
-          this.sales$ = this.httpservice.getSales(1, 10);
-          this.newSalesFrm.controls.reference?.setValue(`${data.sale.reference}`)
-          let printIt = this.printservice.printReceipt //(this.receiptContent);
-          let ctn = this.receiptContent
-          // window.location.reload() 
-          setTimeout(()=> {
-            $('.datasales').DataTable({
-              "bFilter": true,
-              // "sDom": 'fBtlpi',
-              "dom": 'pftil',
-              "ordering": true,
-              "language": {
-                search: ' ',
-                emptyTable: "No data available in table",
-                infoEmpty: "",
-                sLengthMenu: '_MENU_',
-                searchPlaceholder: "Search",
-                info: "_START_ - _END_ of _TOTAL_ items",
-                paginate: {
-                  next: ' <i class=" fa fa-angle-right"></i>',
-                  previous: '<i class="fa fa-angle-left"></i> '
-                },
-              },
-              initComplete: (_settings: any, _json: any) => {
-                $('.dataTables_filter').appendTo('#tableSearch');
-                $('.dataTables_filter').appendTo('.search-input');
-              },
-            }); 
-          },1000)  
-          setTimeout(()=>{
-            console.log(this.newSalesFrm.controls.reference)
-            printIt(ctn)
-
-          }, 3000)    
-          // this.newSalesFrm.reset()
-        },
-        error: error => {
-          let msg = error.error.message
-          console.error('error :', error)
-          this.sharedservice.infoFunc('alert alert-danger', msg, false, false, false)
-        }
-      })
-      // this.printReceipt();
-    }
-  }
 
   printTable() {
     const printWindow = window.open('', '_blank');  // Open a new window

@@ -31,7 +31,7 @@
         </li> -->
     </ul>
     <div *ngIf="userRole == 'Business_Owner'" class="page-btn">
-        <a href="javascript:void(0);" class="btn btn-added" data-bs-toggle="modal" data-bs-target="#add-sales-new"><i
+        <a *ngIf="!hideBtn" href="javascript:void(0);" class="btn btn-added" data-bs-toggle="modal" data-bs-target="#add-sales-new"><i
                 data-feather="plus-circle" class="me-2"></i> Add New Return</a>
     </div>
 </div>
@@ -44,10 +44,22 @@
                     <a href class="btn btn-searchset"><i data-feather="search" class="feather-search"></i></a>
                 </div>
             </div>
-            <div class="search-path">
-                
-            </div>
+
+            <form *ngIf="userRole == 'Business_Owner'" [formGroup]="branch">
+                <select formControlName="id" (change)="branchChange()" class="form-control">
+                    <option>Select branch</option>
+                    <option *ngFor="let branch of branches$ | async" [value]="branch.id">{{branch.branch_name}}</option>
+                </select>
+            </form>
             
+            <!-- <div class="search-path">
+                
+            </div> -->
+            
+        </div>
+
+         <div style="display: flex;justify-content:center;">
+            <app-errormodal></app-errormodal>
         </div>
 
         <div class="table-responsive">
@@ -175,7 +187,7 @@
                                             <div class="input-groupicon select-code">
                                                 <input (input)="inpProductNameChange($event);" type="text"
                                                     list="list-product"
-                                                    placeholder="Please scan product code and select">
+                                                    placeholder="Please search product name and select">
                                                 <div class="addonset">
                                                     <img src="assets/images/qrcode-scan.svg" alt="img">
                                                 </div>

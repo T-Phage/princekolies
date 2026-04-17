@@ -162,6 +162,10 @@ export class HttpService {
     return this.http.get<any>(`${this.baseUrl}/sales`, {headers: this.getHeaders()})
   }
 
+  getBranchSales(branchId: any) {
+    return this.http.get<any>(`${this.baseUrl}/sales/branch/${branchId}`, {headers: this.getHeaders()})
+  }
+
   returnSale(id:any, body: any) {
     this.sharedservice.infoFunc('alert alert-info', 'updating status...', true, true, true)
     return this.http.post<any>(`${this.baseUrl}/sale/return/${id}`, body, {headers: this.getHeaders()}) //.subscribe({
@@ -169,6 +173,10 @@ export class HttpService {
 
   getSalesReturns(page: number, perPage: number) {
     return this.http.get<any>(`${this.baseUrl}/sales/returns`, {headers: this.getHeaders()})
+  }
+
+  getBranchSalesReturns(branchId: any) {
+    return this.http.get<any>(`${this.baseUrl}/sales/branch/returns/${branchId}`, {headers: this.getHeaders()})
   }
 
   getCategories(page: number, perPage: number): Observable<any> {

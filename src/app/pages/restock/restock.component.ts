@@ -94,7 +94,7 @@ export class RestockComponent {
     this.httpservice.postRestock(this.restockForm.value)
     .subscribe({
       next: data =>{
-        console.log(data)
+        // console.log(data)
         this.sharedservice.infoFunc('alert alert-success', data.message, false, false, false)
         this.swalservices.fireSuccess(data.message)
         // Reset the form after submission
@@ -131,7 +131,7 @@ export class RestockComponent {
     this.httpservice.getProducts(1, 10).subscribe({
       next: (res) => {
         this.products = res;
-        console.log(res)
+        // console.log(res)
       },
       error: (err) => {
         this.errorLoading = true;
