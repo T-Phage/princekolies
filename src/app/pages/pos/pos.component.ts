@@ -29,6 +29,7 @@ export class PosComponent {
 
   products: any[] = []
   customers: any[] = [];
+  branches$!: Observable<any>;
 
   selectedProduct: any;
   selectedCustomer: any;
@@ -37,6 +38,8 @@ export class PosComponent {
   errorLoading: boolean= false;
 
   oncredit: boolean = false;
+
+  role = this.httpservice.getUserRole();
 
   constructor(
     private formBuilder: FormBuilder,
@@ -147,40 +150,109 @@ export class PosComponent {
   //   }
   // }
 
+  ngOnDestroy(): void {
+    this.sharedservice.infoFunc('', '', false, false, false);
+  }
+
+  branchChange(){
+    if (this.newSalesFrm.value.branch_id == null || this.newSalesFrm.value.branch_id == '0') {
+      this.loadingService.hide()
+      setTimeout(() => {
+        this.sharedservice.infoFunc('alert alert-danger', 'branch not selected...  ', false, false, false);
+        this.swalService.fireError('No branch has been selected')
+      }, 4500);
+      return
+    }
+
+    sessionStorage.setItem('selected_branch', `${this.newSalesFrm.value.branch_id}`)
+
+    this.sharedservice.refreshComponentFunc(this.router.url);
+  }
+
   ngOnInit(): void {
     
     this.loadingService.show()
+    if (this.httpservice.getUserRole() != "Business_Owner") {
+      this.httpservice.getAllCustomers()
+        .subscribe({
+          next: data => {
+            this.customers = data
+          },
+          error: error => {
+            
+          }
+        });
+  
+      this.httpservice.getProducts(1, 10)
+        .subscribe({
+          next: data => {
+            // console.log(data)
+            this.products = data
+          },
+          error: error => {
+            this.loadingService.hide();
+            this.errorLoading = true;
+  
+            console.log('error :', error)
+            if (error.status == 401){
+              // alert('Your session has expired, you will be redirected to log in');
+              this.swalService.fireError('Your session has expired, you will be redirected to log in')
+              this.router.navigate(['/auth/login'])
+            }
+          },
+          complete: () => {
+            this.loadingService.hide();
+          }
+        });
+       return
+    }
+
+    
+    this.branches$ = this.httpservice.getbranches()
+    if (this.newSalesFrm.value.branch_id == null || this.newSalesFrm.value.branch_id == '0') {
+      this.loadingService.hide()
+      setTimeout(() => {
+        this.sharedservice.infoFunc('alert alert-danger', 'branch not selected...  ', false, false, false);
+        this.swalService.fireError('No branch has been selected')
+      }, 500);
+      return
+    }
+    
+    this.newSalesFrm.get('branch_id')?.setValue(`${sessionStorage.getItem('selected_branch')}`)
     this.httpservice.getAllCustomers()
       .subscribe({
         next: data => {
           this.customers = data
         },
         error: error => {
-          
+        
         }
       });
-
-    this.httpservice.getProducts(1, 10)
-      .subscribe({
-        next: data => {
-          // console.log(data)
-          this.products = data
-        },
-        error: error => {
-          this.loadingService.hide();
-          this.errorLoading = true;
-
-          console.log('error :', error)
-          if (error.status == 401){
-            // alert('Your session has expired, you will be redirected to log in');
-            this.swalService.fireError('Your session has expired, you will be redirected to log in')
-            this.router.navigate(['/auth/login'])
+  
+    this.httpservice.getByBranchProducts(this.newSalesFrm.value.branch_id)
+        .subscribe({
+          next: data => {
+            // console.log(data)
+            this.products = data
+          },
+          error: error => {
+            this.loadingService.hide();
+            // this.errorLoading = true;
+            
+            console.log('error :', error)
+            if (error.status == 401){
+              // alert('Your session has expired, you will be redirected to log in');
+              this.swalService.fireError('Your session has expired, you will be redirected to log in')
+              this.router.navigate(['/auth/login'])
+            } else {
+              this.swalService.fireError('Failed to fetch branch products')
+            }
+          },
+          complete: () => {
+            this.loadingService.hide();
           }
-        },
-        complete: () => {
-          this.loadingService.hide();
-        }
-      });
+        });
+
   }
 
   get items() {
@@ -189,7 +261,7 @@ export class PosComponent {
 
   addAlias(product:string, product_id: number, quantity: number, purchase_price: any, unit_cost:any, barcode: string) {
       // 
-      // if(!this.isProductExists(barcode)){
+      if(!this.isProductExists(product_id)){
         this.items.push(this.formBuilder.group({
           'product': [product, Validators.required],
           'product_id': [product_id, Validators.required],
@@ -200,7 +272,7 @@ export class PosComponent {
         }));
         // this.calculateTotal(this.items.length-1)
         this.calculateGrandTotal()
-      // }
+      } else {}
   }
 
   newSalesFrm = this.formBuilder.group({
@@ -224,6 +296,7 @@ export class PosComponent {
     'bank':[0.0, Validators.compose([Validators.required, Validators.pattern(this.sharedservice.amount)])],
     'biller': [sessionStorage.getItem('id')],
     'items': this.formBuilder.array([]),
+    'branch_id': [this.httpservice.getUserRole() == 'Business_Owner' ? sessionStorage.getItem('selected_branch'): ''],
   })
 
   submitted = false
@@ -364,8 +437,8 @@ export class PosComponent {
   }
 
   // Custom validation to check if a product already exists in the array
-  isProductExists(name: string): boolean {
-    return this.items.controls.some(control => control.value.name === name);
+  isProductExists(productId: any): boolean {
+    return this.items.controls.some(control => control.value.product_id === productId);
   }
 
   currentDate = new Date()
@@ -415,6 +488,7 @@ export class PosComponent {
             this.newSalesFrm.get('cash')?.setValue(0.0)
             this.newSalesFrm.get('momo')?.setValue(0.0)
             this.newSalesFrm.get('amount_paid')?.setValue(0.0)
+            this.newSalesFrm.get('branch_id')?.setValue(`${sessionStorage.getItem('selected_branch')}`)
           }, 2000);
           
         },

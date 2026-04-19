@@ -99,8 +99,8 @@ export class SaleanalyticsComponent {
     .subscribe({
       next: (res) => {
         this.branches = res
-        console.log(res);
-        
+        // console.log(res);
+        this.loading = false;
       },
       error: (err) => {
         this.errorLoading = true;

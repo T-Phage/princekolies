@@ -121,6 +121,9 @@ export class SalesComponent implements OnInit {
           this.sales = data;
           // console.log(data)
           this.datableservice.initiateDataTable('.datasales', 50);
+          
+          this.sharedservice.infoFunc('', '', false, false, false);
+          
         },
         error: _err => {
           this.sharedservice.infoFunc('', '', false, false, false);

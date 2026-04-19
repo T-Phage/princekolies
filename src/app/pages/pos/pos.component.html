@@ -11,6 +11,34 @@
     <div class="card-body">
         <form (submit)="submitSalesFrm($event)" [formGroup]="newSalesFrm">
             <div class="row">
+                <div *ngIf="role == 'Business_Owner'" class="col-lg-3 col-sm-3 col-12">
+                    <div class="input-blocks">
+                        <label>Branch</label>
+                        <select (change)="branchChange()" formControlName="branch_id" class="form-control">
+                            <option *ngFor="let branch of branches$ | async" [value]="branch.id">{{branch.branch_name}}</option>
+                        </select>
+                        <div
+                            *ngIf="(newSalesFrm.get('branch_id')?.invalid && newSalesFrm.get('branch_id')?.touched) || submitted">
+                            <div *ngIf="newSalesFrm.controls['branch_id'] && newSalesFrm.controls['branch_id'].errors"
+                                class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;">field is
+                                required.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6 col-12">
+                    <!-- <div class="input-blocks">
+                        <label>Customer Name</label>
+                        <input (change)="selectCustomer($event)" formControlName="customer_name" type="text" class="form-control" list="list-customers">
+                        <div
+                            *ngIf="(newSalesFrm.get('customer_name')?.invalid && newSalesFrm.get('customer_name')?.touched) || submitted">
+                            <div *ngIf="newSalesFrm.controls['customer_name'] && newSalesFrm.controls['customer_name'].errors"
+                                class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;">field is
+                                required.</div>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-lg-10 col-sm-6 col-12">
                     <div class="input-blocks">
                         <label>Product Name</label>

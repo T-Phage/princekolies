@@ -445,7 +445,7 @@ export class ReturnsComponent {
               this.sharedservice.infoFunc('', '', false, false, false)
               // this.returnSalesFrm.reset()
               // $('.no-pagination .table tbody').empty()
-            }, 5000)    
+            }, 8000)    
             
           },
           error: error => {

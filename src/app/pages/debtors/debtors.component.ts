@@ -68,7 +68,33 @@ export class DebtorsComponent {
   })
 
   branchChange(){
+    if (Number(`${this.branch.value.id}`) == 0){
+      this.sharedservice.infoFunc('', '', false, false, false);
+      return
+    }
 
+    this.sharedservice.infoFunc('alert alert-info', 'fetching branch products...  ', true, true, true);
+    $('.debtorsnew').DataTable().destroy()
+    sessionStorage.setItem('selected_branch', `${this.branch.value.id}`)
+    this.httpService.getAllBranchDebtors(this.branch.value.id)
+      .subscribe({
+        next: (res) => {
+          console.log('heeyy', res)
+          this.debtors = res.unpaidSales
+          this.datatableService.initiateDataTable('.debtorsnew', 15)
+          this.sharedservice.infoFunc('', '', false, false, false);
+        },
+        error: (err) => {
+          // console.log(err)
+          this.sharedservice.infoFunc('alert alert-danger', 'Error fetching branch debtors...  ' + err.error.message, false, false, false);
+          setTimeout(() => {
+            this.sharedservice.infoFunc('', '', false, false, false);
+          }, 6000);
+          if(err.error.staus === 401){
+            this.httpService.httpLogout()
+          }
+        }
+      })
   }
 
   refreshData() {
