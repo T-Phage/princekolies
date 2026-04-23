@@ -21,6 +21,7 @@ import { RestockComponent } from './pages/restock/restock.component';
 import { DebtorsComponent } from './pages/debtors/debtors.component';
 import { NewdebtorComponent } from './pages/newdebtor/newdebtor.component';
 import { SaleanalyticsComponent } from './pages/owner/saleanalytics/saleanalytics.component';
+import { CustomersComponent } from './pages/owner/customers/customers.component';
 
 export const routes: Routes = [
     {
@@ -47,6 +48,7 @@ export const routes: Routes = [
             {path: 'expense-category', component: ExpensesCategoryComponent},
             {path: 'new-debtor', component: NewdebtorComponent},
             {path: 'owner/sales-analytics', component: SaleanalyticsComponent},
+            {path: 'owner/customers', component: CustomersComponent},
         ]
     },
     { path: 'auth/login', component: LoginComponent },

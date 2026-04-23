@@ -6,13 +6,17 @@
         </div>
         <div class="d-flex align-items-center">
             <div class="position-relative daterange-wraper me-2">
-                <div class="input-groupicon calender-input">
-                    <!-- <input type="text" class="form-control  date-range bookingrange" placeholder="Select"
-                        value="{{formattedDate}}"> -->
-                    <input (change)="todayDateChange($event)" type="date" class="form-control" [(ngModel)]="today">
+                <div style="padding: 0;" class="input-groupicon calender-input">
+                    <input (change)="todayDateChange($event)" type="date">
                 </div>
                 <i data-feather="calendar" class="feather-14"></i>
             </div>
+            <form *ngIf="userrole =='Business_Owner' || userrole =='Account_Officer'"  [formGroup]="branch">
+                <select (change)="branchChange()" class="form-control" formControlName="id">
+                    <option [value]="0">Select Branch</option>
+                    <option *ngFor="let branch of branches$ | async" [value]="branch.id">{{branch.branch_name}}</option>
+                </select>
+            </form>
             <button (click)="refresh()" type="button" data-toggle="tooltip" class="btn btn-white-outline d-none d-md-inline-block"
                 data-bs-toggle="tooltip" data-bs-placement="top" title="Refresh"><i data-feather="rotate-ccw"
                     class="feather-rotate-ccw"></i></button>

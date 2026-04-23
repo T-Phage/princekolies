@@ -173,7 +173,8 @@
                         <ul>
                             <li [className]="router.url == '/dashboard/users'? 'active': '' "><a [routerLink]="['/dashboard/users']"><i
                                         ></i><span>Users</span></a></li>
-                            
+                            <li [className]="router.url == '/dashboard/owner/customers'? 'active': '' "><a [routerLink]="['/dashboard/owner/customers']"><i
+                                        data-feather=""></i><span>Customers</span></a></li>
                         </ul>
                     </li>
                     <!-- <li *ngIf="manager || owner" class="submenu-open">
@@ -257,6 +258,8 @@
                             <li (click)="toggleMenu()" [className]="router.url == '/dashboard/users'? 'active': '' "><a [routerLink]="['/dashboard/users']"><i
                                         data-feather=""></i><span>Users</span></a></li>
                             
+                            <li (click)="toggleMenu()" [className]="router.url == '/dashboard/owner/customers'? 'active': '' "><a [routerLink]="['/dashboard/owner/customers']"><i
+                                        data-feather=""></i><span>Customers</span></a></li>
                         </ul>
                     </li>
                     <!-- <li *ngIf="manager || owner" class="submenu-open">

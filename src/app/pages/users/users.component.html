@@ -192,6 +192,8 @@
                                             <option>Choose</option>
                                             <option value="Manager">Manager</option>
                                             <option value="Attendant">Attendant</option>
+                                            <option value="Account_Officer">Accounts Officer</option>
+                                            <option value="Attendant">Attendant</option>
                                         </select>
                                     </div>
                                     <div *ngIf="(newUserFrm.get('role')?.invalid && newUserFrm.get('role')?.touched)">
@@ -307,6 +309,8 @@
                                         <select formControlName="role" class="form-control">
                                             <option value="Manager">Manager</option>
                                             <option value="Attendant">Attendant</option>
+                                            <option value="Assistant">Assistant</option>
+                                            <option value="Account_Officer">Account_Officer</option>
                                         </select>
                                     </div>
                                 </div>
@@ -323,7 +327,8 @@
                                     <div class="input-blocks">
                                         <label>Branch</label>
                                         <select formControlName="branch" class="form-control">
-                                            <option *ngFor="let branch of branches" [value]="branch.id">{{branch.branch_name}}</option>
+                                            <!-- <option *ngFor="let branch of branches" [value]="branch.id">{{branch.branch_name}}</option> -->
+                                            <option *ngFor="let branch of branches$ | async" [value]="branch.id">{{branch.branch_name}}</option>
                                         </select>
                                     </div>
                                 </div>

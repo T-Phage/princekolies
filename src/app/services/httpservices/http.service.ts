@@ -240,12 +240,20 @@ export class HttpService {
     return this.http.get<any>(`${this.baseUrl}/sales/analytics`, {headers: this.getHeaders()});
   }
 
+  getBranchSalesAnalytics(branchId: any): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/sales/branch/analytics/${branchId}`, {headers: this.getHeaders()});
+  }
+
   getUserSalesDateAnalytics(id:any, date:any): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/sales/user/date/${id}/${date}`, {headers: this.getHeaders()});
   }
   getUserSalesDateAnalyticsAsAdmin(date:any): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/sales/admin/date/${date}`, {headers: this.getHeaders()});
   }
+  getBranchSalesDateAnalyticsAsAdmin(date:any, branchId:any): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/sales/branch/admin/date/${date}/${branchId}`, {headers: this.getHeaders()});
+  }
+  
   getallyears(): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/all/years`, {headers: this.getHeaders()});
   }
@@ -311,6 +319,10 @@ export class HttpService {
 
   getAllCustomers(){
     return this.http.get<any>(`${this.baseUrl}/business/customers`, {headers: this.getHeaders()})
+  }
+
+  updateCustomer(customerId:any, body:any){
+    return this.http.patch<any>(`${this.baseUrl}/business/customers/${customerId}`, body, {headers: this.getHeaders()});
   }
 
   getAllDebtors(){

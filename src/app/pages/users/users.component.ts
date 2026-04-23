@@ -145,7 +145,6 @@ export class UsersComponent {
             let msg = error.error.message
             console.error('error :', error)
             this.sharedservice.infoFunc('alert alert-danger', msg, false, false, false)
-
           }
         })
     }

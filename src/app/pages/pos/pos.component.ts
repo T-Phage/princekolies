@@ -296,7 +296,7 @@ export class PosComponent {
     'bank':[0.0, Validators.compose([Validators.required, Validators.pattern(this.sharedservice.amount)])],
     'biller': [sessionStorage.getItem('id')],
     'items': this.formBuilder.array([]),
-    'branch_id': [this.httpservice.getUserRole() == 'Business_Owner' ? sessionStorage.getItem('selected_branch'): ''],
+    'branch_id': [this.role == 'Business_Owner' ? sessionStorage.getItem('selected_branch'): ''],
   })
 
   submitted = false
@@ -488,7 +488,9 @@ export class PosComponent {
             this.newSalesFrm.get('cash')?.setValue(0.0)
             this.newSalesFrm.get('momo')?.setValue(0.0)
             this.newSalesFrm.get('amount_paid')?.setValue(0.0)
-            this.newSalesFrm.get('branch_id')?.setValue(`${sessionStorage.getItem('selected_branch')}`)
+            if(this.httpservice.getUserRole() == 'Business_Owner'){
+              this.newSalesFrm.get('branch_id')?.setValue(`${sessionStorage.getItem('selected_branch')}`)
+            }
           }, 2000);
           
         },

@@ -1,4 +1,5 @@
 import { CommonModule, CurrencyPipe } from '@angular/common';
+import { FormBuilder, FormArray, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
 import { HttpService } from '../../services/httpservices/http.service';
 import { SharedService } from '../../services/sharedservices/shared.service';
@@ -7,13 +8,14 @@ import { Observable } from 'rxjs';
 import  Chart from 'chart.js/auto';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { SwalservicesService } from '../../services/swal/swalservices.service';
 
 declare var $: any;
 
 @Component({
   selector: 'app-sales-dashb0ard',
   standalone: true,
-  imports: [CommonModule,],
+  imports: [ReactiveFormsModule, CommonModule,],
   templateUrl: './sales-dashb0ard.component.html',
   styleUrl: './sales-dashb0ard.component.css',
   schemas: [NO_ERRORS_SCHEMA],
@@ -21,6 +23,9 @@ declare var $: any;
 })
 export class SalesDashb0ardComponent {
   $sales!: Observable<any>;
+  branches$!: Observable<any>;
+
+  branches:any[] = [];
 
   errorLoading:boolean = false;
 
@@ -39,9 +44,7 @@ export class SalesDashb0ardComponent {
   products_expiryLen:number = 0;
   momo:number = 0;
   cashIn:number = 0;
-  bankCashIn:number = 0;
-
-  
+  bankCashIn:number = 0;  
 
   years$!: Observable<any>;
 
@@ -60,7 +63,7 @@ export class SalesDashb0ardComponent {
   owner:boolean = false;
   userrole = this.httpservice.getUserRole()
 
-  loading: boolean = true;
+  loading: boolean = false;
 
   rolemain = '';
 
@@ -68,6 +71,8 @@ export class SalesDashb0ardComponent {
     private httpservice: HttpService,
     public sharedservice: SharedService,
     private router: Router,
+    private formbuilder: FormBuilder,
+    private swalservice: SwalservicesService,
   ){
     // let role = `${sessionStorage.getItem('role')}`
     let role = this.httpservice.getUserRole();
@@ -87,42 +92,133 @@ export class SalesDashb0ardComponent {
 
   }
 
+  branch = this.formbuilder.group({
+    'id': [sessionStorage.getItem('selected_branch')]
+  })
+
+  branchChange(){
+    sessionStorage.setItem('selected_branch', `${this.branch.value.id}`)
+    this.loadPageByBranch()
+  }
+
   todayDateChange(e: Event){
     this.loading = true;
     // getUserSalesDateAnalyticsAsAdmin
     this.selectedDate = (e.target as HTMLInputElement).value
     // console.log('date',new Date(this.selectedDate).toISOString().split('T')[0])
     this.salescount = 0
-        this.todayCashAmount = 0
-        this.momo = 0;
-        this.cashIn = 0;
-        this.bankCashIn = 0;
-        this.productSold = []
-        this.productsReceipts = [];
+    this.todayCashAmount = 0
+    this.momo = 0;
+    this.cashIn = 0;
+    this.bankCashIn = 0;
+    this.productSold = []
+    this.productsReceipts = [];
     // this.httpservice.getUserSalesDateAnalytics(sessionStorage.getItem('id'), new Date(this.selectedDate).toISOString().split('T')[0]).subscribe({
-    this.httpservice.getUserSalesDateAnalyticsAsAdmin(new Date(this.selectedDate).toISOString().split('T')[0]).subscribe({
-      next: data => {
-        // console.log(data)
-        this.salescount = data.salesCount
-        this.todayCashAmount = data.cashSalesTotal
-        this.momo = data.momo;
-        this.cashIn = data.cash;
-        this.bankCashIn = data.bank;
-        this.percentageIncrease = data.percentage_increase
-        this.productSold = data.productsSold;
-        this.productsReceipts = data.productsReceipts
-        this.loading = false;
-      },
-      error: error => {
-        let msg = error.error.message
-        console.log('error :', error)
-        this.loading = false;
-        this.errorLoading = true;
-      },
-      complete: (()=>{
-        this.loading = false;
-      }),
-    })
+    if (this.userrole != "Business_Owner" && this.userrole != "Account_Officer"){ // if user is not business Owner
+      this.httpservice.getUserSalesDateAnalyticsAsAdmin(new Date(this.selectedDate).toISOString().split('T')[0]).subscribe({
+        next: data => {
+          // console.log(data)
+          this.salescount = data.salesCount
+          this.todayCashAmount = data.cashSalesTotal
+          this.momo = data.momo;
+          this.cashIn = data.cash;
+          this.bankCashIn = data.bank;
+          this.percentageIncrease = data.percentage_increase
+          this.productSold = data.productsSold;
+          this.productsReceipts = data.productsReceipts
+          this.loading = false;
+        },
+        error: error => {
+          let msg = error.error.message
+          console.log('error :', error)
+          this.loading = false;
+          this.errorLoading = true;
+        },
+        complete: (()=>{
+          this.loading = false;
+        }),
+      })
+      return
+    } 
+
+    if (this.branch.value.id == null || this.branch.value.id == '0') {
+      this.httpservice.getUserSalesDateAnalyticsAsAdmin(new Date(this.selectedDate).toISOString().split('T')[0]).subscribe({
+        next: data => {
+          // console.log(data)
+          this.salescount = data.salesCount
+          this.todayCashAmount = data.cashSalesTotal
+          this.momo = data.momo;
+          this.cashIn = data.cash;
+          this.bankCashIn = data.bank;
+          this.percentageIncrease = data.percentage_increase
+          this.productSold = data.productsSold;
+          this.productsReceipts = data.productsReceipts
+          this.loading = false;
+        },
+        error: error => {
+          let msg = error.error.message
+          console.log('error :', error)
+          this.loading = false;
+          this.errorLoading = true;
+        },
+        complete: (()=>{
+          this.loading = false;
+        }),
+      })
+      return
+    }
+
+    this.httpservice.getBranchSalesDateAnalyticsAsAdmin(new Date(this.selectedDate).toISOString().split('T')[0], this.branch.value.id).subscribe({
+        next: data => {
+          // console.log(data)
+          this.salescount = data.salesCount
+          this.todayCashAmount = data.cashSalesTotal
+          this.momo = data.momo;
+          this.cashIn = data.cash;
+          this.bankCashIn = data.bank;
+          this.percentageIncrease = data.percentage_increase
+          this.productSold = data.productsSold;
+          this.productsReceipts = data.productsReceipts
+          this.loading = false;
+        },
+        error: error => {
+          let msg = error.error.message
+          console.log('error :', error)
+          this.loading = false;
+          this.errorLoading = true;
+        },
+        complete: (()=>{
+          this.loading = false;
+        }),
+      })
+    
+  }
+
+  loadPageByBranch() {
+    this.loading = true;
+    this.httpservice.getBranchSalesAnalytics(this.branch.value.id).subscribe({
+        next: data => {
+          console.log(data)
+          this.salescount = data.salesCount
+          this.todayCashAmount = data.todayCashAmount
+          this.momo = data.momo;
+          this.cashIn = data.cash;
+          this.bankCashIn = data.bank;
+          this.percentageIncrease = data.percentage_increase
+          this.productSold = data.productsSold;
+          this.productsReceipts = data.productsReceipts
+          this.loading = false;
+        },
+        error: error => {
+          let msg = error.error.message
+          console.log('error :', error)
+          this.loading = false;
+          this.errorLoading = true;
+        },
+        complete: (()=>{
+          this.loading = false;
+        }),
+      })
   }
 
   refresh(){
@@ -133,38 +229,89 @@ export class SalesDashb0ardComponent {
   ngOnInit(){
     // console.log('selected date:',this.selectedDate);
 
-    this.years$ = this.httpservice.getallyears()
-    this.httpservice.getSalesAnalytics().subscribe({
-      next: data => {
-        // this.loading = false;
-        // console.log(data)
-        this.salesa = data.monthlySales
-        this.salescount = data.todaySales
-        this.todayCashAmount = data.todayCashAmount
-        this.percentageIncrease = data.percentage_increase
-        this.products_expiryLen = data.products_expiryLen
-        this.lowStock = data.low_stock
-        this.out_of_stock = data.out_of_stock
-        this.momo = data.momo;
-        this.cashIn = data.cash;
-        this.bankCashIn = data.bank;
-        this.productSold = data.productsSold;
-        this.productsReceipts = data.productsReceipts
-        this.loading = false;
-        // console.log(data.recentSales)
-        // console.log(dara)
-        //  if(this.manager){this.createChart()}
-      },
-      error: error => {
-        let msg = error.error.message
-        console.error('error :', error)
-        this.loading = false;
-        this.errorLoading = true;
-      },
-      complete: (() => {
-        this.loading = false;
+    if (this.userrole != 'Business_Owner' && this.userrole != 'Account_Officer')
+    {
+      this.loading = true;
+      this.years$ = this.httpservice.getallyears()
+      this.httpservice.getSalesAnalytics().subscribe({
+        next: data => {
+          // this.loading = false;
+          // console.log(data)
+          this.salesa = data.monthlySales
+          this.salescount = data.todaySales
+          this.todayCashAmount = data.todayCashAmount
+          this.percentageIncrease = data.percentage_increase
+          this.products_expiryLen = data.products_expiryLen
+          this.lowStock = data.low_stock
+          this.out_of_stock = data.out_of_stock
+          this.momo = data.momo;
+          this.cashIn = data.cash;
+          this.bankCashIn = data.bank;
+          this.productSold = data.productsSold;
+          this.productsReceipts = data.productsReceipts;
+          this.loading = false;
+          // console.log(data.recentSales)
+          // console.log(dara)
+          //  if(this.manager){this.createChart()}
+        },
+        error: error => {
+          let msg = error.error.message
+          console.error('error :', error)
+          this.loading = false;
+          this.errorLoading = true;
+        },
+        complete: (() => {
+          this.loading = false;
+        })
       })
-    })
+
+      return
+    }
+
+    if(parseInt(`${sessionStorage.getItem('selected_branch')}`) != 0){
+      this.branch.get('id')?.setValue(`${sessionStorage.getItem('selected_branch')}`)
+    } else {
+      this.loading = true;
+      this.years$ = this.httpservice.getallyears()
+      this.httpservice.getSalesAnalytics().subscribe({
+        next: data => {
+          // this.loading = false;
+          // console.log(data)
+          // this.todayCashAmount = data.todayCashAmount
+          this.salesa = data.monthlySales
+          this.salescount = data.todaySales
+          this.todayCashAmount = data.todayCashAmount
+          this.percentageIncrease = data.percentage_increase
+          this.products_expiryLen = data.products_expiryLen
+          this.lowStock = data.low_stock
+          this.out_of_stock = data.out_of_stock
+          this.momo = data.momo;
+          this.cashIn = data.cash;
+          this.bankCashIn = data.bank;
+          this.productSold = data.productsSold;
+          this.productsReceipts = data.productsReceipts;
+          this.loading = false;
+          // console.log(data.recentSales)
+          console.log(data)
+          //  if(this.manager){this.createChart()}
+        },
+        error: error => {
+          let msg = error.error.message
+          console.error('error :', error)
+          this.loading = false;
+          this.errorLoading = true;
+        },
+        complete: (() => {
+          this.loading = false;
+        })
+      })
+      return
+    }
+
+    this.branches$ = this.httpservice.getbranches();
+
+    this.loadPageByBranch()
+
   }
 
   createChart(){

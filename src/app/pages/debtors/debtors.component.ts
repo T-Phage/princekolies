@@ -195,15 +195,15 @@ export class DebtorsComponent {
     this.role = sessionStorage.getItem('role') || '';
     this.categories$ = this.httpService.getCategories(1, 10)
     this.branches$ = this.httpService.getbranches();
-
-    if(this.httpService.getUserRole() != 'Business_Owner') {
+    
+    if(this.httpService.getUserRole() != 'Business_Owner' && this.httpService.getUserRole() != 'Account_Officer') {
       this.httpService.getAllDebtors()
       .subscribe({
         next: (res) => {
           // console.log(res.unpaidSales)
           this.debtors = res.unpaidSales
-          this.sharedservice.infoFunc('', '', false, false, false);
           this.datatableService.initiateDataTable('.debtorsnew', 15)
+          this.sharedservice.infoFunc('', '', false, false, false);
         },
         error: (err) => {
           // console.log(err)

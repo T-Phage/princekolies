@@ -83,7 +83,7 @@
                         <th>Price</th>
                         <th>Qty</th>
                         <!-- <th>Created by</th> -->
-                        <th *ngIf="role != 'Attendant'" class="no-sort">Action</th>
+                        <th *ngIf="role == 'Business_Owner'" class="no-sort">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -99,7 +99,7 @@
                         <td>{{product.price | currency:'GHc ':'symbol':'1.2-2' }}</td>
                         <td>{{ product.quantity }}</td>
                         <!-- <td>{{ product.createdby }}</td> -->
-                        <td *ngIf="role != 'Attendant'" class="action-table-data">
+                        <td *ngIf="role == 'Business_Owner'" class="action-table-data">
                             <div class="edit-delete-action">
                                 <!-- <a class="me-2 edit-icon  p-2" href="product-details.html">
                                     <i data-feather="eye" class="feather-eye"></i>
