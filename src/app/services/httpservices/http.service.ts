@@ -10,7 +10,7 @@ import { SwalservicesService } from '../swal/swalservices.service';
 })
 
 export class HttpService {
-  // baseUrl = 'http://localhost/pos/public/api'
+  // baseUrl = 'http://lsocalhost/pos/public/api'
   // baseUrl = 'http://localhost/techne_app_2/public/api'
   baseUrl = 'https://techneservers.com/pos_api/api'
   // appToken = 'ZxcvkdmnvnbjkjewoMQ23'

@@ -56,15 +56,16 @@ export class ProductsComponent {
     this.sharedservice.infoFunc('alert alert-info', 'fetching branch products...  ', true, true, true);
     $('.datanew').DataTable().destroy()
     sessionStorage.setItem('selected_branch', `${this.branch.value.id}`)
+    this.products = []
     this.httpservice.getByBranchProducts(this.branch.value.id)
       .subscribe({
         next: data => {
           this.products = data
           // Initialize DataTable after data loads
-          setTimeout(() => {
+          // setTimeout(() => {
             this.initDataTable();
             this.sharedservice.infoFunc('', '', false, false, false);
-          }, 200);
+          // }, 200);
         },
         error: _error => {
           console.log(_error);
@@ -89,13 +90,13 @@ export class ProductsComponent {
           next: data => {
             this.products = data
             this.sharedservice.infoFunc('', '', false, false, false);
-              if (data.length > 0){
-                setTimeout(() => {
+              // if (data.length > 0){
+                // setTimeout(() => {
                   this.sharedservice.infoFunc('', '', false, false, false);
                   this.initDataTable();
-                }, 170);
+                // }, 170);
                 return;
-              } 
+              // } 
           },
           error: _error => {
             this.sharedservice.infoFunc('', '', false, false, false);
@@ -123,13 +124,13 @@ export class ProductsComponent {
         next: data => {
           this.products = data
           this.sharedservice.infoFunc('', '', false, false, false);
-            if (data.length > 0){
-              setTimeout(() => {
+            // if (data.length > 0){
+              // setTimeout(() => {
                 this.sharedservice.infoFunc('', '', false, false, false);
                 this.initDataTable();
-              }, 170);
+              // }, 170);
               return;
-            } 
+            // } 
         },
         error: _error => {
           this.sharedservice.infoFunc('', '', false, false, false);

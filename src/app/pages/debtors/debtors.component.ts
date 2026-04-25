@@ -79,7 +79,7 @@ export class DebtorsComponent {
     this.httpService.getAllBranchDebtors(this.branch.value.id)
       .subscribe({
         next: (res) => {
-          console.log('heeyy', res)
+          // console.log('heeyy', res)
           this.debtors = res.unpaidSales
           this.datatableService.initiateDataTable('.debtorsnew', 15)
           this.sharedservice.infoFunc('', '', false, false, false);

@@ -45,7 +45,7 @@ export class OverviewDashboardComponent {
   recentProducts:any[] = [];
   expiringproducts:any[] = [];
   monthlyCashSales:any;
-  totalPaidSalesCash:number = 0;
+  totalUnPaidSalesCash:number = 0;
 
   session_off:boolean = false;
 
@@ -104,7 +104,7 @@ export class OverviewDashboardComponent {
         this.totalSalesAmountForWeek = data.totalSalesAmountForWeek
         this.totalSalesAmountForMonth = data.totalSalesAmountForMonth
         this.totalPaidSalesForMonth = data.totalPaidSalesForMonth
-        this.totalPaidSalesCash = data.totalPaidSalesCash
+        this.totalUnPaidSalesCash = data.totalUnPaidSalesCash
         this.branches = data.branches
         
         this.createChart()
@@ -252,7 +252,7 @@ export class OverviewDashboardComponent {
         this.totalSalesAmountForWeek = data.totalSalesAmountForWeek
         this.totalSalesAmountForMonth = data.totalSalesAmountForMonth
         this.totalPaidSalesForMonth = data.totalPaidSalesForMonth
-        this.totalPaidSalesCash = data.totalPaidSalesCash
+        this.totalUnPaidSalesCash = data.totalUnPaidSalesCash
         this.totalPrice = this.calculateTotal(data.products)
         this.branches = data.branches
 

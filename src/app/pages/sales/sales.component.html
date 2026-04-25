@@ -211,7 +211,7 @@
                                                         <div class="product-quantity">
                                                             <span class="quantity-btn">+<i data-feather="plus-circle"
                                                                     class="plus-circle"></i></span>
-                                                            <input type="text" class="quntity-input" readonly value="{{item['quantity']}}">
+                                                            <input type="text" class="quntity-input" readonly value="{{item['quantity'] | number : '1.0-2'}}">
                                                             <span class="quantity-btn"><i data-feather="minus-circle"
                                                                     class="feather-search"></i></span>
                                                         </div>

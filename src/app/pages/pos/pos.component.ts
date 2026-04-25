@@ -206,7 +206,6 @@ export class PosComponent {
         });
        return
     }
-
     
     this.branches$ = this.httpservice.getbranches()
     if (this.newSalesFrm.value.branch_id == null || this.newSalesFrm.value.branch_id == '0') {
@@ -265,7 +264,7 @@ export class PosComponent {
         this.items.push(this.formBuilder.group({
           'product': [product, Validators.required],
           'product_id': [product_id, Validators.required],
-          'quantity': [quantity, Validators.compose([Validators.min(1)])],
+          'quantity': [quantity, Validators.compose([Validators.min(0.5), Validators.required])],
           'barcode': [barcode,],
           'purchase_price': [parseFloat(purchase_price), Validators.compose([Validators.required])],
           'unit_cost': [parseFloat(unit_cost)],
@@ -339,7 +338,7 @@ export class PosComponent {
     var cash = parseFloat(`${this.newSalesFrm.value.cash}`)
     var amount = momo + bank + cash
 
-    console.log(momo, bank, cash)
+    // console.log(momo, bank, cash)
 
 
     let inp = parseFloat((e.target as HTMLInputElement).value)
@@ -373,7 +372,7 @@ export class PosComponent {
     var amount = momo + bank + cash
     // console.log(momo, bank, cash)
     // console.log(amount)
-    console.log(parseFloat(`${this.newSalesFrm.get('grand_total')?.value}`))
+    // console.log(parseFloat(`${this.newSalesFrm.get('grand_total')?.value}`))
     var balance = amount - parseFloat(`${this.newSalesFrm.get('grand_total')?.value}`)
     this.newSalesFrm.get('balance')?.setValue(parseFloat(balance.toFixed(2)));
   }
@@ -385,7 +384,7 @@ export class PosComponent {
     this.selectedProduct = this.products.find(product => product.name === inputValue);
     // console.log(this.isProductExpired(this.selectedProduct.expiry_date))
     
-    console.log(this.selectedProduct)
+    // console.log(this.selectedProduct)
     if(this.isProductExpired(this.selectedProduct.expiry_date)){
       this.alertExpired()
       return
@@ -447,7 +446,7 @@ export class PosComponent {
 
     // this.newSalesFrm.get('status')?.enable();
     // this.newSalesFrm.get('payment_status')?.enable();
-    // console.log(this.newSalesFrm)
+    console.log(this.newSalesFrm)
     // console.log(this.newSalesFrm.value)
 
     this.submitted = true

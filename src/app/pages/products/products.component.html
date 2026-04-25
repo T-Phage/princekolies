@@ -99,7 +99,7 @@
                         <td>{{ product.name}}</td>
                         <td>{{ product.category_id }}</td>
                         <td>{{product.price | currency:'GHc':'symbol':'1.2-2' }}</td>
-                        <td>{{ product.quantity }}</td>
+                        <td>{{ product.quantity | number: '1.0-2' }}</td>
                         <!-- <td>{{ product.createdby }}</td> -->
                         <td *ngIf="role == 'Business_Owner' || role == 'Account_Officer'" class="action-table-data" >
                             <div class="edit-delete-action">

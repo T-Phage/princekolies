@@ -11,8 +11,8 @@
     <div class="card-body">
         <form (submit)="submitSalesFrm($event)" [formGroup]="newSalesFrm">
             <div class="row">
-                <div *ngIf="role == 'Business_Owner'" class="col-lg-3 col-sm-3 col-12">
-                    <div class="input-blocks">
+                <div class="col-lg-3 col-sm-12 col-12">
+                    <div *ngIf="role == 'Business_Owner'" class="input-blocks">
                         <label>Branch</label>
                         <select (change)="branchChange()" formControlName="branch_id" class="form-control">
                             <option *ngFor="let branch of branches$ | async" [value]="branch.id">{{branch.branch_name}}</option>
@@ -23,6 +23,12 @@
                                 class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;">field is
                                 required.</div>
                         </div>
+                    </div>
+                </div>
+                <div *ngIf="!oncredit" class="col-lg-6 col-sm-12 col-12">
+                    <div class="input-blocks">
+                        <label>Customer Name</label>
+                        <input (change)="selectCustomer($event)" formControlName="customer_name" type="text" class="form-control" list="list-customers">
                     </div>
                 </div>
                 <div class="col-lg-6 col-sm-6 col-12">
@@ -214,7 +220,7 @@
                             <td>{{item.value.unit_cost | currency:'GHc':'symbol':'1.2-2' }}</td>
                             <td>
                                 <div class="input-blocks">
-                                    <input class="for-control" (input)="calculateTotal(i)" min="1" type="number"
+                                    <input class="for-control" (input)="calculateTotal(i)" min="0.5" type="number"
                                         formControlName="quantity">
                                         <div *ngIf="" class="text-danger">product expired</div>
                                 </div>

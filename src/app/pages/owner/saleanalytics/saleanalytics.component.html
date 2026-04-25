@@ -117,7 +117,7 @@
                                     <td> {{product.receipt_no}}</td>
                                     <td> {{product.product}}</td>
                                     <td>{{product.unit_cost | currency : 'GHc '}}</td>
-                                    <td> {{product.quantity}}</td>
+                                    <td> {{product.quantity | number : '1.0-2'}}</td>
                                     <td> {{product.purchase_price}}</td>
                                     <td> {{product.amount_received}}</td>
                                     <td> {{product.grand_total }}</td>
@@ -160,11 +160,11 @@
                                     <td>{{i+1}}</td>
                                     <td> {{product.product}}</td>
                                     <td>
-                                        {{product.total_quantity}}
+                                        {{product.total_quantity | number : '1.0-2'}}
                                     </td>
                                     <td>{{product.unit_cost | currency : 'GHc '}}</td>
                                     <td>{{product.grand_total | currency : 'GHc '}}</td>
-                                    <td>{{product.quantity_at_date}}</td>
+                                    <td>{{product.quantity_at_date | number : '1.0-2'}}</td>
                                 </tr>
                                 
                             </tbody>
