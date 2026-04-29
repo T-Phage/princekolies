@@ -162,8 +162,11 @@ export class ReturnsComponent {
         })
         this.httpservice.getProducts(1, 10).subscribe({
           next: data => {
-            // console.log(data)
+            console.log(data)
             this.products = data
+          },
+          error: err => {
+            console.log(err)
           }
         })
 

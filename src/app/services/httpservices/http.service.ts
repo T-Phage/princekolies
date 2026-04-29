@@ -10,7 +10,7 @@ import { SwalservicesService } from '../swal/swalservices.service';
 })
 
 export class HttpService {
-  // baseUrl = 'http://lsocalhost/pos/public/api'
+  // baseUrl = 'http://localhost/pos/public/api'
   // baseUrl = 'http://localhost/techne_app_2/public/api'
   baseUrl = 'https://techneservers.com/pos_api/api'
   // appToken = 'ZxcvkdmnvnbjkjewoMQ23'
@@ -19,7 +19,6 @@ export class HttpService {
   role:string = '';
   dateError: boolean = false;
   allowedDate: Date = new Date('2025-02-22'); // Replace with your desired date
-
   constructor(
     private http: HttpClient,
     private sharedservice: SharedService,
@@ -196,6 +195,14 @@ export class HttpService {
   updateProduct(id: any, body:any) {
     this.sharedservice.infoFunc('alert alert-info', 'updating product...', true, true, true)
     return this.http.post(`${this.baseUrl}/product/update/${id}`, body, {headers: this.getHeaders()}) //.subscribe({
+  }
+
+  allocateProducts(body:any){
+    return this.http.put(`${this.baseUrl}/allocations/allocate`, body, {headers: this.getHeaders()})
+  }
+
+  allocateRestocks(body:any){
+    return this.http.put(`${this.baseUrl}/allocations/allocate/restock`, body, {headers: this.getHeaders()})
   }
 
   deleteProduct(id: any) {

@@ -18,6 +18,7 @@ import { SwalservicesService } from '../../services/swal/swalservices.service';
 export class RestockComponent {
 
   products$!: Observable<any>;
+  branches$!: Observable<any>;
   errorLoading: boolean= false;
   selectedProduct: any;
   products:any[] = [];
@@ -37,6 +38,7 @@ export class RestockComponent {
         product_id: ['', Validators.required],
         product_name: ['', Validators.required],
         quantity: ['', Validators.required],
+        branch_id: ['', Validators.required],
         price: ['', Validators.compose([Validators.required, Validators.pattern(this.sharedservice.amount)])],
       }),
     ]),
@@ -68,6 +70,7 @@ export class RestockComponent {
       product_id: ['', Validators.required],
       product_name: ['', Validators.required],
       quantity: ['', Validators.required],
+      branch_id: ['', Validators.required],
       price: ['', Validators.compose([Validators.required, Validators.pattern(this.sharedservice.amount)])],
     }));
 
@@ -83,7 +86,7 @@ export class RestockComponent {
   frmSubmit(evt: Event) {
     evt.preventDefault();
     this.submitted = true;
-    // console.log(this.restockForm.value)
+    console.log(this.restockForm.value)
 
     if (!this.restockForm.valid){
       return
@@ -91,12 +94,12 @@ export class RestockComponent {
 
     this.sharedservice.infoFunc('alert alert-info', 'updating stocks', true, true, true) 
     
-    this.httpservice.postRestock(this.restockForm.value)
+    this.httpservice.allocateRestocks(this.restockForm.value)
     .subscribe({
       next: data =>{
-        // console.log(data)
-        this.sharedservice.infoFunc('alert alert-success', data.message, false, false, false)
-        this.swalservices.fireSuccess(data.message)
+        console.log(data)
+        this.sharedservice.infoFunc('alert alert-success', 'su', false, false, false)
+        // this.swalservices.fireSuccess(data.message)
         // Reset the form after submission
         this.resetToFirstItem();
         this.submitted = false; 
@@ -106,17 +109,38 @@ export class RestockComponent {
         console.log(err.error);
         console.log(err.error.error);
         this.swalservices.fireError(err.error.error)
-        this.sharedservice.infoFunc('alert alert-danger', err.error.error, false, false, false) 
+        this.sharedservice.infoFunc('alert alert-danger', err.error.message, false, false, false) 
         setTimeout(() => {
           this.sharedservice.infoFunc('', '', false, false, false) 
         }, 4500);
-      },
-      complete: ()=> {
-        setTimeout(() => {
-          this.sharedservice.infoFunc('', '', false, false, false) 
-        }, 3000);
       }
     })
+    // this.httpservice.postRestock(this.restockForm.value)
+    // .subscribe({
+    //   next: data =>{
+    //     // console.log(data)
+    //     this.sharedservice.infoFunc('alert alert-success', data.message, false, false, false)
+    //     this.swalservices.fireSuccess(data.message)
+    //     // Reset the form after submission
+    //     this.resetToFirstItem();
+    //     this.submitted = false; 
+    //   },
+    //   error: err => {
+    //     console.log(err);
+    //     console.log(err.error);
+    //     console.log(err.error.error);
+    //     this.swalservices.fireError(err.error.error)
+    //     this.sharedservice.infoFunc('alert alert-danger', err.error.error, false, false, false) 
+    //     setTimeout(() => {
+    //       this.sharedservice.infoFunc('', '', false, false, false) 
+    //     }, 4500);
+    //   },
+    //   complete: ()=> {
+    //     setTimeout(() => {
+    //       this.sharedservice.infoFunc('', '', false, false, false) 
+    //     }, 3000);
+    //   }
+    // })
   }
 
   resetToFirstItem() {
@@ -128,10 +152,11 @@ export class RestockComponent {
 
   ngOnInit(): void {
     // console.log(this.items.get('product_name')?.hasError('required'))
+    this.branches$ = this.httpservice.getbranches()
     this.httpservice.getProducts(1, 10).subscribe({
       next: (res) => {
-        this.products = res;
-        // console.log(res)
+        this.products = res.products;
+        console.log(res)
       },
       error: (err) => {
         this.errorLoading = true;
@@ -155,11 +180,15 @@ export class RestockComponent {
         price: this.selectedProduct.price,
       });
 
+      console.log(this.selectedProduct)
+
       // console.log(`Row ${index} updated with Product ID: ${this.selectedProduct.id}`);
     }
     
   }
 
-  refresh() {}
+  refresh() {
+    this.ngOnInit();
+  }
 
 }

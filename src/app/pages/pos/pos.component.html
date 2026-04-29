@@ -11,8 +11,8 @@
     <div class="card-body">
         <form (submit)="submitSalesFrm($event)" [formGroup]="newSalesFrm">
             <div class="row">
-                <div class="col-lg-3 col-sm-12 col-12">
-                    <div *ngIf="role == 'Business_Owner'" class="input-blocks">
+                <div *ngIf="role == 'Business_Owner'"  class="col-lg-3 col-sm-12 col-12">
+                    <div class="input-blocks">
                         <label>Branch</label>
                         <select (change)="branchChange()" formControlName="branch_id" class="form-control">
                             <option *ngFor="let branch of branches$ | async" [value]="branch.id">{{branch.branch_name}}</option>
@@ -220,7 +220,7 @@
                             <td>{{item.value.unit_cost | currency:'GHc':'symbol':'1.2-2' }}</td>
                             <td>
                                 <div class="input-blocks">
-                                    <input class="for-control" (input)="calculateTotal(i)" min="0.5" type="number"
+                                    <input class="for-control" (input)="calculateTotal(i)" min="0" type="number"
                                         formControlName="quantity">
                                         <div *ngIf="" class="text-danger">product expired</div>
                                 </div>

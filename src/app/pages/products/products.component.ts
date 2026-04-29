@@ -62,10 +62,10 @@ export class ProductsComponent {
         next: data => {
           this.products = data
           // Initialize DataTable after data loads
-          // setTimeout(() => {
+          setTimeout(() => {
             this.initDataTable();
             this.sharedservice.infoFunc('', '', false, false, false);
-          // }, 200);
+          }, 170);
         },
         error: _error => {
           console.log(_error);
@@ -91,10 +91,10 @@ export class ProductsComponent {
             this.products = data
             this.sharedservice.infoFunc('', '', false, false, false);
               // if (data.length > 0){
-                // setTimeout(() => {
+                setTimeout(() => {
                   this.sharedservice.infoFunc('', '', false, false, false);
                   this.initDataTable();
-                // }, 170);
+                }, 170);
                 return;
               // } 
           },
@@ -123,12 +123,13 @@ export class ProductsComponent {
       .subscribe({
         next: data => {
           this.products = data
+          console.log(data)
           this.sharedservice.infoFunc('', '', false, false, false);
             // if (data.length > 0){
-              // setTimeout(() => {
+              setTimeout(() => {
                 this.sharedservice.infoFunc('', '', false, false, false);
                 this.initDataTable();
-              // }, 170);
+              }, 170);
               return;
             // } 
         },

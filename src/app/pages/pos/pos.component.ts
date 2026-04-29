@@ -186,7 +186,7 @@ export class PosComponent {
       this.httpservice.getProducts(1, 10)
         .subscribe({
           next: data => {
-            // console.log(data)
+            console.log(data)
             this.products = data
           },
           error: error => {
@@ -380,7 +380,7 @@ export class PosComponent {
 
   inpProductNameChange(evt: any){
     const inputValue = evt.target.value;
-    // console.log(inputValue)
+    console.log(inputValue)
     this.selectedProduct = this.products.find(product => product.name === inputValue);
     // console.log(this.isProductExpired(this.selectedProduct.expiry_date))
     
@@ -392,7 +392,7 @@ export class PosComponent {
     if (this.selectedProduct) {
       this.addAlias(
         this.selectedProduct.name, 
-        this.selectedProduct.id, 
+        this.selectedProduct.product_id, 
         1,
         this.selectedProduct.price,
         this.selectedProduct.price,

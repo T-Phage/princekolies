@@ -134,6 +134,10 @@
                                     [routerLink]="['/dashboard/add-product']"><i
                                         data-feather=""></i><span>Create
                                         Product</span></a></li>
+                            <li *ngIf="owner" [className]="router.url == '/dashboard/owner/allocations'? 'active': '' "><a
+                                    [routerLink]="['/dashboard/owner/allocations']"><i
+                                        data-feather=""></i><span>
+                                        Allocations</span></a></li>
                             <li *ngIf="owner" [className]="router.url == '/dashboard/restock'? 'active': '' "><a [routerLink]="['/dashboard/restock']"><i data-feather=""></i><span>Restock
                                         Products</span></a></li>
                             <li [className]="router.url == '/dashboard/products/expiry'? 'active': '' "><a [routerLink]="['/dashboard/products/expiry']"><i data-feather=""></i><span>Expired
@@ -218,6 +222,10 @@
                                     [routerLink]="['/dashboard/add-product']"><i
                                         ></i><span>Create
                                         Product</span></a></li>
+                            <li *ngIf="owner" (click)="toggleMenu()" [className]="router.url == '/dashboard/owner/allocations'? 'active': '' "><a
+                                    [routerLink]="['/dashboard/owner/allocations']"><i
+                                        data-feather=""></i><span>
+                                        Allocations</span></a></li>
                             <li (click)="toggleMenu()" *ngIf="owner" [className]="router.url == '/dashboard/restock'? 'active': '' "><a [routerLink]="['/dashboard/restock']"><i data-feather=""></i><span>Restock
                                     Products</span></a></li>
                             <li (click)="toggleMenu()" [className]="router.url == '/dashboard/products/expiry'? 'active': '' "><a [routerLink]="['/dashboard/products/expiry']"><i data-feather=""></i><span>Expired

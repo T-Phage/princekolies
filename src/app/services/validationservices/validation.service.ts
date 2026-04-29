@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpService } from '../httpservices/http.service';
-import { ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
+import { ValidatorFn, AbstractControl, ValidationErrors, FormArray } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +25,15 @@ export class ValidationService {
         return { notPositiveInteger: true };  // Validation error
       }
       return null;  // Valid case
+    };
+  }
+
+  totalStockValidator(maxTotal: number): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const allocations = (control as FormArray).value;
+      const currentTotal = allocations.reduce((sum: number, item: any) => sum + (item.quantity || 0), 0);
+
+      return currentTotal > maxTotal ? { totalExceeded: { max: maxTotal, actual: currentTotal } } : null;
     };
   }
 

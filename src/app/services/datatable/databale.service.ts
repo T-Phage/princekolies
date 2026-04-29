@@ -39,7 +39,6 @@ export class DatabaleService {
             initComplete: (_settings: any, _json: any) => {
               $('.dataTables_filter').appendTo('#tableSearch');
               $('.dataTables_filter').appendTo('.search-input');
-  
             },
           }); 
           // $('.datanew-2').DataTable({

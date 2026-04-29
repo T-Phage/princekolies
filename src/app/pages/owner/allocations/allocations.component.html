@@ -1,0 +1,173 @@
+<div class="page-header">
+    <div class="add-item d-flex">
+        <div class="page-title">
+            <h4>Product Allocations</h4>
+            <h6>Manage your product allocations</h6>
+        </div>
+    </div>
+    <ul class="table-top-head">
+        <li>
+            <a  *ngIf="role != 'Attendant'" (click)="exportTableToPDF()" data-bs-toggle="tooltip" data-bs-placement="top" title="Pdf" disabled><img
+                    src="assets/images/pdf.svg" alt="img"></a>
+        </li>
+        <li>
+            <a (click)="exportToExcel()"  data-bs-toggle="tooltip" data-bs-placement="top" title="Excel"><img
+                    src="assets/images/excel.svg" alt="img"></a>
+        </li>
+        <li>
+            <a  *ngIf="role != 'Attendant'" (click)="printTable()" data-bs-toggle="tooltip" data-bs-placement="top" title="Print">
+                <!-- <i data-feather="printer" class="feather-rotate-ccw"></i> -->
+                <img src="assets/images/printer.svg">
+            </a>
+        </li>
+        <li>
+            <a (click)="refreshData()" data-bs-toggle="tooltip" data-bs-placement="top" title="Refresh"><i data-feather="rotate-ccw"
+                    class="feather-rotate-ccw"></i></a>
+        </li>
+        <!-- <li>
+            <a data-bs-toggle="tooltip" data-bs-placement="top" title="Collapse" id="collapse-header"><i
+                    data-feather="chevron-up" class="feather-chevron-up"></i></a>
+        </li> -->
+    </ul>
+    <!-- <div *ngIf="role == 'Business_Owner'" class="page-btn">
+        <a [routerLink]="['/dashboard/add-product']" class="btn btn-added"><i data-feather="plus-circle" class="me-2"></i>Add
+            New Product</a>
+    </div> -->
+    <!-- <div class="page-btn import">
+        <a href="#" class="btn btn-added color" data-bs-toggle="modal" data-bs-target="#view-notes"><i
+                data-feather="download" class="me-2"></i>Import Product</a>
+    </div> -->
+</div>
+
+<div class="card table-list-card">
+    <div class="card-body">
+        <div class="table-top">
+            <div class="search-set">
+                <div class="search-input">
+                    <a href="javascript:void(0);" class="btn btn-searchset"><i data-feather="search"
+                            class="feather-search"></i></a>
+                </div>
+            </div>
+        </div>
+        <div style="display: flex;justify-content:center;">
+            <app-errormodal></app-errormodal>
+        </div>
+
+        <div class="card mb-0" id="filter_inputs">
+            <div class="card-body pb-0">
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive product-list">
+            <table class="table dataallocation" id="table">
+                <thead>
+                    <tr>
+                        <th class="no-sort">
+                            <label class="checkboxs">
+                                <input type="checkbox" id="select-all">
+                                <span class="checkmarks"></span>
+                            </label>
+                        </th>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th *ngFor="let branch of branches">{{branch.branch_name}}</th>
+                        <th *ngIf="role == 'Business_Owner'" class="no-sort">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let allocation of products;let i = index">
+                        <td>
+                            <label class="checkboxs">
+                                <input type="checkbox">
+                                <span class="checkmarks"></span>
+                            </label>
+                        </td>
+                        <td>{{ allocation.name}}</td>
+                        <td>{{allocation.price | currency:'GHc':'symbol':'1.2-2' }}</td>
+                        @for (branch of branches; track branch.id) {
+                            <td>{{ getStock(allocation, branch.id) | number : '1.0-1'}}</td> 
+                        }
+                        <td *ngIf="role == 'Business_Owner' || role == 'Account_Officer'" class="action-table-data" >
+                            <div class="edit-delete-action">
+                                <a (click)="allocationClicked(allocation.id, allocation.name)" class="me-2 p-2" data-bs-toggle="modal" data-bs-target="#update-product" href="javascript:void(0);">
+                                    <i data-feather="edit" class="feather-edit"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="update-product">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="page-wrapper-new p-0">
+                <div class="content">
+                    <div class="modal-header border-0 custom-modal-header">
+                        <div class="page-title">
+                            <h4>Update Product Allocations</h4>
+                        </div>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body custom-modal-body">
+                        <form (submit)="submitUpdateFrm($event)" [formGroup]="updateAllocationFrm">
+                            <div class="row">
+                                <div class="col-lg-12 col-sm-12 col-12">
+                                    <div class="input-blocks">
+                                        <label>Product Name</label>
+                                        <div class="form-control">{{selectedItem.name}}</div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 col-sm-12 col-12">
+                                    <table class="col-lg-12 col-sm-12 col-12">
+                                        <thead>
+                                            <tr>
+                                                <td>Branch</td>
+                                                <td>Quantity</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody formArrayName="allocations">
+                                            <tr *ngFor="let branch of allocations.controls;let i = index" [formGroupName]="i">
+                                                <td>
+                                                    {{branch.value.branch_name}}
+                                                </td>
+                                                <td>
+                                                    <!-- <input type="number" min="0" value="{{getStock(selectedItem, branch.id)}}"> -->
+                                                    <input class="form-control" type="number" min="0" formControlName="quantity">
+                                                </td>
+                                            </tr>
+                                            <tr class="border">
+                                                <td>Total</td>
+                                                <td>{{getTotalStock(selectedItem)}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div style="display: flex;justify-content:center;">
+                                <app-errormodal></app-errormodal>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="modal-footer-btn">
+                                    <button [disabled]="sharedservice.responses.disabled" type="button" class="btn btn-cancel me-2"
+                                        data-bs-dismiss="modal">Cancel</button>
+                                    <button [disabled]="sharedservice.responses.disabled" type="submit" class="btn btn-submit">Submit</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
