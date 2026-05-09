@@ -295,7 +295,7 @@ export class ExpiryComponent {
     // console.log(this.updateProductFrm.value)
     // console.log(this.updateProductFrm.valid)
     if(this.updateProductFrm.valid){
-      this.httpservice.updateProduct(this.productId, this.updateProductFrm.value)
+      this.httpservice.updateProduct(this.productId, this.branch.value.id, this.updateProductFrm.value)
       .subscribe({
         next: data => {
           $('.dataexp').DataTable().destroy()

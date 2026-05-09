@@ -19,6 +19,7 @@ export class HttpService {
   role:string = '';
   dateError: boolean = false;
   allowedDate: Date = new Date('2025-02-22'); // Replace with your desired date
+  
   constructor(
     private http: HttpClient,
     private sharedservice: SharedService,
@@ -128,6 +129,10 @@ export class HttpService {
 
   }
 
+  getServices(){
+    return this.http.get<any>(`${this.baseUrl}/services`, {headers: this.getHeaders()});
+  }
+
   getProducts(page: number, perPage: number): Observable<any> {
     // console.log("getting products", this.appToken)
     return this.http.get<any>(`${this.baseUrl}/products`, {headers: this.getHeaders()}) 
@@ -192,9 +197,9 @@ export class HttpService {
 
   }
 
-  updateProduct(id: any, body:any) {
+  updateProduct(id: any, branchId:any, body:any) {
     this.sharedservice.infoFunc('alert alert-info', 'updating product...', true, true, true)
-    return this.http.post(`${this.baseUrl}/product/update/${id}`, body, {headers: this.getHeaders()}) //.subscribe({
+    return this.http.post(`${this.baseUrl}/product/update/${id}/${branchId}`, body, {headers: this.getHeaders()}) //.subscribe({
   }
 
   allocateProducts(body:any){
@@ -307,12 +312,20 @@ export class HttpService {
     return this.http.get<any>(`${this.baseUrl}/expenses`, {headers: this.getHeaders()})
   }
 
-  postExpenses(){
-    return this.http.post<any>(`${this.baseUrl}/expenses`, {headers: this.getHeaders()})
+  getExpensesByBranch(branchId:any){
+    return this.http.get<any>(`${this.baseUrl}/expenses/by/branch/${branchId}`, {headers: this.getHeaders()})
   }
 
-  postExpenseCategory(){
-    return this.http.post<any>(`${this.baseUrl}/expense/category`, {headers: this.getHeaders()})
+  postExpenses(body:any){
+    return this.http.post<any>(`${this.baseUrl}/expenses`, body, {headers: this.getHeaders()})
+  }
+
+  postExpenseCategory(body:any){
+    return this.http.post<any>(`${this.baseUrl}/expense/category`, body, {headers: this.getHeaders()})
+  }
+
+  patchExpenseCategory(id:any, body:any){
+    return this.http.patch<any>(`${this.baseUrl}/expense/category/${id}`, body, {headers: this.getHeaders()})
   }
 
   getExpenseCategory(){

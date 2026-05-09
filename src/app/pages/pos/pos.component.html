@@ -127,8 +127,9 @@
                         <label>Identification Type</label>
                         <select formControlName="identification_type" class="form-control">
                             <option value="National ID Card">National ID Card</option>
+                            <option value="TIN">TIN</option>
                             <option value="Passport">Passport</option>
-                            <option value="License">License</option>
+                            <!-- <option value="License">License</option> -->
                         </select>
                     </div>
                 </div>
@@ -233,6 +234,33 @@
                         </tr>
                     </tbody>
                 </table>
+            </div>
+            <div class="row">
+                <!-- Service Selection -->
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <h6>Add Extra Services</h6>
+                        <div class="d-flex gap-3">
+                            <button *ngFor="let service of services$ | async" type="button" class="btn btn-outline-secondary text-sm" (click)="addService(service)">
+                                + Add {{service.name}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Display Selected Services -->
+                <div formArrayName="extra_services" class="mt-2">
+                    <div *ngFor="let service of extra_services.controls; let i = index" [formGroupName]="i" class="d-flex justify-content-between border-bottom py-2">
+                        <span>{{ service.value.name }}</span>
+                        <div class="d-flex align-items-center">
+                            <!-- <span class="me-3">Ghc {{ service.value.cost }}</span> -->
+                            <input (chaange)="calculateGrandTotal()" (keyup)="calculateGrandTotal()" type="number" min="{{service.value.min_price}}" formControlName="cost" class="form-control w-100 text-center">
+                            <button type="button" class="btn btn-sm btn-danger" (click)="remove_extra(i)">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="row">
                 <div class="col-lg-6 ms-auto">

@@ -16,6 +16,7 @@ export class DashboardComponent {
 
   manager:boolean = false;
   owner: boolean = false;
+  accounts: boolean = false;
   username = `${sessionStorage.getItem('username')}`
   userrole = this.httpservice.getUserRole();
 
@@ -37,6 +38,10 @@ export class DashboardComponent {
     let role = this.httpservice.getUserRole();
     if(role == 'Manager'){
         this.manager = true;
+    }
+
+    if(role == 'Account_Officer'){
+      this.accounts = true
     }
 
     if (role == 'Business_Owner'){

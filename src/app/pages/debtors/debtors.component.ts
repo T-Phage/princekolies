@@ -200,7 +200,7 @@ export class DebtorsComponent {
       this.httpService.getAllDebtors()
       .subscribe({
         next: (res) => {
-          // console.log(res.unpaidSales)
+          console.log(res.unpaidSales)
           this.debtors = res.unpaidSales
           this.datatableService.initiateDataTable('.debtorsnew', 15)
           this.sharedservice.infoFunc('', '', false, false, false);

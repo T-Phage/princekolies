@@ -63,7 +63,7 @@ export class LowStockComponent {
     this.httpservice.getProductsAlert(this.branch.value.id)
       .subscribe({
         next: data => {
-        console.log(data);
+        // console.log(data);
         this.products_low = data.low_stock
         this.products_out = data.out_of_stock
         this.sharedservice.infoFunc('', '', false, false, false);
@@ -99,6 +99,7 @@ export class LowStockComponent {
           }, 100)
         },
         error: error => {
+          console.log(error)
           this.sharedservice.infoFunc('alert alert-danger', 'out of stock products could not be fetched', false,false,false);
         }
       })
@@ -110,6 +111,7 @@ export class LowStockComponent {
           },100)
         },
         error: error => {
+          console.log(error)
           this.sharedservice.infoFunc('alert alert-danger', 'low stocked products could not be fetched', false,false,false);
         }
       })
@@ -388,7 +390,7 @@ export class LowStockComponent {
 
     // console.log(this.updateProductFrm.value)
     if(this.updateProductFrm.valid){
-      this.httpservice.updateProduct(this.productId, this.updateProductFrm.value)
+      this.httpservice.updateProduct(this.productId, this.branch.value.id, this.updateProductFrm.value)
       .subscribe({
         next: data => {
           $('.datanew_1').DataTable().destroy()

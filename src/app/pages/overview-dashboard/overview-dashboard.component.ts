@@ -155,8 +155,8 @@ export class OverviewDashboardComponent {
 
   calculateTotal(products: any[]): number {
     return products.reduce((sum, product) => {
-      const price = product.price || 0;
-      const quantity = product.quantity || 0;
+      const price = product.unit_price || 0;
+      const quantity = product.quantity_in_stock || 0;
       return sum + price * quantity;
     }, 0);
   }

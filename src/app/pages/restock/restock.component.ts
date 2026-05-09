@@ -98,17 +98,20 @@ export class RestockComponent {
     .subscribe({
       next: data =>{
         console.log(data)
-        this.sharedservice.infoFunc('alert alert-success', 'su', false, false, false)
+        this.sharedservice.infoFunc('alert alert-success', 'successfully allocated products', false, false, false)
         // this.swalservices.fireSuccess(data.message)
         // Reset the form after submission
         this.resetToFirstItem();
         this.submitted = false; 
+        setTimeout(()=>{
+          this.sharedservice.infoFunc('', '', false, false, false) 
+        }, 4500);
       },
       error: err => {
         console.log(err);
         console.log(err.error);
         console.log(err.error.error);
-        this.swalservices.fireError(err.error.error)
+        this.swalservices.fireError(err.error.message)
         this.sharedservice.infoFunc('alert alert-danger', err.error.message, false, false, false) 
         setTimeout(() => {
           this.sharedservice.infoFunc('', '', false, false, false) 
@@ -151,14 +154,19 @@ export class RestockComponent {
   }
 
   ngOnInit(): void {
+    this.sharedservice.infoFunc('alert alert-info', 'Please wait, fetching products...', true, true, true)
     // console.log(this.items.get('product_name')?.hasError('required'))
     this.branches$ = this.httpservice.getbranches()
     this.httpservice.getProducts(1, 10).subscribe({
       next: (res) => {
         this.products = res.products;
         console.log(res)
+        setTimeout(()=>{
+          this.sharedservice.infoFunc('', '', false, false, false)
+        }, 270)
       },
       error: (err) => {
+        this.sharedservice.infoFunc('alert alert-danger', 'failed to fetch products', false, false, false)
         this.errorLoading = true;
       }
     })
@@ -189,6 +197,10 @@ export class RestockComponent {
 
   refresh() {
     this.ngOnInit();
+  }
+
+  ngOnDestroy(): void {
+    this.sharedservice.infoFunc('alert alert-danger', 'failed to fetch products', false, false, false)
   }
 
 }

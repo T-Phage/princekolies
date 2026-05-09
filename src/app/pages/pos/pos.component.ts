@@ -30,6 +30,7 @@ export class PosComponent {
   products: any[] = []
   customers: any[] = [];
   branches$!: Observable<any>;
+  services$!: Observable<any>;
 
   selectedProduct: any;
   selectedCustomer: any;
@@ -172,6 +173,17 @@ export class PosComponent {
   ngOnInit(): void {
     
     this.loadingService.show()
+
+    this.services$ = this.httpservice.getServices()
+    this.httpservice.getServices()
+    .subscribe({
+      next: data => {
+        console.log(data)
+      },
+      error: err => {
+        console.log(err)
+      }
+    })
     if (this.httpservice.getUserRole() != "Business_Owner") {
       this.httpservice.getAllCustomers()
         .subscribe({
@@ -186,7 +198,7 @@ export class PosComponent {
       this.httpservice.getProducts(1, 10)
         .subscribe({
           next: data => {
-            console.log(data)
+            // console.log(data)
             this.products = data
           },
           error: error => {
@@ -295,8 +307,38 @@ export class PosComponent {
     'bank':[0.0, Validators.compose([Validators.required, Validators.pattern(this.sharedservice.amount)])],
     'biller': [sessionStorage.getItem('id')],
     'items': this.formBuilder.array([]),
+    'extra_services': this.formBuilder.array([]),
     'branch_id': [this.role == 'Business_Owner' ? sessionStorage.getItem('selected_branch'): ''],
   })
+
+  get extra_services() {
+    return this.newSalesFrm.get('extra_services') as FormArray;
+  }
+
+  remove_extra(index: number) {
+    this.extra_services.removeAt(index);
+    this.calculateGrandTotal()
+  }
+
+  isServiceExists(serviceId: any): boolean {
+    return this.extra_services.controls.some(control => control.value.id === serviceId);
+  }
+
+  // Function to add a service (called when a user selects one)
+  addService(service: any) {
+    // console.log(service)
+
+    if(this.isServiceExists(service.id)) {
+      return
+    }
+    const serviceGroup = this.formBuilder.group({
+      id: [service.id],
+      name: [service.name],
+      cost: [service.min_price] 
+    });
+    this.extra_services.push(serviceGroup);
+    this.calculateGrandTotal()
+  }
 
   submitted = false
 
@@ -363,8 +405,18 @@ export class PosComponent {
       return acc + itemTotal;  // Sum up all totals
     }, 0);
 
+    // Calculate the total cost of extra services
+    let extraServicesTotal = this.extra_services.controls.reduce((acc, service) => {  
+      const serviceCost = service.get('cost')?.value || 0;  // Get cost for each service or 0 if null
+      return Number(acc) + Number(serviceCost);  // Sum up all service costs
+    }, 0);
+
+    
+    let total = grandTotal + extraServicesTotal
+    // console.log(total);
+    
     // Update the grand_total form control if necessary
-    this.newSalesFrm.get('grand_total')?.setValue(grandTotal.toFixed(2));
+    this.newSalesFrm.get('grand_total')?.setValue(total.toFixed(2));
 
     var bank = parseFloat(`${this.newSalesFrm.value.bank}`)
     var momo = parseFloat(`${this.newSalesFrm.value.momo}`)
@@ -405,14 +457,14 @@ export class PosComponent {
   }
 
   selectCustomer(evt: any){
-    console.log('click')
-    console.log(this.customers)
+    // console.log('click')
+    // console.log(this.customers)
     const inputValue = evt.target.value;
-    console.log(inputValue)
-    console.log(inputValue.toString().split(' | ')[0])
+    // console.log(inputValue)
+    // console.log(inputValue.toString().split(' | ')[0])
     this.selectedCustomer = this.customers.find(customer => customer.name === inputValue);
     
-    console.log(this.selectedCustomer)
+    // console.log(this.selectedCustomer)
 
     // this.newSalesFrm.get('customer_name')?.setValue(this.selectedCustomer.name)
     this.newSalesFrm.get('customer_phone')?.setValue(this.selectedCustomer.phone)
@@ -451,8 +503,8 @@ export class PosComponent {
 
     this.submitted = true
 
-    console.log(this.newSalesFrm.get('balance')!.value)
-    console.log(this.oncredit)
+    // console.log(this.newSalesFrm.get('balance')!.value)
+    // console.log(this.oncredit)
     if((this.newSalesFrm.get('balance')!.value ?? 0) < 0 && !this.oncredit ){
       this.swalService.fireWarning('Customer details are required for credit buys')
       return
@@ -466,7 +518,6 @@ export class PosComponent {
       this.httpservice.addNewSale(this.newSalesFrm.value, this.receiptContent)
       .subscribe({
         next: data => {
-          
           // 
           this.newSalesFrm.controls.reference?.setValue(`${data.sale.reference}`)
           this.sharedservice.infoFunc('alert alert-success', data.message, false, false, false) 
@@ -481,6 +532,7 @@ export class PosComponent {
 
           setTimeout(() => {
             this.newSalesFrm.controls.items.clear();
+            this.newSalesFrm.controls.extra_services.clear();
             this.newSalesFrm.reset();
             this.submitted = false;
             this.newSalesFrm.get('bank')?.setValue(0.0)

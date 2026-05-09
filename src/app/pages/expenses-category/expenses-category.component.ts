@@ -4,7 +4,9 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ErrormodalComponent } from '../../components/errormodal/errormodal.component';
 import { SharedService } from '../../services/sharedservices/shared.service';
-
+import { SwalservicesService } from '../../services/swal/swalservices.service';
+import { DatabaleService } from '../../services/datatable/databale.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-expenses-category',
@@ -30,115 +32,112 @@ export class ExpensesCategoryComponent {
     private formBuilder: FormBuilder,
     public sharedservices: SharedService,
     private httpservice: HttpService,
+    private datatableService: DatabaleService,
+    private swalService: SwalservicesService,
+    private router: Router,
   ){}
 
-  createCategoryFrm = this.formBuilder.group({
+    createCategoryFrm = this.formBuilder.group({
       'expense_name': ['', Validators.required],
       'status': [true, Validators.required],
-      'createdby': [parseInt(`${sessionStorage.getItem('id')}`),],
+      'description': [''],
     });
   
     updateCategoryFrm = this.formBuilder.group({
       'expense_name': ['', Validators.required],
       'status': [true, Validators.required],
-      'updatedby': [parseInt(`${sessionStorage.getItem('id')}`),],
     });
 
     categoryClicked(id:string, expense_name:string, status:boolean){
-    // console.log(name)
-    // console.log(status)
 
-    this.selectedCategoryId = id
+      this.selectedCategoryId = id
 
-    this.updateCategoryFrm.controls.expense_name.setValue(expense_name)
-    this.updateCategoryFrm.controls.status.setValue(status)
+      this.updateCategoryFrm.controls.expense_name.setValue(expense_name)
+      this.updateCategoryFrm.controls.status.setValue(status)
 
-    // console.log(this.updateCategoryFrm.value)
-  }
+      // console.log(this.updateCategoryFrm.value)
+      // console.log(id)
+    }
 
    submitUpdateFrm(event:Event){
     event.preventDefault();
+    this.sharedservices.infoFunc('alert alert-info', 'updating category', true, true, true) 
 
     // console.log(this.updateCategoryFrm.value)
     if(this.updateCategoryFrm.valid){
-      this.httpservice.updateCategory(this.selectedCategoryId, this.updateCategoryFrm.value)
+      this.httpservice.patchExpenseCategory(this.selectedCategoryId, this.updateCategoryFrm.value)
       .subscribe({
         next: data => {
-          $('.datanewcat').DataTable().destroy()
-          // $('.datanewcat ').empty()
+          $('.dataexpcat').DataTable().destroy()
           this.sharedservices.infoFunc('alert alert-success', 'category updated', false, false, false) 
-          this.httpservice.getExpenseCategory()
-            .subscribe({
-              next: data => {
-                this.categories = data
-              },
-              error: error => {
-                const msg = error.error.message
-                // setTimeout(()=> this.sharedservices.infoFunc('alert alert-danger',msg, false,false,false), 3000)
-              }
-            })
-
-          setTimeout(()=> this.sharedservices.infoFunc('','', false,false,false), 3000)
-
-          // window.location.reload() 
-          setTimeout(()=> {
-            $('.datanewcat').DataTable({
-              "bFilter": true,
-              // "sDom": 'fBtlpi',
-              "dom": 'pftil',
-              "ordering": true,
-              "language": {
-                search: ' ',
-                emptyTable: "No data available in table",
-                infoEmpty: "",
-                sLengthMenu: '_MENU_',
-                searchPlaceholder: "Search",
-                info: "_START_ - _END_ of _TOTAL_ items",
-                paginate: {
-                  next: ' <i class=" fa fa-angle-right"></i>',
-                  previous: '<i class="fa fa-angle-left"></i> '
-                },
-              },
-              initComplete: (_settings: any, _json: any) => {
-                $('.dataTables_filter').appendTo('#tableSearch');
-                $('.dataTables_filter').appendTo('.search-input');
-              },
-            }); 
-          },1000)  
-              
-        },
+            // this.categories = data
+          this.ngOnInit();
+          setTimeout(()=> this.sharedservices.infoFunc('','', false,false,false), 250)
+        },  
         error: error => {
-          let msg = error.error.message
-          console.error('error :', error)
+          const msg = error.error.message
           this.sharedservices.infoFunc('alert alert-danger', msg, false, false, false)
-          let fume = this.sharedservices.infoFunc
-
-          setTimeout(()=>{
-            fume('', '', false, false, false) 
-          }, 3000)
+          setTimeout(()=> this.sharedservices.infoFunc('', '', false, false, false), 8000)
         }
       })
     }
   }
 
-  refreshData(){}
+  refresh(){
+    $('.dataexpcat').DataTable().destroy()
+    this.sharedservices.infoFunc('', '', true, true, true)
+    this.sharedservices.refreshComponentFunc(this.router.url);
+  }
 
   deleteCategory(){}
 
-  createCategoryFunc(evt:Event){}
+  createCategoryFunc(evt:Event){
+    this.sharedservices.infoFunc('alert alert-info', 'adding new category', true, true, true) 
+    
+    evt.preventDefault();
+
+    if(!this.createCategoryFrm.valid){
+      return
+    }
+    
+    this.httpservice.postExpenseCategory(this.createCategoryFrm.value)
+    .subscribe({
+      next: data => {
+        $('.dataexpcat').DataTable().destroy()
+        // console.log(data)
+        this.sharedservices.infoFunc('alert alert-success', 'new category added', false, false, false) 
+        this.ngOnInit()
+      },
+      error: err => {
+        this.sharedservices.infoFunc('alert alert-danger', 'new category not added', false, false, false) 
+        console.log(err)
+      }
+    })
+  }
 
   ngOnInit(): void {
+    this.sharedservices.infoFunc('alert alert-info', 'fetching data...', true, true, true)
     this.httpservice.getExpenseCategory().subscribe({
-      next: data =>{ 
-        console.log(data)
+      next: data => { 
+        // console.log(data)
         this.categories = data
+        this.datatableService.initiateDataTable('.dataexpcat', 20)
+        setTimeout(() => {
+          this.sharedservices.infoFunc('', '', false, false, false)
+        }, 250)
       },
       error: error => {
         console.log(error)
+        this.datatableService.initiateDataTable('.dataexpcat', 20)
       },
       complete: () => {
         // console.log(vrr)
       }
     });
+  }
+
+  ngOnDestroy() {
+    $('.dataexpcat').DataTable().destroy()
+    this.sharedservices.infoFunc('', '', false, false, false)
   }
 }

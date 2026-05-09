@@ -1,7 +1,7 @@
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { Component, NgZone, NO_ERRORS_SCHEMA } from '@angular/core';
 import { FormArray, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { HttpService } from '../../services/httpservices/http.service';
 import { SharedService } from '../../services/sharedservices/shared.service';
@@ -40,6 +40,7 @@ export class ProductsComponent {
     private zone: NgZone,
     private formBuilder: FormBuilder,
     public sharedservice: SharedService,
+    private router: Router,
   ) { 
   }
 
@@ -76,7 +77,7 @@ export class ProductsComponent {
         }
       })
   }
-  
+
   ngOnInit() {
     this.sharedservice.infoFunc('alert alert-info', 'fetching branch products...  ', true, true, true);
     this.role = sessionStorage.getItem('role') || '';
@@ -84,7 +85,8 @@ export class ProductsComponent {
     this.branches$ = this.httpservice.getbranches()
 
     this.role = this.httpservice.getUserRole();
-    if(this.httpservice.getUserRole() !== 'Business_Owner'){
+    // this.products = []
+    if(this.httpservice.getUserRole() != 'Business_Owner'){
       this.httpservice.getProducts(0,0)
         .subscribe({
           next: data => {
@@ -165,7 +167,7 @@ export class ProductsComponent {
     // Reset the product ID first
     this.productId = null;
 
-    console.log('clicked',id, name, description, barcode, price, category_id, quantity, quantity_alert, manufactured_date, expiry_date)
+    // console.log('clicked',id, name, description, barcode, price, category_id, quantity, quantity_alert, manufactured_date, expiry_date)
     
     if(expiry_date != undefined){
       const date = new Date(expiry_date); // or any Date value
@@ -183,6 +185,8 @@ export class ProductsComponent {
       this.updateProductFrm.controls.manufactured_date.reset()
     }
 
+    console.log(quantity_alert)
+
     this.updateProductFrm.controls.name.setValue(name)
     this.updateProductFrm.controls.description.setValue(description)
     this.updateProductFrm.controls.barcode.setValue(barcode)
@@ -193,7 +197,7 @@ export class ProductsComponent {
     this.updateProductFrm.controls.updatedby.setValue(parseInt(`${sessionStorage.getItem('id')}`))
     this.productId = id
 
-    // console.log(this.updateProductFrm.value)
+    console.log(this.updateProductFrm.value)
   }
 
   hide:boolean = true;
@@ -227,16 +231,15 @@ export class ProductsComponent {
   submitUpdateFrm(event:Event){
     event.preventDefault();
 
-    console.log(this.updateProductFrm.value)
-    console.log(this.updateProductFrm)
+    // console.log(this.updateProductFrm.value)
+    // console.log(this.updateProductFrm)
     if(this.updateProductFrm.valid){
-      this.httpservice.updateProduct(this.productId, this.updateProductFrm.value)
+      this.httpservice.updateProduct(this.productId, this.branch.value.id, this.updateProductFrm.value)
       .subscribe({
         next: data => {
           $('.datanew').DataTable().destroy()
-          // $('.datanew ').empty()
           this.sharedservice.infoFunc('alert alert-success', 'product updated', false, false, false) 
-          this.categories$ = this.httpservice.getCategories(1, 10)
+          // this.categories$ = this.httpservice.getCategories(1, 10)
           
           // Reset form and product ID
           // this.resetForm();
@@ -245,7 +248,8 @@ export class ProductsComponent {
             this.sharedservice.infoFunc('','', false,false,false)
             // Close the modal and clean up backdrop
             this.closeModalAndRefresh();
-          }, 2000)
+            // this.ngOnInit();
+          },0)
         },
         error: error => {
           let msg = error.error.message
@@ -299,7 +303,8 @@ export class ProductsComponent {
     document.body.style.overflow = 'auto';
 
     // Refresh the component
-    this.refreshData();
+    // this.refreshData();
+    this.sharedservice.refreshComponentFunc(this.router.url)
   }
 
   // Method to export the product table to Excel
@@ -389,8 +394,10 @@ export class ProductsComponent {
   }
   
   refreshData(){
+    $('.datanew').DataTable().destroy()
     // location.reload();
-    this.sharedservice.refreshComponentFunc('dashboard/products');
+    // this.sharedservice.refreshComponentFunc('dashboard/products');
+    this.ngOnInit();
   }
 
   initDataTable() {

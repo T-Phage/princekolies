@@ -66,8 +66,8 @@
                                 <span class="checkmarks"></span>
                             </label>
                         </td>
-                        <td>{{ debtor.customer.name }}</td>
-                        <td>{{ debtor.customer.phone }}</td>
+                        <td>{{ debtor.customer ? debtor.customer.name : 'N/A' }}</td>
+                        <td>{{ debtor.customer ? debtor.customer.phone : 'N/A' }}</td>
                         <td>{{ debtor.customer.identification_type }} <br> ({{ debtor.customer.identity_number }})</td>
                         <td>{{ debtor.grand_total | currency:'GHc ':'symbol':'1.2-2' }}</td>
                         <td>{{ debtor.amount_paid | currency:'GHc ':'symbol':'1.2-2' }}</td>

@@ -1,8 +1,8 @@
 <div class="page-header">
     <div class="add-item d-flex">
         <div class="page-title">
-            <h4>Category</h4>
-            <h6>Manage your categories</h6>
+            <h4>Expenditure Categories</h4>
+            <h6>Manage your expenditure categories</h6>
         </div>
     </div>
     <ul class="table-top-head">
@@ -21,7 +21,7 @@
             </a>
         </li> -->
         <li>
-            <a (click)="refreshData()" data-bs-toggle="tooltip" data-bs-placement="top" title="Refresh"><i data-feather="rotate-ccw"
+            <a (click)="refresh()" data-bs-toggle="tooltip" data-bs-placement="top" title="Refresh"><i data-feather="rotate-ccw"
                     class="feather-rotate-ccw"></i></a>
         </li>
         <!-- <li>
@@ -45,9 +45,11 @@
             </div>            
         </div>
 
-
+        <div style="display: flex;justify-content:center;">
+            <app-errormodal></app-errormodal>
+        </div>
         <div class="table-responsive">
-            <table class="table datanewcat">
+            <table class="table dataexpcat">
                 <thead>
                     <tr>
                         <th class="no-sort">
@@ -71,7 +73,6 @@
                             </label>
                         </td>
                         <td>{{ category.expense_name }}</td>
-                        <!-- <td>{{ category.createdby }}</td> -->
                         <td>
                             <span *ngIf="category.status" class="badge badge-linesuccess">Active</span>
                             <span *ngIf="!category.status" class="badge badge-linedanger">Inactive</span>

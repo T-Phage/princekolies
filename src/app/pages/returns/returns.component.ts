@@ -177,14 +177,13 @@ export class ReturnsComponent {
         setTimeout(() => {
             this.sharedservice.infoFunc('alert alert-danger', 'branch not selected...  ', false, false, false);
         }, 4500);
-  
           return
       }
 
       this.httpservice.getByBranchProducts(this.branch.value.id)
         .subscribe({
           next: data => {
-            // console.log(data)
+            console.log(data)
             this.products = data
           }
         });
@@ -192,7 +191,7 @@ export class ReturnsComponent {
         this.httpservice.getBranchSales(this.branch.value.id)
         .subscribe({
           next: data => {
-            // console.log(data) all_sales
+            // console.log(data) // all_sales
             this.all_sales = data
           }
         });
@@ -200,6 +199,7 @@ export class ReturnsComponent {
       this.httpservice.getBranchSalesReturns(this.branch.value.id)
       .subscribe({
           next: data => {
+            // console.log(data);
             this.sales = data
             this.sharedservice.infoFunc('', '', false, false, false);
             
@@ -298,11 +298,12 @@ export class ReturnsComponent {
     inpProductNameChange(evt: any){
       const inputValue = evt.target.value;
       this.selectedProduct = this.products.find(product => product.name === inputValue);
-  
+      
+      console.log(this.selectedProduct)
       if (this.selectedProduct) {
         this.addAlias(
           this.selectedProduct.name, 
-          this.selectedProduct.id, 
+          this.selectedProduct.product_id, 
           1,
           this.selectedProduct.price,
           this.selectedProduct.price,
@@ -340,7 +341,7 @@ export class ReturnsComponent {
         next: data => {
           this.sharedservice.infoFunc('alert alert-success', 'record deleted', false, false, false)
         
-          $('.datanew').DataTable().destroy()
+          $('.returnstable').DataTable().destroy()
           
           this.httpservice.getSalesReturns(1, 10).subscribe({
             next: sdata => {
@@ -352,7 +353,7 @@ export class ReturnsComponent {
           setTimeout(() =>{ 
             this.sharedservice.infoFunc('', '', false, false, false)
 
-            $('.datanew').DataTable({
+            $('.returnstable').DataTable({
               "bFilter": true,
               // "sDom": 'fBtlpi',
               "dom": 'pftil',
@@ -409,7 +410,7 @@ export class ReturnsComponent {
           next: data => {
           this.submitted = false;
 
-            $('.datanew').DataTable().destroy()
+            $('.returnstable').DataTable().destroy()
             // $('.datanew ').empty()
             this.sharedservice.infoFunc('alert alert-success', data.message, false, false, false) 
             
@@ -420,7 +421,7 @@ export class ReturnsComponent {
             })
             // this.returnSalesFrm.controls.reference?.setValue(`${data.sale.reference}`)
             setTimeout(()=> {
-              $('.datanew').DataTable({
+              $('.returnstable').DataTable({
                 "bFilter": true,
                 // "sDom": 'fBtlpi',
                 "dom": 'pftil',
@@ -545,15 +546,15 @@ export class ReturnsComponent {
     }
   
     refreshData(){
+      $('.returnstable').DataTable().destroy();
       
       this.httpservice.getSalesReturns(1, 10).subscribe({
         next: sdata => {
           this.sales = sdata
         }
       })
-      $('.datanew').DataTable().destroy();
       setTimeout(()=> {
-        $('.datanew2').DataTable({
+        $('.returnstable').DataTable({
           "bFilter": true,
           "sDom": 'fBtlpi',
           // "dom": 'pftil',
@@ -577,53 +578,10 @@ export class ReturnsComponent {
         }); 
       },3000)
     }
-  
-    // ngAfterViewInit(): void {
-    //   // Hide preloader once the view is fully initialized
-  
-    //   // this.products$.subscribe({
-    //   //   next: data => {
-    //   //     if(data){
-    //   this.zone.runOutsideAngular(() => {
-    //     setTimeout(() => {
-    //       const preloader = document.getElementById('global-loader') as HTMLDivElement;
-    //       if (preloader) {
-    //         preloader.style.display = 'none';
-    //       }
-    //       $('.datanew').DataTable({
-    //         "bFilter": true,
-    //         // "sDom": 'fBtlpi',
-    //         // "dom": 'pftil',
-    //         "ordering": true,
-    //         "language": {
-    //           search: ' ',
-    //           emptyTable: "No data available in table",
-    //           infoEmpty: "",
-    //           sLengthMenu: '_MENU_',
-    //           searchPlaceholder: "Search",
-    //           info: "_START_ - _END_ of _TOTAL_ items",
-    //           paginate: {
-    //             next: ' <i class=" fa fa-angle-right"></i>',
-    //             previous: '<i class="fa fa-angle-left"></i> '
-    //           },
-    //         },
-    //         initComplete: (_settings: any, _json: any) => {
-    //           $('.dataTables_filter').appendTo('#tableSearch');
-    //           $('.dataTables_filter').appendTo('.search-input');
-  
-    //         },
-    //       });  // Initialize jQuery DataTable outside Angular’s zone
-    //     }, 2000)
-    //   }
-    //   );
-    //   // }
-    //   // });
-    //   // });
-    // }
 
     ngOnDestroy(): void {
       // Destroy the DataTable to free up resources
-      $('.datanew').DataTable().destroy();
+      $('.returnstable').DataTable().destroy();
     }
   
   
