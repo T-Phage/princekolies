@@ -55,12 +55,14 @@ export class SalesComponent implements OnInit {
     customer_name: '',
     reference: '',
     status: '',
-    grand_total: '',
+    grand_total: 0.0,
     amount_paid: 0.0,
     payment_status: '',
     biller: '',
     items: [],
     returns: [],
+    extra_services:[],
+    discount: 0.0,
   }
 
   branchChange(){
@@ -94,18 +96,20 @@ export class SalesComponent implements OnInit {
       })
   }
 
-  saleClicked(customer_name:any,reference:any,status:any,grand_total:any,payment_status:any,amount_paid:any,biller:any,items:any, returns:any){
+  saleClicked(customer_name:any,reference:any,status:any,grand_total:any,payment_status:any,amount_paid:any,biller:any,items:any, returns:any, sale:any){
     this.clickedSale.customer_name = customer_name
     this.clickedSale.reference = reference
     this.clickedSale.status = status
-    this.clickedSale.grand_total = grand_total
+    this.clickedSale.grand_total = Number(grand_total)
     this.clickedSale.amount_paid = amount_paid
     this.clickedSale.payment_status = payment_status
     this.clickedSale.biller = biller
     this.clickedSale.items = items
     this.clickedSale.returns = returns || []
+    this.clickedSale.extra_services = JSON.parse(sale.extra_services) || []
+    this.clickedSale.discount = Number(sale.discount) || 0.0
 
-    // console.log(this.clickedSale)
+    console.log(this.clickedSale)
   }
 
   ngOnInit(): void {
@@ -113,7 +117,7 @@ export class SalesComponent implements OnInit {
     this.products$ = this.httpservice.getProducts(1, 10)
     this.branches$ = this.httpservice.getbranches()
 
-    if (this.role != 'Business_Owner') {
+    if (this.role != 'Business_Owner' && this.role != 'Account_Officer') {
       
       this.httpservice.getSales(1, 10)
       .subscribe({

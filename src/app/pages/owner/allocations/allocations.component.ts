@@ -83,7 +83,7 @@ export class AllocationsComponent {
                 setTimeout(() => {
                 //   this.sharedservice.infoFunc('', '', false, false, false);
                   this.datatableservice.initiateDataTable('.dataallocation', 35);
-                }, 170);
+                }, 200);
                 return;
               // } 
           },
@@ -186,12 +186,22 @@ export class AllocationsComponent {
           next: data => {
             this.sharedservice.infoFunc('alert alert-success', 'product allocation updated', false, false, false) 
             $('.dataallocation').DataTable().destroy();
+
+            const modalElement = document.getElementById('update-product');
+            if (modalElement) {
+              // Get Bootstrap modal instance and hide it
+              const modal = (window as any).bootstrap.Modal.getInstance(modalElement);
+              if (modal) {
+                modal.hide();
+              }
+            }
             
             setTimeout(()=> {
               // this.sharedservice.infoFunc('','', false,false,false)
               // Close the modal and clean up backdrop
-              this.ngOnInit();
-            }, 2000)
+              // this.ngOnInit();
+              this.refreshData();
+            }, 200)
           },
           error: error => {
             let msg = error.error.message

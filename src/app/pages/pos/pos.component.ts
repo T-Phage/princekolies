@@ -52,7 +52,7 @@ export class PosComponent {
     private swalService: SwalservicesService,
   ) {
     this.username = sessionStorage.getItem('username')
-   }
+  }
 
   refresh(){
     let url = this.router.url;
@@ -175,16 +175,8 @@ export class PosComponent {
     this.loadingService.show()
 
     this.services$ = this.httpservice.getServices()
-    this.httpservice.getServices()
-    .subscribe({
-      next: data => {
-        console.log(data)
-      },
-      error: err => {
-        console.log(err)
-      }
-    })
-    if (this.httpservice.getUserRole() != "Business_Owner") {
+
+    if (this.httpservice.getUserRole() != "Business_Owner" && this.httpservice.getUserRole() != "Account_Officer") {
       this.httpservice.getAllCustomers()
         .subscribe({
           next: data => {
@@ -286,6 +278,7 @@ export class PosComponent {
       } else {}
   }
 
+  currentDate = new Date();
   newSalesFrm = this.formBuilder.group({
     'customer_id': [''],
     'customer_name': [''],
@@ -309,6 +302,8 @@ export class PosComponent {
     'items': this.formBuilder.array([]),
     'extra_services': this.formBuilder.array([]),
     'branch_id': [this.role == 'Business_Owner' ? sessionStorage.getItem('selected_branch'): ''],
+    'discount': [0.0, Validators.compose([Validators.required, Validators.pattern(this.sharedservice.amount)])],
+    'sale_date': [this.currentDate.toISOString().split('T')[0]]
   })
 
   get extra_services() {
@@ -356,6 +351,10 @@ export class PosComponent {
   // Remove an item at the given index from the FormArray
   removeItem(index: number): void {
     this.items.removeAt(index);
+    this.calculateGrandTotal()
+  }
+
+  onDiscountChange(e: Event){
     this.calculateGrandTotal()
   }
 
@@ -412,8 +411,10 @@ export class PosComponent {
     }, 0);
 
     
-    let total = grandTotal + extraServicesTotal
+    let subtotal = grandTotal + extraServicesTotal
     // console.log(total);
+
+    let total = subtotal - Number(`${this.newSalesFrm.get('discount')?.value}`)
     
     // Update the grand_total form control if necessary
     this.newSalesFrm.get('grand_total')?.setValue(total.toFixed(2));
@@ -432,11 +433,11 @@ export class PosComponent {
 
   inpProductNameChange(evt: any){
     const inputValue = evt.target.value;
-    console.log(inputValue)
+    // console.log(inputValue)
     this.selectedProduct = this.products.find(product => product.name === inputValue);
     // console.log(this.isProductExpired(this.selectedProduct.expiry_date))
     
-    // console.log(this.selectedProduct)
+    console.log(this.selectedProduct)
     if(this.isProductExpired(this.selectedProduct.expiry_date)){
       this.alertExpired()
       return
@@ -492,14 +493,14 @@ export class PosComponent {
     return this.items.controls.some(control => control.value.product_id === productId);
   }
 
-  currentDate = new Date()
+  // currentDate = new Date()
   submitSalesFrm(evt: Event){
     evt.preventDefault()
 
     // this.newSalesFrm.get('status')?.enable();
     // this.newSalesFrm.get('payment_status')?.enable();
     console.log(this.newSalesFrm)
-    // console.log(this.newSalesFrm.value)
+    console.log(this.newSalesFrm.value)
 
     this.submitted = true
 
@@ -509,9 +510,17 @@ export class PosComponent {
       this.swalService.fireWarning('Customer details are required for credit buys')
       return
     }
+    if((this.newSalesFrm.get('balance')!.value ?? 0) > 0 ){
+      // let amount_received = Number(`${this.newSalesFrm.get('grand_total')!.value}`) - Number(`${this.newSalesFrm.get('balance')!.value}`)
+      // this.newSalesFrm.get('amount_paid')?.setValue(Number(`${this.newSalesFrm.get('grand_total')!.value}`));
+      this.swalService.fireWarning('Amount received should not be greater than grand total')
+      return
+    }
     if(parseFloat(`${this.newSalesFrm.get('grand_total')!.value}`) < 0 && (!this.oncredit)) {
       this.swalService.fireWarning('Amount paid by customer is less the grand total. \n Kindly get customer details')
     }
+
+    console.log(this.newSalesFrm.value)
 
     if (this.newSalesFrm.valid && this.newSalesFrm.controls.items.length >= 1){
       // console.log(this.newSalesFrm.value)
@@ -519,6 +528,7 @@ export class PosComponent {
       .subscribe({
         next: data => {
           // 
+          var customerInfo = document.getElementsByClassName('customer-info') as HTMLCollection
           this.newSalesFrm.controls.reference?.setValue(`${data.sale.reference}`)
           this.sharedservice.infoFunc('alert alert-success', data.message, false, false, false) 
           this.newSalesFrm.controls.reference?.setValue(`${data.sale.reference}`)
@@ -535,14 +545,21 @@ export class PosComponent {
             this.newSalesFrm.controls.extra_services.clear();
             this.newSalesFrm.reset();
             this.submitted = false;
+            this.oncredit = false;
+            customerInfo[0].classList.remove('show')
+            this.newSalesFrm.get('sale_date')?.setValue(this.currentDate.toISOString().split('T')[0]);
+            this.newSalesFrm.get('biller')?.setValue(sessionStorage.getItem('id'))
             this.newSalesFrm.get('bank')?.setValue(0.0)
             this.newSalesFrm.get('cash')?.setValue(0.0)
             this.newSalesFrm.get('momo')?.setValue(0.0)
             this.newSalesFrm.get('amount_paid')?.setValue(0.0)
+            this.newSalesFrm.get('discount')?.setValue(0.0);
             if(this.httpservice.getUserRole() == 'Business_Owner'){
               this.newSalesFrm.get('branch_id')?.setValue(`${sessionStorage.getItem('selected_branch')}`)
+            } else {
+              this.newSalesFrm.get('branch_id')?.setValue(sessionStorage.getItem('branch_id'));
             }
-          }, 2000);
+          }, 1700);
           
         },
         error: error => {
@@ -550,7 +567,10 @@ export class PosComponent {
           console.error('error :', error)
           this.sharedservice.infoFunc('alert alert-danger', msg, false, false, false)
           setTimeout(() => this.sharedservice.infoFunc('', '', false, false, false),4000)
-          
+          if (error.status == 401){
+            this.swalService.fireError('Your session has expired, you will be redirected to log in')
+            this.router.navigate(['/auth/login'])
+          }
         }
       })
       // this.printReceipt();

@@ -30,6 +30,7 @@ export class StaffSalesComponent {
   salescount: any;
   todayCashAmount:any;
   percentageIncrease:number = 0;
+  categorySales:any[] = [];
 
   momo:number = 0;
   cashIn:number = 0;
@@ -67,6 +68,7 @@ export class StaffSalesComponent {
         this.percentageIncrease = data.percentage_increase
         this.productSold = data.productsSold;
         this.productsReceipts = data.productsReceipts
+        this.categorySales = data.categorySales;
         // console.log(data.recentSales)
       },
       error: error => {
@@ -132,6 +134,7 @@ export class StaffSalesComponent {
         this.productSold = data.productsSold;
         this.productsReceipts = data.productsReceipts
         this.loading = false
+        this.categorySales = data.categorySales;
         // console.log(data.recentSales)
         //  if(this.manager){this.createChart()}
       },
@@ -228,7 +231,7 @@ export class StaffSalesComponent {
                               <tbody>';
       this.productsReceipts.forEach((product, index) => {
         tableHtml += `<tr>
-                          <td> ${index+1}
+                          <td> ${index+1} </td>
                           <td> ${product.receipt_no}</td>
                           <td> ${product.product}</td>
                           <td> ${product.unit_cost}</td>
@@ -250,6 +253,22 @@ export class StaffSalesComponent {
                     </tr>`;
       tableHtml += '</tbody></table>';
       return tableHtml;
+    }
+
+     exportProductSoldTableToPDF() {
+      // Create a new jsPDF instance
+      const doc = new jsPDF();
+  
+      var data = this.productsReceipts
+  
+      const columns = [
+          { header: "Product", dataKey:"product"},
+          { header: "Unit Cost", dataKey: "unit_cost"},
+          { header: "Quantity", dataKey: "quantity"},
+          { header: "Total Cost", dataKey: ""},
+          { header: "Sale Cost", dataKey: "grand_total"},
+          { header: "Quantity At date", dataKey: "quantity_at_date"},
+      ];
     }
   
     exportTableToPDF() {

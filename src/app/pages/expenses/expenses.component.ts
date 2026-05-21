@@ -97,6 +97,8 @@ export class ExpensesComponent {
         console.log(data)
         this.sharedservice.infoFunc('alert alert-success', 'expenditure details saved', false, false, false)
         this.ngOnInit()
+
+        setTimeout(()=> this.sharedservice.infoFunc('', '', false, false, false),5000)
       },
       error: err => {
         console.log(err)

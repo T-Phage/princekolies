@@ -1,0 +1,267 @@
+<div class="content">
+    <div class="page-header">
+        <div class="add-item d-flex">
+            <div class="page-title">
+                <h4>Branches</h4>
+                <h6>Manage Your regional hubs</h6>
+            </div>
+        </div>
+        <ul class="table-top-head">
+            
+        </ul>
+        <div class="page-btn">
+            <button class="btn btn-added" data-bs-toggle="modal" data-bs-target="#new-units"><i
+                    data-feather="plus-circle" class="me-2"></i> Create New Branch</button>
+        </div>
+    </div>
+
+    <div class="card table-list-card">
+        <div class="card-body">
+            <div class="table-top">
+                <div class="search-set">
+                    <div class="search-input">
+                        <a href class="btn btn-searchset"><i data-feather="search" class="feather-search"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: flex;justify-content:center;">
+                <app-errormodal></app-errormodal>
+            </div>
+
+            <div class="card" id="filter_inputs">
+                <div class="card-body pb-0">
+                    
+                    
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <div *ngIf="!(branches$ | async); else customerTable">
+                    Loading...
+                  </div>
+                <ng-template #customerTable>
+                    <table class="table databranches">
+                        <thead>
+                            <tr>
+                                <th class="no-sort">
+                                    <label class="checkboxs">
+                                        <input type="checkbox" id="select-all">
+                                        <span class="checkmarks"></span>
+                                    </label>
+                                </th>
+                                <th>Branch Code</th>
+                                <th>Branch Name</th>
+                                <th>Location</th>
+                                <!-- <th></th> -->
+                                <th class="no-sort">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let branch of branches">
+                                <td>
+                                    <label class="checkboxs">
+                                        <input type="checkbox">
+                                        <span class="checkmarks"></span>
+                                    </label>
+                                </td>
+                                <td>{{branch.branch_code}}</td>
+                                <td>{{branch.branch_name}}</td>
+                                <td>{{branch.location}}</td>
+                                <td class="action-table-data">
+                                    <div class="edit-delete-action">
+                                        <!-- <a class="me-2 p-2 mb-0" href="javascript:void(0);">
+                                            <i data-feather="eye" class="action-eye"></i>
+                                        </a> -->
+                                        <a (click)="branchClicked(branch)" class="me-2 p-2 mb-0" data-bs-toggle="modal" data-bs-target="#edit-units">
+                                            <i data-feather="edit" class="feather-edit"></i>
+                                        </a>
+                                        <!-- <a (click)="customerClicked("") class="me-2 confirm-text p-2 mb-0" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#delete-units">
+                                            <i data-feather="trash-2" class="feather-trash-2">
+                                                <img src="assets/images/trash-solid.svg">
+                                            </i>
+                                        </a> -->
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </ng-template>
+                <div class="info"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" id="new-units">
+    <div class="modal-dialog modal-dialog-centered custom-modal-two">
+        <div class="modal-content">
+            <div class="page-wrapper-new p-0">
+                <div class="content">
+                    <div class="modal-header border-0 custom-modal-header">
+                        <div class="page-title">
+                            <h4>New Branch Info</h4>
+                        </div>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body custom-modal-body">
+                        <form (submit)="newBranch($event)" [formGroup]="newBranchFrm">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="input-blocks">
+                                        <label>Branch Code</label>
+                                        <input formControlName="branch_code" type="text" placeholder="">
+                                    </div>
+                                    <div style="color:red" *ngIf="(newBranchFrm.get('branch_code')?.invalid && newBranchFrm.get('branch_code')?.touched) || submitted">
+                                        <div class="forgot-link" style="font-size: 12px;font-weight: 500;" *ngIf="newBranchFrm.get('branch_code')?.errors!['required']">Branch code is required.</div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="input-blocks">
+                                        <label>Branch Name</label>
+                                        <input formControlName="branch_name" type="text" placeholder="">
+                                    </div>
+                                    <div style="color:red" *ngIf="(newBranchFrm.get('branch_name')?.invalid && newBranchFrm.get('branch_name')?.touched) || submitted">
+                                        <div class="forgot-link" style="font-size: 12px;font-weight: 500;" *ngIf="newBranchFrm.get('branch_name')?.errors!['required']">Branch name is required.</div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="input-blocks">
+                                        <label>Location</label>
+                                        <input formControlName="location" type="text" placeholder="">
+                                    </div>
+                                    <div style="color:red" *ngIf="(newBranchFrm.get('location')?.invalid && newBranchFrm.get('location')?.touched) || submitted">
+                                        <div class="forgot-link" style="font-size: 12px;font-weight: 500;" *ngIf="newBranchFrm.get('location')?.errors!['required']">Location is required.</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-lg-6">
+                                    <div class="input-blocks">
+                                        <label>Manager</label>
+                                         <select class="form-control" formControlName="branch_manager">
+                                            <option *ngFor="let user of users$ | async" [value]="user.id">{{ user.name }}</option>
+                                         </select>
+                                    </div>
+                                    <div style="color:red" *ngIf="(newBranchFrm.get('branch_manager')?.invalid && newBranchFrm.get('branch_manager')?.touched) || submitted">
+                                        <div class="forgot-link" style="font-size: 12px;font-weight: 500;" *ngIf="newBranchFrm.get('branch_manager')?.errors!['required']">Manager is required.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display: flex;justify-content:center;">
+                                <app-errormodal></app-errormodal>
+                            </div>
+                            <div class="modal-footer-btn">
+                                <button [disabled]="sharedservice.responses.disabled"  type="button" class="btn btn-cancel me-2"
+                                    data-bs-dismiss="modal">Cancel</button>
+                                <button [disabled]="sharedservice.responses.disabled"  type="submit" class="btn btn-submit">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="edit-units">
+    <div class="modal-dialog modal-dialog-centered custom-modal-two">
+        <div class="modal-content">
+            <div class="page-wrapper-new p-0">
+                <div class="content">
+                    <div class="modal-header border-0 custom-modal-header">
+                        <div class="page-title">
+                            <h4>Edit Branch Info</h4>
+                        </div>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body custom-modal-body">
+                        <form (submit)="updateBranch($event)" [formGroup]="updateBranchFrm">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="input-blocks">
+                                        <label>Branch Name</label>
+                                        <input formControlName="branch_name" type="text" placeholder="">
+                                    </div>
+                                    <div style="color:red" *ngIf="updateBranchFrm.get('branch_name')?.invalid && updateBranchFrm.get('branch_name')?.touched">
+                                        <div class="forgot-link" style="font-size: 12px;font-weight: 500;" *ngIf="updateBranchFrm.get('branch_name')?.errors!['required']">Branch name is required.</div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="input-blocks">
+                                        <label>Location</label>
+                                        <input formControlName="location" type="text" placeholder=" ">
+                                    </div>
+                                    <div style="color:red" *ngIf="updateBranchFrm.get('location')?.invalid && updateBranchFrm.get('location')?.touched">
+                                        <div class="forgot-link" style="font-size: 12px;font-weight: 500;" *ngIf="updateBranchFrm.get('location')?.errors!['required']">location is required.</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-lg-6">
+                                    <div class="input-blocks">
+                                        <label>Manager</label>
+                                         <select class="form-control" formControlName="branch_manager">
+                                            <option *ngFor="let user of users$ | async" [value]="user.id">{{user.name}}</option>
+                                         </select>
+                                    </div>
+                                    <div style="color:red" *ngIf="updateBranchFrm.get('branch_manager ')?.invalid && updateBranchFrm.get('branch_manager ')?.touched">
+                                        <div class="forgot-link" style="font-size: 12px;font-weight: 500;" *ngIf="updateBranchFrm.get('branch_manager ')?.errors!['required']">manager is required.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display: flex;justify-content:center;">
+                                <app-errormodal></app-errormodal>
+                            </div>
+                            <div class="modal-footer-btn">
+                                <button [disabled]="sharedservice.responses.disabled"  type="button" class="btn btn-cancel me-2"
+                                    data-bs-dismiss="modal">Cancel</button>
+                                <button [disabled]="sharedservice.responses.disabled"  type="submit" class="btn btn-submit">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="delete-units">
+    <div class="modal-dialog modal-dialog-centered custom-modal-two">
+        <div class="modal-content">
+            <div class="page-wrapper-new p-0">
+                <div class="content">
+                    <div class="modal-header border-0 custom-modal-header">
+                        <div class="page-title">
+                            <h4 *ngIf="hide">Delete this customer account</h4>
+                            <h4 *ngIf="!hide">customer account deleted</h4>
+                        </div>
+                        <!-- <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button> -->
+                    </div>
+                    <div class="modal-body custom-modal-body">
+                        <div *ngIf="hide"> <h5>Are you sure you want to continue</h5></div>
+                        <div style="display: flex;justify-content:center;">
+                            <app-errormodal></app-errormodal>
+                        </div>
+                        <div class="modal-footer-btn">
+                            <!-- <button [disabled]="sharedservice.responses.disabled"  type="button" class="btn btn-cancel me-2"
+                                data-bs-dismiss="modal" (click)="hide=true;">Cancel</button>
+                            <button *ngIf="hide" (click)="deletecustomer()" [disabled]="sharedservice.responses.disabled"  type="submit" class="btn btn-danger">Submit</button> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

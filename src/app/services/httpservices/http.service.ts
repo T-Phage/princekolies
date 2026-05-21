@@ -106,8 +106,11 @@ export class HttpService {
           if(data.user.role == "Business_Owner"){
             this.router.navigate(['/dashboard/overview-dashboard'])
           }
+          else if(data.user.role == "Account_Officer"){
+            this.router.navigate(['/dashboard/overview-dashboard'])
+          }
           else if(data.user.role == "Manager"){
-            this.router.navigate(['/dashboard/sales-dashboard'])
+            this.router.navigate(['/dashboard/pos'])
           } else {
             this.router.navigate(['/dashboard/pos'])
           }
@@ -306,6 +309,14 @@ export class HttpService {
   getbranches(){
     // this.sharedservice.infoFunc('alert alert-info', 'fetching branches... ', true, true, true)
     return this.http.get<any>(`${this.baseUrl}/branches`, {headers: this.getHeaders()})
+  }
+
+  postbranches(body:any){
+    return this.http.post<any>(`${this.baseUrl}/branches`, body, {headers: this.getHeaders()})
+  }
+
+  patchbranches(id:any, body:any){
+    return this.http.patch<any>(`${this.baseUrl}/branches/${id}`, body, {headers: this.getHeaders()})
   }
 
   getExpenses(){

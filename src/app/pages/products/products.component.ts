@@ -49,33 +49,34 @@ export class ProductsComponent {
   })
 
   branchChange() {
-    if (Number(`${this.branch.value.id}`) == 0){
-      this.sharedservice.infoFunc('', '', false, false, false);
-      return
-    }
-
-    this.sharedservice.infoFunc('alert alert-info', 'fetching branch products...  ', true, true, true);
-    $('.datanew').DataTable().destroy()
-    sessionStorage.setItem('selected_branch', `${this.branch.value.id}`)
-    this.products = []
-    this.httpservice.getByBranchProducts(this.branch.value.id)
-      .subscribe({
-        next: data => {
-          this.products = data
-          // Initialize DataTable after data loads
-          setTimeout(() => {
-            this.initDataTable();
-            this.sharedservice.infoFunc('', '', false, false, false);
-          }, 170);
-        },
-        error: _error => {
-          console.log(_error);
-          this.initDataTable();
-          if(_error.error.staus === 401){
-            this.httpservice.httpLogout()
-          }
-        }
-      })
+      if (Number(`${this.branch.value.id}`) == 0){
+        this.sharedservice.infoFunc('', '', false, false, false);
+        return
+      }
+  
+      this.sharedservice.infoFunc('alert alert-info', 'fetching branch products...  ', true, true, true);
+      $('.datanew').DataTable().destroy()
+      sessionStorage.setItem('selected_branch', `${this.branch.value.id}`)
+      this.sharedservice.refreshComponentFunc(this.router.url)
+      // this.products = []
+      // this.httpservice.getByBranchProducts(this.branch.value.id)
+      //   .subscribe({
+      //     next: data => {
+      //       this.products = data
+      //       // Initialize DataTable after data loads
+      //       setTimeout(() => {
+      //         this.initDataTable();
+      //         this.sharedservice.infoFunc('', '', false, false, false);
+      //       }, 170);
+      //     },
+      //     error: _error => {
+      //       console.log(_error);
+      //       this.initDataTable();
+      //       if(_error.error.staus === 401){
+      //         this.httpservice.httpLogout()
+      //       }
+      //     }
+      //   })
   }
 
   ngOnInit() {
@@ -86,7 +87,7 @@ export class ProductsComponent {
 
     this.role = this.httpservice.getUserRole();
     // this.products = []
-    if(this.httpservice.getUserRole() != 'Business_Owner'){
+    if(this.httpservice.getUserRole() != 'Business_Owner' && this.httpservice.getUserRole() != 'Account_Officer'){
       this.httpservice.getProducts(0,0)
         .subscribe({
           next: data => {
@@ -185,7 +186,7 @@ export class ProductsComponent {
       this.updateProductFrm.controls.manufactured_date.reset()
     }
 
-    console.log(quantity_alert)
+    // console.log(quantity_alert)
 
     this.updateProductFrm.controls.name.setValue(name)
     this.updateProductFrm.controls.description.setValue(description)

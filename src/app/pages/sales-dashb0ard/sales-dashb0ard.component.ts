@@ -45,6 +45,10 @@ export class SalesDashb0ardComponent {
   momo:number = 0;
   cashIn:number = 0;
   bankCashIn:number = 0;  
+  categorySales: any[] = [];
+  servicesOnSales: any[] = [];
+  credits:any = 0;
+  creditsPaidToday = 0;
 
   years$!: Observable<any>;
 
@@ -113,11 +117,12 @@ export class SalesDashb0ardComponent {
     this.bankCashIn = 0;
     this.productSold = []
     this.productsReceipts = [];
+    this.servicesOnSales = [];
     // this.httpservice.getUserSalesDateAnalytics(sessionStorage.getItem('id'), new Date(this.selectedDate).toISOString().split('T')[0]).subscribe({
     if (this.userrole != "Business_Owner" && this.userrole != "Account_Officer"){ // if user is not business Owner
       this.httpservice.getUserSalesDateAnalyticsAsAdmin(new Date(this.selectedDate).toISOString().split('T')[0]).subscribe({
         next: data => {
-          // console.log(data)
+          console.log(data)
           this.salescount = data.salesCount
           this.todayCashAmount = data.cashSalesTotal
           this.momo = data.momo;
@@ -126,6 +131,10 @@ export class SalesDashb0ardComponent {
           this.percentageIncrease = data.percentage_increase
           this.productSold = data.productsSold;
           this.productsReceipts = data.productsReceipts
+          this.categorySales = data.categorySales
+          this.credits = data.credits
+          this.creditsPaidToday = data.creditsPaidToday;
+          this.servicesOnSales = data.servicesOnSales;
           this.loading = false;
         },
         error: error => {
@@ -144,7 +153,7 @@ export class SalesDashb0ardComponent {
     if (this.branch.value.id == null || this.branch.value.id == '0') {
       this.httpservice.getUserSalesDateAnalyticsAsAdmin(new Date(this.selectedDate).toISOString().split('T')[0]).subscribe({
         next: data => {
-          // console.log(data)
+          console.log(data)
           this.salescount = data.salesCount
           this.todayCashAmount = data.cashSalesTotal
           this.momo = data.momo;
@@ -153,6 +162,10 @@ export class SalesDashb0ardComponent {
           this.percentageIncrease = data.percentage_increase
           this.productSold = data.productsSold;
           this.productsReceipts = data.productsReceipts
+          this.categorySales = data.categorySales;
+          this.credits = data.credits;
+          this.servicesOnSales = data.servicesOnSales;
+          this.creditsPaidToday = data.creditsPaidToday;
           this.loading = false;
         },
         error: error => {
@@ -170,7 +183,7 @@ export class SalesDashb0ardComponent {
 
     this.httpservice.getBranchSalesDateAnalyticsAsAdmin(new Date(this.selectedDate).toISOString().split('T')[0], this.branch.value.id).subscribe({
         next: data => {
-          // console.log(data)
+          console.log(data)
           this.salescount = data.salesCount
           this.todayCashAmount = data.cashSalesTotal
           this.momo = data.momo;
@@ -179,6 +192,10 @@ export class SalesDashb0ardComponent {
           this.percentageIncrease = data.percentage_increase
           this.productSold = data.productsSold;
           this.productsReceipts = data.productsReceipts
+          this.categorySales = data.categorySales
+          this.credits = data.credits
+          this.servicesOnSales = data.servicesOnSales
+          this.creditsPaidToday = data.creditsPaidToday;
           this.loading = false;
         },
         error: error => {
@@ -207,7 +224,11 @@ export class SalesDashb0ardComponent {
           this.percentageIncrease = data.percentage_increase
           this.productSold = data.productsSold;
           this.productsReceipts = data.productsReceipts
+          this.credits = data.credits
+          this.creditsPaidToday = data.creditsPaidToday;
           this.loading = false;
+          this.categorySales = data.categorySales;
+          this.servicesOnSales = data.servicesOnSales;
         },
         error: error => {
           let msg = error.error.message
@@ -235,8 +256,8 @@ export class SalesDashb0ardComponent {
       this.years$ = this.httpservice.getallyears()
       this.httpservice.getSalesAnalytics().subscribe({
         next: data => {
-          // this.loading = false;
-          // console.log(data)
+          this.loading = false;
+          console.log(data)
           this.salesa = data.monthlySales
           this.salescount = data.todaySales
           this.todayCashAmount = data.todayCashAmount
@@ -249,6 +270,10 @@ export class SalesDashb0ardComponent {
           this.bankCashIn = data.bank;
           this.productSold = data.productsSold;
           this.productsReceipts = data.productsReceipts;
+          this.categorySales = data.categorySales;
+          this.servicesOnSales = data.servicesOnSales;
+          this.creditsPaidToday = data.creditsPaidToday;
+          this.credits = data.credits;
           this.loading = false;
           // console.log(data.recentSales)
           // console.log(dara)
@@ -267,6 +292,8 @@ export class SalesDashb0ardComponent {
 
       return
     }
+
+    this.branches$ = this.httpservice.getbranches();
 
     if(parseInt(`${sessionStorage.getItem('selected_branch')}`) != 0){
       this.branch.get('id')?.setValue(`${sessionStorage.getItem('selected_branch')}`)
@@ -290,8 +317,12 @@ export class SalesDashb0ardComponent {
           this.bankCashIn = data.bank;
           this.productSold = data.productsSold;
           this.productsReceipts = data.productsReceipts;
+          this.categorySales = data.categorySales;
+          this.credits = data.credits
+          this.servicesOnSales = data.servicesOnSales
+          this.creditsPaidToday = data.creditsPaidToday;
           this.loading = false;
-          // console.log(data.recentSales)
+          console.log(data.credits)
           console.log(data)
           //  if(this.manager){this.createChart()}
         },
@@ -308,7 +339,6 @@ export class SalesDashb0ardComponent {
       return
     }
 
-    this.branches$ = this.httpservice.getbranches();
 
     this.loadPageByBranch()
 

@@ -57,6 +57,18 @@
                     title="Refresh"></i>
             </div>
         </div>
+        <div class="col-xl-3 col-sm-6 col-12">
+            <div class="card color-info bg-secondary mb-4">
+                <h3 class="counters" [data-count]="credits">{{credits | currency : 'Ghc '}}</h3>
+                <p>Credit Balances</p>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 col-12">
+            <div class="card color-info bg-secondary mb-4">
+                <h3 class="counters" [data-count]="creditsPaidToday">{{creditsPaidToday | currency : 'Ghc '}}</h3>
+                <p>Credit Paid Today</p>
+            </div>
+        </div>
         <!-- <div class="col-xl-3 col-sm-6 col-12">
             <div class="card color-info bg-secondary mb-4">
                 <img src="/assets/images/purchased-earnings.svg" alt="img">
@@ -64,6 +76,24 @@
                 <p>No of Total Sales</p>
                 <i data-feather="rotate-ccw" class="feather-16" data-bs-toggle="tooltip" data-bs-placement="top"
                     title="Refresh"></i>
+            </div>
+        </div> -->
+    </div>
+    <!-- categorySale -->
+    <div class="row">
+        <!-- <div categorySale></div> -->
+         <!-- <div *ngFor="let sale of categorySales;" class="col-xl-3 col-sm-6 col-12 d-flex">
+            <div class="card revenue-widget flex-fill color-info">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom">
+                        <div>
+                            <p>{{sale.categoryName}}</p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <p class="mb-0"><span class="fs-13 fw-bold text-success"></span> {{sale.cash | currency : 'GHs'}}</p>
+                    </div>
+                </div>
             </div>
         </div> -->
     </div>
@@ -257,6 +287,52 @@
         <div class="col-sm-12 col-md-12 col-xl-12 d-flex">
             <div class="card flex-fill default-cover w-100 mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="card-title mb-0">Products Categories Sold</h4>
+                    <ul class="table-top-head">
+                        <!-- <li>
+                            <a  *ngIf="userrole != 'Attendant'" (click)="exportTableToPDF()" data-bs-toggle="tooltip" data-bs-placement="top" title="Pdf" disabled><img
+                                    src="assets/images/pdf.svg" alt="img"></a>
+                        </li> -->
+                        <!-- <li>
+                            <a  *ngIf="userrole != 'Attendant'" (click)="printTable()" data-bs-toggle="tooltip" data-bs-placement="top" title="Print">
+                                <img src="assets/images/printer.svg">
+                            </a>
+                        </li> -->
+                    </ul>
+                    <!-- <div class="dropdown">
+                        <a href="javascript:void(0);" class="view-all d-flex align-items-center">
+                            View All<span class="ps-2 d-flex align-items-center"><i data-feather="arrow-right"
+                                    class="feather-16"></i></span>
+                        </a>
+                    </div> -->
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-border cat-sales">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Category Name</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let sale of categorySales; let i=index">
+                                    <td>{{i+1}}</td>
+                                    <td> {{sale.categoryName}}</td>
+                                    <td> {{sale.cash | currency : 'GHc '}}</td>
+                                </tr>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-12 col-xl-12 d-flex">
+            <div class="card flex-fill default-cover w-100 mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
                     <h4 class="card-title mb-0">Products Sold</h4>
                     <!-- <div class="dropdown">
                         <a href="javascript:void(0);" class="view-all d-flex align-items-center">
@@ -267,7 +343,7 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-borderless recent-transactions">
+                        <table class="table table-borderless products-sold">
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -288,6 +364,40 @@
                                     <td>{{product.unit_cost | currency : 'GHc '}}</td>
                                     <td>{{product.grand_total | currency : 'GHc '}}</td>
                                     <td>{{product.quantity_at_date | number : '1.0-2'}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-12 col-xl-12 d-flex">
+            <div class="card flex-fill default-cover w-100 mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="card-title mb-0">Products Services</h4>
+                    <!-- <div class="dropdown">
+                        <a href="javascript:void(0);" class="view-all d-flex align-items-center">
+                            View All<span class="ps-2 d-flex align-items-center"><i data-feather="arrow-right"
+                                    class="feather-16"></i></span>
+                        </a>
+                    </div> -->
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-borderless products-services">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Service</th>
+                                    <th>Total Cost</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let service of servicesOnSales; let i=index">
+                                    <td>{{i+1}}</td>
+                                    <td> {{service.name}}</td>
+                                    <td>{{service.cost | currency : 'GHc '}}</td>
                                 </tr>
                             </tbody>
                         </table>

@@ -41,7 +41,7 @@
                 </div>
             </div>
             
-            <form *ngIf="role == 'Business_Owner'" [formGroup]="branch">
+            <form *ngIf="role == 'Business_Owner' || role == 'Account_Officer'" [formGroup]="branch">
                 <select formControlName="id" (change)="branchChange()" class="form-control">
                     <option value="0">Select branch</option>
                     <option *ngFor="let branch of branches$ | async" [value]="branch.id">{{branch.branch_name}}</option>
@@ -64,9 +64,11 @@
                             </label>
                         </th>
                         <th>Reference</th>
+                        <th>Customer Name</th>
                         <th>Date Created</th>
                         <th>Status</th>
                         <th>Grand Total</th>
+                        <th>Discount</th>
                         <th>Amount Paid</th>
                         <th>Payment Status</th>
                         <th>Biller</th>
@@ -82,12 +84,14 @@
                             </label>
                         </td>
                         <td>{{sale.reference}}</td>
-                        <td>{{sale.created_at | date: 'dd MMM yyyy'}}</td>
+                        <td>{{sale.customer_name}}</td>
+                        <td>{{sale.sale_date | date: 'dd MMM yyyy'}}</td>
                         <td>
                             <span *ngIf="sale.status == 'Completed'" class="badge badge-bgsuccess">Completed</span>
                             <span *ngIf="sale.status == 'Pending'" class="badge badge-bgdanger">Pending</span>
                         </td>
                         <td>{{sale.grand_total | currency:'GHc':'symbol':'1.2-2'}}</td>
+                        <td>{{sale.discount | currency : 'Ghc' : 'symbol': '1.2-2'}}</td>
                         <td>{{sale.amount_paid | currency:'GHc':'symbol':'1.2-2'}}</td>
                         <td>
                             <span *ngIf="sale.payment_status == 'Unpaid'"
@@ -114,7 +118,7 @@
                                 <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
                             </a>
                             <ul class="dropdown-menu">
-                                <li (click)="saleClicked(sale.customer_name,sale.reference,sale.status,sale.grand_total,sale.payment_status,sale.amount_paid,sale.biller, sale.items, sale.returns)">
+                                <li (click)="saleClicked(sale.customer_name,sale.reference,sale.status,sale.grand_total,sale.payment_status,sale.amount_paid,sale.biller, sale.items, sale.returns, sale)">
                                     <a href="javascript:void(0);" class="dropdown-item" data-bs-toggle="modal"
                                         data-bs-target="#sales-details-new"><i data-feather="eye"
                                             class="info-img"></i>Sale Detail</a>
@@ -219,6 +223,15 @@
                                                     <td>{{item['purchase_price'] | currency: 'Ghc '}}</td>
                                                     
                                                 </tr>
+                                                <tr *ngIf="clickedSale.returns.length > 0">
+                                                    <td colspan="4"><h5 class="order-text">Services</h5></td>
+                                                </tr>
+                                                <tr *ngFor="let service of clickedSale.extra_services;">
+                                                    <td>{{service['name']}}</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td>{{service['cost'] | currency: 'Ghc '}}</td>
+                                                </tr>
 
                                                 <tr *ngIf="clickedSale.returns.length > 0">
                                                     <td colspan="4"><h5 class="order-text">Returned Items</h5></td>
@@ -249,13 +262,13 @@
                                         <div class="col-lg-6 ms-auto">
                                             <div class="total-order w-100 max-widthauto m-auto mb-4">
                                                 <ul>
-                                                    <!-- <li>
-                                                        <h4>Order Tax</h4>
-                                                        <h5>$ 0.00</h5>
-                                                    </li> -->
+                                                    <li>
+                                                        <h4>Total</h4>
+                                                        <h5>{{(clickedSale.grand_total + clickedSale.discount)  | currency:'Ghc'}}</h5>
+                                                    </li>
                                                     <li>
                                                         <h4>Discount</h4>
-                                                        <h5>Ghc 0.00</h5>
+                                                        <h5>{{clickedSale.discount | currency:'Ghc'}}</h5>
                                                     </li>
                                                     <li>
                                                         <h4>Grand Total</h4>

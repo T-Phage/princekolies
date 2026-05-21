@@ -23,6 +23,7 @@ import { NewdebtorComponent } from './pages/newdebtor/newdebtor.component';
 import { SaleanalyticsComponent } from './pages/owner/saleanalytics/saleanalytics.component';
 import { CustomersComponent } from './pages/owner/customers/customers.component';
 import { AllocationsComponent } from './pages/owner/allocations/allocations.component';
+import { BranchesComponent } from './pages/owner/branches/branches.component';
 
 export const routes: Routes = [
     {
@@ -51,6 +52,7 @@ export const routes: Routes = [
             {path: 'owner/sales-analytics', component: SaleanalyticsComponent},
             {path: 'owner/customers', component: CustomersComponent},
             {path: 'owner/allocations', component: AllocationsComponent},
+            {path: 'owner/branches', component: BranchesComponent},
         ]
     },
     { path: 'auth/login', component: LoginComponent },

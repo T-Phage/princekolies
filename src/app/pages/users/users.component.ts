@@ -157,7 +157,7 @@ export class UsersComponent {
         .subscribe({
           next: async data => {
             this.sharedservice.infoFunc('alert alert-success', 'user updated', false, false, false)
-            console.log(data)
+            // console.log(data)
             $('.datauser').DataTable().destroy()
             // this.users$ = this.httpservice.getUsers()
             // this.users$.
@@ -179,16 +179,15 @@ export class UsersComponent {
 
    closeModalAndRefresh() {
     // Get the modal element
-    // const modalElement = document.getElementById('update-product');
-    // if (modalElement) {
-    //   // Get Bootstrap modal instance and hide it
-    //   const modal = (window as any).bootstrap.Modal.getInstance(modalElement);
-    //   if (modal) {
-    //     modal.hide();
-    //   }
+    const modalElement = document.getElementById('add-units') || document.getElementById('edit-units');
+    if (modalElement) {
+      // Get Bootstrap modal instance and hide it
+      const modal = (window as any).bootstrap.Modal.getInstance(modalElement);
+      if (modal) {
+        modal.hide();
+      }
+    }
 
-    
-    
     // // Remove modal backdrop
     // const backdrop = document.querySelector('.modal-backdrop');
     // if (backdrop) {

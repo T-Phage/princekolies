@@ -13,6 +13,18 @@
             <div class="row">
                 <div *ngIf="role == 'Business_Owner'"  class="col-lg-3 col-sm-12 col-12">
                     <div class="input-blocks">
+                        <label>Sale Date</label>
+                        <input type="date" formControlName="sale_date" class="form-control">
+                        <!-- <div
+                            *ngIf="(newSalesFrm.get('branch_id')?.invalid && newSalesFrm.get('branch_id')?.touched) || submitted">
+                            <div *ngIf="newSalesFrm.controls['branch_id'] && newSalesFrm.controls['branch_id'].errors"
+                                class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;">field is
+                                required.</div>
+                        </div> -->
+                    </div>
+                </div>
+                <div *ngIf="role == 'Business_Owner'"  class="col-lg-3 col-sm-12 col-12">
+                    <div class="input-blocks">
                         <label>Branch</label>
                         <select (change)="branchChange()" formControlName="branch_id" class="form-control">
                             <option *ngFor="let branch of branches$ | async" [value]="branch.id">{{branch.branch_name}}</option>
@@ -272,7 +284,7 @@
                                                     </li> -->
                             <li>
                                 <h4>Discount</h4>
-                                <h5>Ghc 0.00</h5>
+                                <h5>Ghc <input style="width: 30%;" (change)="onDiscountChange($event)" (keyup)="onDiscountChange($event)" *ngIf="role == 'Manager' || role == 'Business_Owner'" type="number" min="0" formControlName="discount"></h5>
                             </li>
                             <!-- <li>
                                                         <h4>Shipping</h4>
@@ -299,7 +311,7 @@
                 
                 <div class="col-lg-12 text-end">
                     <!-- <button type="button" class="btn btn-cancel add-cancel me-3" data-bs-dismiss="modal">Cancel</button> -->
-                    <button type="submit" class="btn btn-submit add-sale">Submit</button>
+                    <button  [disabled]="sharedservice.responses.disabled" type="submit" class="btn btn-submit add-sale">Submit</button>
                 </div>
             </div>
         </form>
@@ -400,6 +412,14 @@
                                         <td>{{ item.value.unit_cost | currency: 'Ghc'}}</td>
                                         <td>{{ item.value.purchase_price | currency: 'Ghc' }}</td>
                                       </tr>
+                                      
+                                      <tr class="border-0 text-black" style="color: #000;font-size: 0.813rem" *ngFor="let service of extra_services.controls; let i=index">
+                                        <td>..</td>
+                                        <td  >{{service.value.name}}</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>{{service.value.cost}}</td>
+                                      </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -411,13 +431,16 @@
                         <div class="row mt-3" style="display: flex;justify-content:end;">
                             <div class="" style="display:flex;flex-direction:column;">
                                 <div style="display: grid;grid-template-columns:5fr 5fr">
+                                    <span>Discount</span>
+                                    <span >{{newSalesFrm.controls.discount.value | currency: 'Ghc'}}</span>
+                                </div>
+                                <div style="display: grid;grid-template-columns:5fr 5fr">
                                     <span>SubTotal</span>
                                     <span >{{ newSalesFrm.controls.grand_total.value | currency: 'Ghc' }}</span>
                                 </div>
                                 <div style="display: grid;grid-template-columns:5fr 5fr">
                                     <span>Total</span> 
                                     <span>{{ newSalesFrm.controls.grand_total.value | currency: 'Ghc' }}</span>
-                                    
                                 </div>
                             </div>
                         </div>

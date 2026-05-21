@@ -85,44 +85,44 @@ export class ReturnsComponent {
         return
       }
 
-    this.sharedservice.infoFunc('alert alert-info', 'fetching branch products...  ', true, true, true);
-    $('.returnstable').DataTable().destroy()
-    sessionStorage.setItem('selected_branch', `${this.branch.value.id}`)
-    this.httpservice.getByBranchProducts(this.branch.value.id)
-      .subscribe({
-        next: data => {
-          // console.log(data)
-          this.products = data
-        }
-      });
-
-    this.httpservice.getBranchSales(this.branch.value.id)
-    .subscribe({
-      next: data => {
-        // console.log(data) all_sales
-        this.all_sales = data
-      }
-    });
-    this.httpservice.getBranchSalesReturns(this.branch.value.id)
-      .subscribe({
-        next: data => {
-          this.sales = data
-          // Initialize DataTable after data loads
-          setTimeout(() => {
-            this.dataTableservice.initiateDataTable('.returnstable', 20);
-            this.sharedservice.infoFunc('', '', false, false, false);
-          }, 200);
-        },
-        error: _error => {
-          console.log(_error);
-          // this.initDataTable();
-          if(_error.error.staus === 401){
-            this.httpservice.httpLogout()
+      this.sharedservice.infoFunc('alert alert-info', 'fetching branch products...  ', true, true, true);
+      $('.returnstable').DataTable().destroy()
+      sessionStorage.setItem('selected_branch', `${this.branch.value.id}`)
+      this.httpservice.getByBranchProducts(this.branch.value.id)
+        .subscribe({
+          next: data => {
+            // console.log(data)
+            this.products = data
           }
-        }
-      })
-      this.hideBtn = false;
-    }
+        });
+
+        this.httpservice.getBranchSales(this.branch.value.id)
+        .subscribe({
+          next: data => {
+            // console.log(data) all_sales
+            this.all_sales = data
+          }
+        });
+        this.httpservice.getBranchSalesReturns(this.branch.value.id)
+        .subscribe({
+          next: data => {
+            this.sales = data
+            // Initialize DataTable after data loads
+            setTimeout(() => {
+              this.dataTableservice.initiateDataTable('.returnstable', 20);
+              this.sharedservice.infoFunc('', '', false, false, false);
+            }, 200);
+          },
+          error: _error => {
+            console.log(_error);
+            // this.initDataTable();
+            if(_error.error.staus === 401){
+              this.httpservice.httpLogout()
+            }
+          }
+        })
+        this.hideBtn = false;
+      }
   
     saleClicked(customer_name:any,reference:any,status:any,grand_total:any,payment_status:any,amount_paid:any,biller:any,items:any){
       this.clickedSale.customer_name = customer_name
@@ -353,30 +353,8 @@ export class ReturnsComponent {
           setTimeout(() =>{ 
             this.sharedservice.infoFunc('', '', false, false, false)
 
-            $('.returnstable').DataTable({
-              "bFilter": true,
-              // "sDom": 'fBtlpi',
-              "dom": 'pftil',
-              "ordering": true,
-              "language": {
-                search: ' ',
-                emptyTable: "No data available in table",
-                infoEmpty: "",
-                sLengthMenu: '_MENU_',
-                searchPlaceholder: "Search",
-                info: "_START_ - _END_ of _TOTAL_ items",
-                paginate: {
-                  next: ' <i class="fa fa-angle-right"></i>',
-                  previous: '<i class="fa fa-angle-left"></i> '
-                },
-              },
-              initComplete: (_settings: any, _json: any) => {
-                $('.dataTables_filter').appendTo('#tableSearch');
-                $('.dataTables_filter').appendTo('.search-input');
-                $('#info').appendTo('#info')
-              },
-            
-            })
+            this.dataTableservice.initiateDataTable('.returnstable', 15)
+
             // $('#delete-units').modal('hide')
             // $('#delete-units').modal('hide').on('hidden.bs.modal', function () {
             //   $('body').removeClass('modal-open'); // Ensure body scroll is enabled
@@ -414,42 +392,23 @@ export class ReturnsComponent {
             // $('.datanew ').empty()
             this.sharedservice.infoFunc('alert alert-success', data.message, false, false, false) 
             
-            this.httpservice.getSalesReturns(1, 10).subscribe({
-              next: data => {
-                this.sales = data
-              }
-            })
+            this.ngOnInit()
+            // this.httpservice.getSalesReturns(1, 10).subscribe({
+            //   next: data => {
+            //     this.sales = data
+            //   }
+            // })
             // this.returnSalesFrm.controls.reference?.setValue(`${data.sale.reference}`)
-            setTimeout(()=> {
-              $('.returnstable').DataTable({
-                "bFilter": true,
-                // "sDom": 'fBtlpi',
-                "dom": 'pftil',
-                "ordering": true,
-                "language": {
-                  search: ' ',
-                  emptyTable: "No data available in table",
-                  infoEmpty: "",
-                  sLengthMenu: '_MENU_',
-                  searchPlaceholder: "Search",
-                  info: "_START_ - _END_ of _TOTAL_ items",
-                  paginate: {
-                    next: ' <i class=" fa fa-angle-right"></i>',
-                    previous: '<i class="fa fa-angle-left"></i> '
-                  },
-                },
-                initComplete: (_settings: any, _json: any) => {
-                  $('.dataTables_filter').appendTo('#tableSearch');
-                  $('.dataTables_filter').appendTo('.search-input');
-                },
-              }); 
-              this.returnSalesFrm.controls.items_returned.clear();
-            },1000)
-            setTimeout(()=> {
-              this.sharedservice.infoFunc('', '', false, false, false)
-              // this.returnSalesFrm.reset()
-              // $('.no-pagination .table tbody').empty()
-            }, 8000)    
+            // setTimeout(()=> {
+            //   this.dataTableservice.initiateDataTable('.returnstable', 15)
+          
+            //   this.returnSalesFrm.controls.items_returned.clear();
+            // },1000)
+            // setTimeout(()=> {
+            //   this.sharedservice.infoFunc('', '', false, false, false)
+            //   // this.returnSalesFrm.reset()
+            //   // $('.no-pagination .table tbody').empty()
+            // }, 8000)    
             
           },
           error: error => {
@@ -548,35 +507,16 @@ export class ReturnsComponent {
     refreshData(){
       $('.returnstable').DataTable().destroy();
       
-      this.httpservice.getSalesReturns(1, 10).subscribe({
-        next: sdata => {
-          this.sales = sdata
-        }
-      })
-      setTimeout(()=> {
-        $('.returnstable').DataTable({
-          "bFilter": true,
-          "sDom": 'fBtlpi',
-          // "dom": 'pftil',
-          "ordering": true,
-          "language": {
-            search: ' ',
-            emptyTable: "No data available in table",
-            infoEmpty: "",
-            sLengthMenu: '_MENU_',
-            searchPlaceholder: "Search",
-            info: "_START_ - _END_ of _TOTAL_ items",
-            paginate: {
-              next: ' <i class=" fa fa-angle-right"></i>',
-              previous: '<i class="fa fa-angle-left"></i> '
-            },
-          },
-          initComplete: (_settings: any, _json: any) => {
-            $('.dataTables_filter').appendTo('#tableSearch');
-            $('.dataTables_filter').appendTo('.search-input');
-          },
-        }); 
-      },3000)
+      if(this.userRole !== 'Business_Owner' && this.userRole !== 'Account_Officer'){
+        this.httpservice.getSalesReturns(1, 10).subscribe({
+          next: sdata => {
+            this.sales = sdata
+          }
+        })
+        setTimeout(()=> {
+          this.dataTableservice.initiateDataTable('.returnstable', 15);
+        },3000)
+      }
     }
 
     ngOnDestroy(): void {
