@@ -150,7 +150,8 @@
                                     [routerLink]="['/dashboard/category']"><i
                                         ></i><span>Category</span></a>
                             </li>
-                            
+                            <li [className]="router.url == '/dashboard/owner/products-audits'? 'active': '' "><a [routerLink]="['/dashboard/owner/products-audits']"><i
+                                        data-feather=""></i><span>Product Audits</span></a></li>
                         </ul>
                     </li>
                     
@@ -245,7 +246,8 @@
                                     [routerLink]="['/dashboard/category']"><i
                                         ></i><span>Category</span></a>
                             </li>
-                            
+                            <li (click)="toggleMenu()" [className]="router.url == '/dashboard/owner/products-audits'? 'active': '' "><a [routerLink]="['/dashboard/owner/products-audits']"><i
+                                        data-feather=""></i><span>Product Audits</span></a></li>
                         </ul>
                     </li>
                     

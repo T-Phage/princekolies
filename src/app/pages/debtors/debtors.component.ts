@@ -54,7 +54,7 @@ export class DebtorsComponent {
     private fb: FormBuilder,
     private datatableService: DatabaleService,
     private swalService: SwalservicesService,
-    private sharedservice: SharedService,
+    public sharedservice: SharedService,
     private router: Router,
   ) { 
     let role = sessionStorage.getItem('role');
@@ -156,7 +156,7 @@ export class DebtorsComponent {
     this.httpService.makeSalePayment(this.editPaymentFrm.value)
     .subscribe({
       next: data => { 
-        // this.sharedservice.infoFunc('alert alert-success', 'Payment successful', true, true, true);
+        this.sharedservice.infoFunc('', '', false, false, false);
         this.swalService.fireSuccess("Payment successful")
         // this.editPaymentFrm.reset()
         this.submitted = false

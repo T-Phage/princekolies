@@ -76,7 +76,7 @@ export class AllocationsComponent {
       this.httpservice.getProducts(1, 0)
         .subscribe({
           next: data => {
-            this.products = data.products
+            this.products = data
             // console.log(data)
             this.sharedservice.infoFunc('', '', false, false, false);
               // if (data.length > 0){

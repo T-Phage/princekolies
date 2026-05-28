@@ -190,7 +190,7 @@ export class PosComponent {
       this.httpservice.getProducts(1, 10)
         .subscribe({
           next: data => {
-            // console.log(data)
+            console.log(data)
             this.products = data
           },
           error: error => {
@@ -264,6 +264,7 @@ export class PosComponent {
 
   addAlias(product:string, product_id: number, quantity: number, purchase_price: any, unit_cost:any, barcode: string) {
       // 
+      console.log(product, product_id, quantity, purchase_price, unit_cost, barcode)
       if(!this.isProductExists(product_id)){
         this.items.push(this.formBuilder.group({
           'product': [product, Validators.required],
@@ -445,7 +446,7 @@ export class PosComponent {
     if (this.selectedProduct) {
       this.addAlias(
         this.selectedProduct.name, 
-        this.selectedProduct.product_id, 
+        this.selectedProduct.product_id || this.selectedProduct.id, 
         1,
         this.selectedProduct.price,
         this.selectedProduct.price,

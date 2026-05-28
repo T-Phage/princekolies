@@ -28,7 +28,7 @@ export class RestockComponent {
     private httpservice: HttpService,
     private formBuilder: FormBuilder,
     public loadingService: LoadingService,
-    private sharedservice: SharedService,
+    public sharedservice: SharedService,
     private swalservices: SwalservicesService,
   ) {}
 
@@ -159,8 +159,8 @@ export class RestockComponent {
     this.branches$ = this.httpservice.getbranches()
     this.httpservice.getProducts(1, 10).subscribe({
       next: (res) => {
-        this.products = res.products;
-        console.log(res)
+        this.products = res;
+        // console.log(res)
         setTimeout(()=>{
           this.sharedservice.infoFunc('', '', false, false, false)
         }, 270)
@@ -175,6 +175,7 @@ export class RestockComponent {
   inpProductNameChange(evt: any, index: number){
     const inputValue = evt.target.value;
     // console.log(inputValue)
+    // console.log(this.products)
     this.selectedProduct = this.products.find(product => product.name === inputValue);
     // console.log(this.selectedProduct)
 

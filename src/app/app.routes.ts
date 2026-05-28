@@ -24,6 +24,7 @@ import { SaleanalyticsComponent } from './pages/owner/saleanalytics/saleanalytic
 import { CustomersComponent } from './pages/owner/customers/customers.component';
 import { AllocationsComponent } from './pages/owner/allocations/allocations.component';
 import { BranchesComponent } from './pages/owner/branches/branches.component';
+import { ProductAuditComponent } from './pages/owner/product-audit/product-audit.component';
 
 export const routes: Routes = [
     {
@@ -53,6 +54,7 @@ export const routes: Routes = [
             {path: 'owner/customers', component: CustomersComponent},
             {path: 'owner/allocations', component: AllocationsComponent},
             {path: 'owner/branches', component: BranchesComponent},
+            {path: 'owner/products-audits', component: ProductAuditComponent},
         ]
     },
     { path: 'auth/login', component: LoginComponent },

@@ -1,0 +1,84 @@
+<div class="container-fluid max-w-6xl">
+    <h4 class="mb-4">Product Audit Logs</h4>
+
+    <!-- QUERY FORM -->
+    <div class="card audit-card p-4 mb-4">
+        <h5 class="mb-3">Product Audit Query</h5>
+        <form (submit)="queryAudit($event)" class="row g-3 align-items-end" [formGroup]="auditForm">
+            <div class="col-md-3">
+                <label class="form-label small fw-bold">PRODUCT</label>
+                <select class="form-select" formControlName="product">
+                    <option value="">Select Product</option>
+                    <option *ngFor="let product of products$ | async" [value]=product.id>{{ product.name }}</option>
+                </select>   
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small fw-bold">START DATE</label>
+                <input type="date" class="form-control" formControlName="startDate">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small fw-bold">END DATE</label>
+                <input type="date" class="form-control" formControlName="endDate">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small fw-bold">BRANCH</label>
+                <select class="form-select" formControlName="branch">
+                    <option value="">Select Branch</option>
+                    <option *ngFor="let branch of branches$ | async" [value]=branch.id>{{ branch.branch_name }}</option>
+                </select>   
+            </div>
+            <div class="col-md-2">
+                <button [disabled]="sharedservice.responses.disabled" type="submit" class="btn btn-primary w-100 fw-bold">SUBMIT</button>
+            </div>
+        </form>
+        <div style="display: flex;justify-content:center;">
+            <app-errormodal></app-errormodal>
+        </div>
+    </div>
+
+    <!-- RESULTS TABLE -->
+    <div class="card audit-card">
+        <div class="card-header bg-white py-3">
+            <h5 class="mb-0">Audit Results</h5>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0 dataaudit">
+                <thead class="table-light">
+                    <tr>
+                        <th class="px-4">Product Name</th>
+                        <th>Timestamp</th>
+                        <th>Action</th>
+                        <th>Prev Qty</th>
+                        <th>New Qty</th>
+                        <th>Prev Price</th>
+                        <th>New Price</th>
+                        <th>Branch</th>
+                        <th>User </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- <tr>
+                        <td class="px-4">Agric Feed Product 1</td>
+                        <td>Apr 1, 2023, 09:14:25</td>
+                        <td>10</td>
+                        <td>15</td>
+                        <td>GH₵ 12.00</td>
+                        <td class="new-value">→ GH₵ 15.00</td>
+                        <td>af0100</td>
+                    </tr> -->
+                    <tr *ngFor="let audit of auditData">
+                        <td class="px-4">{{ audit.product.name }}</td>
+                        <td>{{ audit.created_at | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+                        <td>{{ audit.action }}</td>
+                        <td>{{ audit.quantity_before | number: '1.0-2' }}</td>
+                        <td>{{ audit.quantity_after | number: '1.0-2' }}</td>
+                        <td>{{ audit.price_before | currency:'GHS' }}</td>
+                        <td class="new-value">{{ audit.price_after | currency:'GHS' }}</td>
+                        <td>{{ audit.branch.branch_name || '' }}</td>
+                        <td>{{ audit.user.name }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

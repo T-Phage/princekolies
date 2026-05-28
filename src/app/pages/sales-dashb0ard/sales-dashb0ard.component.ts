@@ -1,6 +1,6 @@
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { FormBuilder, FormArray, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
+import { Component, ElementRef, ViewChild, NO_ERRORS_SCHEMA } from '@angular/core';
 import { HttpService } from '../../services/httpservices/http.service';
 import { SharedService } from '../../services/sharedservices/shared.service';
 import { Router } from '@angular/router';
@@ -22,6 +22,8 @@ declare var $: any;
   providers: [CurrencyPipe]
 })
 export class SalesDashb0ardComponent {
+
+  @ViewChild('dateInput') dateInputRef!: ElementRef<HTMLInputElement>;
   $sales!: Observable<any>;
   branches$!: Observable<any>;
 
@@ -93,15 +95,20 @@ export class SalesDashb0ardComponent {
     } else {
       router.navigate(['/auth/login'])
     }
-
   }
 
   branch = this.formbuilder.group({
     'id': [sessionStorage.getItem('selected_branch')]
   })
 
+  todayDate:string = '';
   branchChange(){
     sessionStorage.setItem('selected_branch', `${this.branch.value.id}`)
+    if(this.dateInputRef.nativeElement.value){
+      console.log(this.dateInputRef.nativeElement.value)
+      this.loadBranchWithDate(this.dateInputRef.nativeElement.value, this.branch.value.id)
+      return
+    }
     this.loadPageByBranch()
   }
 
@@ -208,7 +215,36 @@ export class SalesDashb0ardComponent {
           this.loading = false;
         }),
       })
-    
+  }
+
+  loadBranchWithDate(date:any, branch_id:any){
+    this.httpservice.getBranchSalesDateAnalyticsAsAdmin(new Date(date).toISOString().split('T')[0], branch_id).subscribe({
+        next: data => {
+          console.log(data)
+          this.salescount = data.salesCount
+          this.todayCashAmount = data.cashSalesTotal
+          this.momo = data.momo;
+          this.cashIn = data.cash;
+          this.bankCashIn = data.bank;
+          this.percentageIncrease = data.percentage_increase
+          this.productSold = data.productsSold;
+          this.productsReceipts = data.productsReceipts
+          this.categorySales = data.categorySales
+          this.credits = data.credits
+          this.servicesOnSales = data.servicesOnSales
+          this.creditsPaidToday = data.creditsPaidToday;
+          this.loading = false;
+        },
+        error: error => {
+          let msg = error.error.message
+          console.log('error :', error)
+          this.loading = false;
+          this.errorLoading = true;
+        },
+        complete: (()=>{
+          this.loading = false;
+        }),
+      })
   }
 
   loadPageByBranch() {

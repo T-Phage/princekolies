@@ -223,6 +223,11 @@ export class HttpService {
     return this.http.post<any>(`${this.baseUrl}/create/category`, body, {headers: this.getHeaders()})//.subscribe({
   }
 
+  auditProduct(body: any) {
+    this.sharedservice.infoFunc('alert alert-info', 'fetching audit data... ', true, true, true)
+    return this.http.post<any>(`${this.baseUrl}/product/audit`, body, {headers: this.getHeaders()})//.subscribe({
+  }
+
   updateCategory(id: any, body:any) {
     this.sharedservice.infoFunc('alert alert-info', 'updating category...', true, true, true)
     return this.http.post(`${this.baseUrl}/category/update/${id}`, body, {headers: this.getHeaders()}) //.subscribe({
