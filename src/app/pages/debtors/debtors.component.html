@@ -5,10 +5,10 @@
             <h6>Manage your debtors</h6>
         </div>
     </div>
-    <div class="page-btn">
+    <!-- <div class="page-btn">
         <a *ngIf="role == 'Business_Owner'"  [routerLink]="['/dashboard/new-debtor']" class="btn btn-added"><i data-feather="plus-circle" class="me-2"></i>
             Input Debtor</a>
-    </div>
+    </div> -->
     &nbsp;
     <ul class="table-top-head">
         <li (click)="refreshData()">
@@ -39,7 +39,7 @@
             <app-errormodal></app-errormodal>
         </div>
 
-        <div class="table-responsive">
+        <!-- <div class="table-responsive">
             <table class="table debtorsnew" id="table">
                 <thead>
                     <tr>
@@ -85,6 +85,62 @@
                                             class="info-img"></i>Debtor Detail</a>
                                 </li>
                                 <li *ngIf="userrole == 'Business_Owner'" (click)="debtorClicked(debtor.customer.id,debtor.id,debtor.customer.name,debtor.reference,debtor.status,debtor.grand_total,debtor.payment_status,debtor.amount_paid, debtor.biller, debtor.items, debtor.customer.phone, debtor.customer.identification_type, debtor.customer.identity_number)">
+                                    <a href="javascript:void(0);" class="dropdown-item" data-bs-toggle="modal"
+                                        data-bs-target="#edit-debtors-payment"><i data-feather="eye"
+                                            class="info-img"></i>Update Payments</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div> -->
+        <div class="table-responsive">
+            <table class="table debtorsnew" id="table">
+                <thead>
+                    <tr>
+                        <th class="no-sort">
+                            <label class="checkboxs">
+                                <input type="checkbox" id="select-all">
+                                <span class="checkmarks"></span>
+                            </label>
+                        </th>
+                        <th>Customer Name</th>
+                        <th>Phone</th>
+                        <th>ID Type/Number</th>
+                        <th>Amount</th>
+                        <th>Amount Paid</th>
+                        <th>Balance</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="sales-list">
+                    <tr *ngFor="let debtor of debtors">
+                        <td>
+                            <label class="checkboxs">
+                                <input type="checkbox">
+                                <span class="checkmarks"></span>
+                            </label>
+                        </td>
+                        <td>{{ debtor.customer ? debtor.customer.name : 'N/A' }}</td>
+                        <td>{{ debtor.customer ? debtor.customer.phone : 'N/A' }}</td>
+                        <td>{{ debtor.customer.identification_type }} <br> ({{ debtor.customer.identity_number }})</td>
+                        <td>{{ debtor.grand_total | currency:'GHc ':'symbol':'1.2-2' }}</td>
+                        <td>{{ debtor.amount_paid | currency:'GHc ':'symbol':'1.2-2' }}</td>
+                        <td>{{ debtor.grand_total - debtor.amount_paid | currency:'GHc ':'symbol':'1.2-2' }}</td>
+                        
+                        <td class="text-center">
+                            <a class="action-set" href="javascript:void(0);" data-bs-toggle="dropdown"
+                                aria-expanded="true">
+                                <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li (click)="debtorClicked(debtor)">
+                                    <a href="javascript:void(0);" class="dropdown-item" data-bs-toggle="modal"
+                                        data-bs-target="#debtors-details-new"><i data-feather="eye"
+                                            class="info-img"></i>Debtor Detail</a>
+                                </li>
+                                <li *ngIf="userrole == 'Business_Owner'" (click)="debtorClicked(debtor)">
                                     <a href="javascript:void(0);" class="dropdown-item" data-bs-toggle="modal"
                                         data-bs-target="#edit-debtors-payment"><i data-feather="eye"
                                             class="info-img"></i>Update Payments</a>

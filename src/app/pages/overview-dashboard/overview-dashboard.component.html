@@ -55,7 +55,7 @@
                     <!-- <span><img src="assets/images/dash5.svg" alt="&#8373;"></span> -->
                 </div>
                 <div class="dash-widgetcontent">
-                    <h5 style="font-size: 14px;"><span class="counters" data-count="{{totalPrice}}">{{totalPrice | currency : 'Ghc ' :'symbol':'1.2-2' }}</span></h5>
+                    <h5 style="font-size: 14px;"><span class="counters" data-count="{{totalProductsPrice}}">{{totalProductsPrice | currency : 'Ghc ' :'symbol':'1.2-2' }}</span></h5>
                     <h6>Total Products Cost</h6>
                 </div>
             </div>
@@ -230,7 +230,8 @@
             </div>
         </div>
     </div>
-    <div class="card">
+    
+    <!-- <div class="card">
         <div class="card-header">
             <h4 class="card-title">Expired Products</h4>
         </div>
@@ -277,7 +278,7 @@
                 </table>
             </div>
         </div>
-    </div>
+    </div> -->
 </div>
 
 <div *ngIf="session_off" style="position:fixed;z-index:999;bottom:0;padding:8px;background:red;color:#fff;display: flex; justify-content: center; align-items: center; ">

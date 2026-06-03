@@ -46,6 +46,7 @@ export class OverviewDashboardComponent {
   expiringproducts:any[] = [];
   monthlyCashSales:any;
   totalUnPaidSalesCash:number = 0;
+  totalProductsPrice:number = 0;
 
   session_off:boolean = false;
 
@@ -87,7 +88,7 @@ export class OverviewDashboardComponent {
       
     this.httpservice.getAnalytics().subscribe({
       next: data => {
-        // console.log(data)      
+        console.log(data)      
         this.productsLen = data.productLen
         this.salesLen = data.salesLen
         this.expiryLen = data.expiryLen
@@ -106,6 +107,7 @@ export class OverviewDashboardComponent {
         this.totalPaidSalesForMonth = data.totalPaidSalesForMonth
         this.totalUnPaidSalesCash = data.totalUnPaidSalesCash
         this.branches = data.branches
+        this.totalProductsPrice = data.totalProductsPrice
         
         this.createChart()
         
@@ -254,6 +256,7 @@ export class OverviewDashboardComponent {
         this.totalPaidSalesForMonth = data.totalPaidSalesForMonth
         this.totalUnPaidSalesCash = data.totalUnPaidSalesCash
         this.totalPrice = this.calculateTotal(data.products)
+        this.totalProductsPrice = data.totalProductsPrice
         this.branches = data.branches
 
         this.createChart()

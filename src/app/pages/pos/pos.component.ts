@@ -290,7 +290,7 @@ export class PosComponent {
     'identification_type': [''],
     'customer_email': ['', Validators.email],
     'reference': [''],
-    'status': ['Completed', Validators.required],
+    'status': ['Completed'],
     'grand_total': ['', Validators.required],
     'amount_paid': [0.0, Validators.required],
     'payment_status': ['Paid',],
@@ -555,6 +555,7 @@ export class PosComponent {
             this.newSalesFrm.get('momo')?.setValue(0.0)
             this.newSalesFrm.get('amount_paid')?.setValue(0.0)
             this.newSalesFrm.get('discount')?.setValue(0.0);
+            this.newSalesFrm.get('status')?.setValue('Completed');
             if(this.httpservice.getUserRole() == 'Business_Owner'){
               this.newSalesFrm.get('branch_id')?.setValue(`${sessionStorage.getItem('selected_branch')}`)
             } else {

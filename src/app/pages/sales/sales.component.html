@@ -123,11 +123,11 @@
                                         data-bs-target="#sales-details-new"><i data-feather="eye"
                                             class="info-img"></i>Sale Detail</a>
                                 </li>
-                                <!-- <li (click)="saleClicked(sale.customer_name,sale.reference,sale.status,sale.grand_total,sale.payment_status,sale.amount_paid,sale.biller, sale.items_returned)">
-                                    <a href="javascript:void(0);" class="dropdown-item" data-bs-toggle="modal"
-                                    data-bs-target="#delete-sale-units"><i data-feather="trash" class="info-img"></i>
-                                        Delete</a>
-                                </li> -->
+                                <li *ngIf="role == 'Business_Owner'" (click)="reverseTs(sale.reference)">
+                                    <a href="javascript:void(0);" class="dropdown-item">
+                                        <i data-feather="trash" class="info-img"></i>
+                                        Reverse</a>
+                                </li>
                             </ul>
                         </td>
                     </tr>

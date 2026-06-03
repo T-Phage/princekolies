@@ -73,14 +73,16 @@ export class DebtorsComponent {
       return
     }
 
+    this.editPaymentFrm.get('branch_id')?.setValue(`${this.branch.value.id}`)  
+
     this.sharedservice.infoFunc('alert alert-info', 'fetching branch products...  ', true, true, true);
     $('.debtorsnew').DataTable().destroy()
     sessionStorage.setItem('selected_branch', `${this.branch.value.id}`)
-    this.httpService.getAllBranchDebtors(this.branch.value.id)
+    this.httpService.getBranchDebtors(`${this.branch.value.id}`)
       .subscribe({
         next: (res) => {
           // console.log('heeyy', res)
-          this.debtors = res.unpaidSales
+          this.debtors = res
           this.datatableService.initiateDataTable('.debtorsnew', 15)
           this.sharedservice.infoFunc('', '', false, false, false);
         },
@@ -105,33 +107,33 @@ export class DebtorsComponent {
     this.sharedservice.refreshComponentFunc(this.router.url);
   }
 
-  debtorClicked(customer_id:any,sale_id:any,customer_name:any,reference:any,status:any,grand_total:any,payment_status:any,amount_paid:any,biller:any,items:any,phone:any,identity_type:any,identity_number:any){
-    this.clickedDebtor.customer_id = customer_id
-    this.clickedDebtor.sale_id = sale_id
-    this.clickedDebtor.customer_name = customer_name
-    this.clickedDebtor.reference = reference
-    this.clickedDebtor.status = status
-    this.clickedDebtor.grand_total = grand_total
-    this.clickedDebtor.amount_paid = amount_paid
-    this.clickedDebtor.payment_status = payment_status
-    this.clickedDebtor.biller = biller
-    this.clickedDebtor.phone = phone
-    this.clickedDebtor.identity_type = identity_type
-    this.clickedDebtor.identity_number = identity_number
-    this.clickedDebtor.items = JSON.parse(items);
+  debtorClicked(debtor:any){
+    console.log(debtor)
+    this.clickedDebtor.customer_id = debtor.customer_id
+    // this.clickedDebtor.sale_id = sale_id
+    this.clickedDebtor.customer_name = debtor.customer.name
+    // this.clickedDebtor.reference = reference
+    // this.clickedDebtor.status = status
+    this.clickedDebtor.grand_total = debtor.grand_total
+    this.clickedDebtor.amount_paid = debtor.amount_paid
+    this.clickedDebtor.payment_status = debtor.payment_status
+    // this.clickedDebtor.biller = biller
+    this.clickedDebtor.phone = debtor.customer.phone
+    this.clickedDebtor.identity_type = debtor.customer.identification_type
+    this.clickedDebtor.identity_number = debtor.customer.identity_number
+    this.clickedDebtor.items = debtor.items;
 
     // console.log(this.clickedDebtor)
     this.editPaymentFrm.get('customer_id')?.setValue(this.clickedDebtor.customer_id)
-    this.editPaymentFrm.get('sale_id')?.setValue(this.clickedDebtor.sale_id);
-    this.editPaymentFrm.get('reference')?.setValue(this.clickedDebtor.reference);
+    // this.editPaymentFrm.get('sale_id')?.setValue(this.clickedDebtor.sale_id);
+    // this.editPaymentFrm.get('reference')?.setValue(this.clickedDebtor.reference);
   }
 
   editPaymentFrm = this.fb.group({
+    'branch_id': [this.branch.value.id == null || this.branch.value.id == '0' ? sessionStorage.getItem('selected_branch') : this.branch.value.id],
     'customer_id': ['', Validators.required],
-    'sale_id': ['', Validators.required],
-    'reference': ['', Validators.required],
     'payment_date': [''],
-    'amount': [0.0], 
+    'amount_paid': [0.0], 
     'bank': [0.0, Validators.compose([Validators.required, Validators.pattern(this.sharedservice.amount)])],
     'momo': [0.0, Validators.compose([Validators.required, Validators.pattern(this.sharedservice.amount)])],
     'cash': [0.0, Validators.compose([Validators.required, Validators.pattern(this.sharedservice.amount)])],
@@ -153,39 +155,64 @@ export class DebtorsComponent {
       return
     }
 
-    this.httpService.makeSalePayment(this.editPaymentFrm.value)
+    // console.log(this.editPaymentFrm.value)
+    // console.log(this.editPaymentFrm)
+
+    this.httpService.payDebt(this.editPaymentFrm.value)
     .subscribe({
       next: data => { 
         this.sharedservice.infoFunc('', '', false, false, false);
-        this.swalService.fireSuccess("Payment successful")
-        // this.editPaymentFrm.reset()
+        this.swalService.fireSuccess("Payment updated Successfully")
+        this.editPaymentFrm.get('customer_id')?.setValue('');
+        this.editPaymentFrm.get('payment_date')?.setValue('');
+        this.editPaymentFrm.get('amount_paid')?.setValue(0.0); 
+        this.editPaymentFrm.get('bank')?.setValue(0.0);
+        this.editPaymentFrm.get('momo')?.setValue(0.0);
+        this.editPaymentFrm.get('cash')?.setValue(0.0);
         this.submitted = false
         this.ngOnDestroy()
         this.ngOnInit();
-        // this.refreshData();
-        // this.sharedservice.refreshComponentFunc(this.router.url)
+        // console.log(data)
       },
       error: (err) => {
+        console.log(err)
         this.swalService.fireError(err.error.message)
         this.sharedservice.infoFunc('', '', false, false, false);
-        if(err.error.staus === 401){
-          this.httpService.httpLogout()
-        }
-      },
-      complete: () => {
-        this.submitted = false
-        this.sharedservice.infoFunc('', '', false, false, false);
-        this.editPaymentFrm.get('bank')?.setValue(0.0)
-        this.editPaymentFrm.get('cash')?.setValue(0.0)
-        this.editPaymentFrm.get('momo')?.setValue(0.0)
-        this.editPaymentFrm.get('amount')?.setValue(0.0)
       }
-    })
+    });
+    // this.httpService.makeSalePayment(this.editPaymentFrm.value)
+    // .subscribe({
+    //   next: data => { 
+    //     this.sharedservice.infoFunc('', '', false, false, false);
+    //     this.swalService.fireSuccess("Payment successful")
+    //     // this.editPaymentFrm.reset()
+    //     this.submitted = false
+    //     this.ngOnDestroy()
+    //     this.ngOnInit();
+    //     // this.refreshData();
+    //     // this.sharedservice.refreshComponentFunc(this.router.url)
+    //   },
+    //   error: (err) => {
+    //     this.swalService.fireError(err.error.message)
+    //     this.sharedservice.infoFunc('', '', false, false, false);
+    //     if(err.error.staus === 401){
+    //       this.httpService.httpLogout()
+    //     }
+    //   },
+    //   complete: () => {
+    //     this.submitted = false
+    //     this.sharedservice.infoFunc('', '', false, false, false);
+    //     this.editPaymentFrm.get('bank')?.setValue(0.0)
+    //     this.editPaymentFrm.get('cash')?.setValue(0.0)
+    //     this.editPaymentFrm.get('momo')?.setValue(0.0)
+    //     this.editPaymentFrm.get('amount_paid')?.setValue(0.0)
+    //   }
+    // })
   }
 
   calculateTotal(){
     var amount = parseFloat(`${this.editPaymentFrm.get('bank')?.value}`) + parseFloat(`${this.editPaymentFrm.get('momo')?.value}`) + parseFloat(`${this.editPaymentFrm.get('cash')?.value}`)
-    this.editPaymentFrm.get('amount')?.setValue(amount);
+    this.editPaymentFrm.get('amount_paid')?.setValue(amount);
     return amount
   }
 
@@ -197,11 +224,11 @@ export class DebtorsComponent {
     this.branches$ = this.httpService.getbranches();
     
     if(this.httpService.getUserRole() != 'Business_Owner' && this.httpService.getUserRole() != 'Account_Officer') {
-      this.httpService.getAllDebtors()
+      this.httpService.getBranchDebtors('0')
       .subscribe({
         next: (res) => {
-          console.log(res.unpaidSales)
-          this.debtors = res.unpaidSales
+          console.log(res)
+          this.debtors = res
           this.datatableService.initiateDataTable('.debtorsnew', 15)
           this.sharedservice.infoFunc('', '', false, false, false);
         },
@@ -225,11 +252,11 @@ export class DebtorsComponent {
         return
     }
 
-    this.httpService.getAllBranchDebtors(this.branch.value.id)
+    this.httpService.getBranchDebtors(this.branch.value.id)
       .subscribe({
         next: (res) => {
           // console.log('heeyy', res)
-          this.debtors = res.unpaidSales
+          this.debtors = res
           this.datatableService.initiateDataTable('.debtorsnew', 15)
           this.sharedservice.infoFunc('', '', false, false, false);
         },

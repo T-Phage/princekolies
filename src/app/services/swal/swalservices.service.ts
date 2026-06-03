@@ -45,4 +45,25 @@ export class SwalservicesService {
       buttonsStyling: false,
     })
   }
+
+  fireAlert(){
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to proceed with this request?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, proceed',
+      cancelButtonText: 'No, cancel'
+    }).then((result:any) => {
+      if (result.isConfirmed) {
+        // Code to execute when the user proceeds
+        // Swal.fire('Submitted!', 'Your request has been processed.', 'success');
+        // return true;
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        // Code to execute when the user cancels
+        // Swal.fire('Cancelled', 'Your request has been cancelled.', 'error');
+        // return false
+      }
+    });
+  }
 }

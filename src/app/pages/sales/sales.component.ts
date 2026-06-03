@@ -12,6 +12,7 @@ import * as XLSX from 'xlsx';
 import FileSaver, { saveAs } from 'file-saver';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { SwalservicesService } from '../../services/swal/swalservices.service';
 
 @Component({
   selector: 'app-sales',
@@ -43,6 +44,7 @@ export class SalesComponent implements OnInit {
     private printservice: PrintService,
     private datableservice: DatabaleService,
     private router: Router,
+    private swalservice: SwalservicesService,
   ) { 
     
   }
@@ -110,6 +112,44 @@ export class SalesComponent implements OnInit {
     this.clickedSale.discount = Number(sale.discount) || 0.0
 
     console.log(this.clickedSale)
+  }
+
+  reverseTs(reference: string){
+    // var res  = this.swalservice.fireAlert();
+
+    // console.log(res)
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to proceed with this request?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, proceed',
+      cancelButtonText: 'No, cancel'
+    }).then((result:any) => {
+      if (result.isConfirmed) {
+        // Code to execute when the user proceeds
+        this.sharedservice.infoFunc('alert alert-info', 'reversing transaction...  ', true, true, true);
+        this.httpservice.reverseTransaction(reference)
+        .subscribe({
+          next: data => {
+            Swal.fire('Submitted!', 'Your request has been processed.', 'success');
+            this.sharedservice.infoFunc('', '', false, false, false);
+            setTimeout(()=> this.refreshData(), 300);
+          },
+          error: error => {
+            this.sharedservice.infoFunc('', '', false, false, false);
+            let msg = error.error.message
+            console.error('error :', error)
+            Swal.fire('Error!', msg, 'error');
+          }
+        });
+
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        // Code to execute when the user cancels
+        // Swal.fire('Cancelled', 'Your request has been cancelled.', 'error');
+        // return false
+      }
+    });
   }
 
   ngOnInit(): void {

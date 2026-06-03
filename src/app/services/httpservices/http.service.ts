@@ -248,6 +248,10 @@ export class HttpService {
     return this.http.post(`${this.baseUrl}/delete/sale/${id}`, {}, {headers: this.getHeaders()}) //.subscribe({
   }
 
+  reverseTransaction(reference: string){
+    return this.http.delete(`${this.baseUrl}/sale/reverse/${reference}`, {headers: this.getHeaders()})
+  }
+
   getAnalytics(): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/analytics`, {headers: this.getHeaders()} );
   }
@@ -367,6 +371,14 @@ export class HttpService {
 
   getAllBranchDebtors(branchId: any){
     return this.http.get<any>(`${this.baseUrl}/unpaid/branch/sales/${branchId}`, {headers: this.getHeaders()})
+  }
+
+  getBranchDebtors(branchId:string){
+    return this.http.get<any>(`${this.baseUrl}/debtors/${branchId}`, {headers: this.getHeaders()});
+  }
+
+  payDebt(body: any){
+    return this.http.post<any>(`${this.baseUrl}/update/credit/payment`, body, {headers: this.getHeaders()})
   }
 
   makeSalePayment(body: any){
