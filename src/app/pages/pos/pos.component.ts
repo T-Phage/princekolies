@@ -561,8 +561,8 @@ export class PosComponent {
             } else {
               this.newSalesFrm.get('branch_id')?.setValue(sessionStorage.getItem('branch_id'));
             }
+            this.ngOnInit();
           }, 1700);
-          
         },
         error: error => {
           let msg = error.error.message
