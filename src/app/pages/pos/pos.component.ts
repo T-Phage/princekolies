@@ -521,7 +521,7 @@ export class PosComponent {
       this.swalService.fireWarning('Amount paid by customer is less the grand total. \n Kindly get customer details')
     }
 
-    console.log(this.newSalesFrm.value)
+    console.log(this.newSalesFrm.value)   
 
     if (this.newSalesFrm.valid && this.newSalesFrm.controls.items.length >= 1){
       // console.log(this.newSalesFrm.value)
@@ -533,12 +533,13 @@ export class PosComponent {
           this.newSalesFrm.controls.reference?.setValue(`${data.sale.reference}`)
           this.sharedservice.infoFunc('alert alert-success', data.message, false, false, false) 
           this.newSalesFrm.controls.reference?.setValue(`${data.sale.reference}`)
-          let printIt = this.printservice.printReceipt //(this.receiptContent);
-          let ctn = this.receiptContent
+          // let printIt = this.printservice.printReceipt //(this.receiptContent);
+          // let ctn = this.receiptContent
           setTimeout(() => this.sharedservice.infoFunc('', '', false, false, false), 3000)
           setTimeout(()=>{
             // console.log(this.newSalesFrm.controls.reference)
-            printIt(ctn)
+            // printIt(ctn)
+             this.printservice.printReceipt(this.receiptContent)
           }, 1000)
 
           setTimeout(() => {

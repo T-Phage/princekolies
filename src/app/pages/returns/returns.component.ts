@@ -12,6 +12,7 @@ import { SharedService } from '../../services/sharedservices/shared.service';
 import { CommonModule } from '@angular/common';
 import { ErrormodalComponent } from '../../components/errormodal/errormodal.component';
 import { DatabaleService } from '../../services/datatable/databale.service';
+import { Router } from '@angular/router';
 // import { BarcodeFormat } from '@zxing/library';
 
 @Component({
@@ -55,6 +56,7 @@ export class ReturnsComponent {
       public sharedservice: SharedService,
       private printservice: PrintService,
       private dataTableservice: DatabaleService,
+      private router: Router,
       private zone: NgZone,
     ) { 
       let role = `${sessionStorage.getItem('role')}`
@@ -180,21 +182,21 @@ export class ReturnsComponent {
           return
       }
 
-      this.httpservice.getByBranchProducts(this.branch.value.id)
-        .subscribe({
-          next: data => {
-            console.log(data)
-            this.products = data
-          }
-        });
+      // this.httpservice.getByBranchProducts(this.branch.value.id)
+      //   .subscribe({
+      //     next: data => {
+      //       console.log(data)
+      //       this.products = data
+      //     }
+      //   });
 
-        this.httpservice.getBranchSales(this.branch.value.id)
-        .subscribe({
-          next: data => {
-            // console.log(data) // all_sales
-            this.all_sales = data
-          }
-        });
+        // this.httpservice.getBranchSales(this.branch.value.id)
+        // .subscribe({
+        //   next: data => {
+        //     // console.log(data) // all_sales
+        //     this.all_sales = data
+        //   }
+        // });
 
       this.httpservice.getBranchSalesReturns(this.branch.value.id)
       .subscribe({
@@ -506,17 +508,19 @@ export class ReturnsComponent {
   
     refreshData(){
       $('.returnstable').DataTable().destroy();
+
+      this.sharedservice.refreshComponentFunc(this.router.url)
       
-      if(this.userRole !== 'Business_Owner' && this.userRole !== 'Account_Officer'){
-        this.httpservice.getSalesReturns(1, 10).subscribe({
-          next: sdata => {
-            this.sales = sdata
-          }
-        })
-        setTimeout(()=> {
-          this.dataTableservice.initiateDataTable('.returnstable', 15);
-        },3000)
-      }
+      // if(this.userRole !== 'Business_Owner' && this.userRole !== 'Account_Officer'){
+      //   this.httpservice.getSalesReturns(1, 10).subscribe({
+      //     next: sdata => {
+      //       this.sales = sdata
+      //     }
+      //   })
+      //   setTimeout(()=> {
+      //     this.dataTableservice.initiateDataTable('.returnstable', 15);
+      //   },3000)
+      // }
     }
 
     ngOnDestroy(): void {

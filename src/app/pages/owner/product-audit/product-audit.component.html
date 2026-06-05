@@ -50,6 +50,7 @@
                         <th>Action</th>
                         <th>Prev Qty</th>
                         <th>New Qty</th>
+                        <th>Qty Change</th>
                         <th>Prev Price</th>
                         <th>New Price</th>
                         <th>Branch</th>
@@ -72,6 +73,7 @@
                         <td>{{ audit.action }}</td>
                         <td>{{ audit.quantity_before | number: '1.0-2' }}</td>
                         <td>{{ audit.quantity_after | number: '1.0-2' }}</td>
+                        <td>{{ audit.quantity_change | number: '1.0-2' }}</td>
                         <td>{{ audit.price_before | currency:'GHS' }}</td>
                         <td class="new-value">{{ audit.price_after | currency:'GHS' }}</td>
                         <td>{{ audit.branch.branch_name || '' }}</td>
