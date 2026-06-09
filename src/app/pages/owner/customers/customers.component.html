@@ -56,6 +56,7 @@
                                 <th>Identification Type</th>
                                 <th>ID Number</th>
                                 <th>Phone</th>
+                                <th>Credit Worthy</th>
                                 <th *ngIf="role == 'Business_Owner'" class="no-sort">Action</th>
                             </tr>
                         </thead>
@@ -75,15 +76,22 @@
                                 <td> 
                                     {{customer.phone}}
                                 </td>
+                                <td>
+                                    <span style="display: flex;justify-content: center;font-size: 22px;" class="text-center">
+                                        <i *ngIf="customer.is_credit_allowed == 1" data-feather="check" class="feather-check text-success"></i>
+                                        <i *ngIf="customer.is_credit_allowed == 0" data-feather="x" class="feather-x text-danger "></i>
+                                    </span>
+                                </td>
                                 <td *ngIf="role == 'Business_Owner'" class="action-table-data">
                                     <div class="edit-delete-action">
-                                        <!-- <a class="me-2 p-2 mb-0" href="javascript:void(0);">
-                                            <i data-feather="eye" class="action-eye"></i>
+                                        <!-- <a title="Update credit worthiness" class="me-2 p-2 mb-0" href="javascript:void(0);">
+                                            <i data-feather="trash-2" class="feather-trash-2">
+                                            </i>
                                         </a> -->
-                                        <a (click)="customerClicked(customer.id, customer.name, customer.email, customer.phone, customer.business_name,customer.identification_type, customer.identity_number, customer.address)" class="me-2 p-2 mb-0" data-bs-toggle="modal" data-bs-target="#edit-units">
+                                        <a (click)="customerClicked(customer)" class="me-2 p-2 mb-0" data-bs-toggle="modal" data-bs-target="#edit-units">
                                             <i data-feather="edit" class="feather-edit"></i>
                                         </a>
-                                        <!-- <a (click)="customerClicked(customer.id, customer.name, customer.email, customer.phone_number, customer.role,customer.customer_account,customer.branch_id)" class="me-2 confirm-text p-2 mb-0" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#delete-units">
+                                        <!-- <a class="me-2 confirm-text p-2 mb-0" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#delete-units">
                                             <i data-feather="trash-2" class="feather-trash-2">
                                                 <img src="assets/images/trash-solid.svg">
                                             </i>
@@ -141,7 +149,7 @@
                                 <div class="col-lg-6">
                                     <div class="input-blocks">
                                         <label>Email</label>
-                                        <input formControlName="email" type="email" placeholder="thomas@example.com">
+                                        <input formControlName="email" type="email" placeholder="email">
                                     </div>
                                     <div style="color:red" *ngIf="updatecustomerFrm.get('email')?.invalid && updatecustomerFrm.get('email')?.touched">
                                         <div class="forgot-link" style="font-size: 12px;font-weight: 500;" *ngIf="updatecustomerFrm.get('email')?.errors!['email']">email is invalid.</div>
@@ -186,6 +194,19 @@
                                         <div class="forgot-link" style="font-size: 12px;font-weight: 500;" *ngIf="updatecustomerFrm.get('business_name')?.errors!['required']">business_name is required.</div>
                                     </div>
                                 </div>
+                                <div class="col-lg-6">
+                                    <div class="input-blocks">
+                                        <label>Update Credit Worthiness</label>
+                                        <select formControlName="is_credit_allowed" class="form-control">
+                                            <option value="1">Allow Credit Purchase</option>
+                                            <option value="0">Disallow Credit Purchase</option>
+                                        </select>
+                                        <!-- <input type="text" formControlName="business_name" placeholder="Business Name"> -->
+                                    </div>
+                                    <div style="color:red" *ngIf="updatecustomerFrm.get('is_credit_allowed')?.invalid && updatecustomerFrm.get('is_credit_allowed')?.touched">
+                                        <div class="forgot-link" style="font-size: 12px;font-weight: 500;" *ngIf="updatecustomerFrm.get('is_credit_allowed')?.errors!['required']">Credit worthiness is required.</div>
+                                    </div>
+                                </div>
                                 
                                 <!-- <div class="col-lg-12">
                                     <div class="mb-0 input-blocks">
@@ -201,6 +222,8 @@
                             <div class="modal-footer-btn">
                                 <button [disabled]="sharedservice.responses.disabled"  type="button" class="btn btn-cancel me-2"
                                     data-bs-dismiss="modal">Cancel</button>
+                                <!-- <button [disabled]="sharedservice.responses.disabled"  type="button" class="btn btn-danger me-2"
+                                    data-bs-dismiss="modal">Disallow Credit Purchase</button> -->
                                 <button [disabled]="sharedservice.responses.disabled"  type="submit" class="btn btn-submit">Submit</button>
                             </div>
                         </form>

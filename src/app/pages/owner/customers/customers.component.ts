@@ -39,16 +39,18 @@ export class CustomersComponent {
   ) { }
 
 
-  customerClicked(id:any, name:any, email:any, phone:any, business_name:any, identification_type:any, identity_number:any, address:any){
+  customerClicked(customer:any){
+    console.log(customer)
     this.updatecustomerFrm.patchValue({
-      id: id,
-      name: name,
-      phone: phone,
-      email: email,
-      address: address,
-      business_name: business_name,
-      identification_type: identification_type,
-      identity_number: identity_number,
+      id: customer.id,
+      name: customer.name,
+      phone: customer.phone,
+      email: customer.email,
+      address: customer.address,
+      business_name: customer.business_name,
+      identification_type: customer.identification_type,
+      identity_number: customer.identity_number,
+      is_credit_allowed: customer.is_credit_allowed,
     })
 
   }
@@ -100,6 +102,7 @@ export class CustomersComponent {
     identification_type: ['', Validators.required],
     identity_number: ['', Validators.required],
     business_name: ['', Validators.required],
+    is_credit_allowed: ['', Validators.required],
   })
 
   ngOnInit() {
@@ -112,6 +115,7 @@ export class CustomersComponent {
     this.httpservice.getAllCustomers()
     .subscribe({
       next: data => {
+        console.log(data)
         this.customers = data
         this.datatableservice.initiateDataTable('.datacustomer', 20)
 
