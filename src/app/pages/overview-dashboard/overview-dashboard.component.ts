@@ -45,6 +45,7 @@ export class OverviewDashboardComponent {
   recentProducts:any[] = [];
   expiringproducts:any[] = [];
   monthlyCashSales:any;
+  monthlySales:any;
   totalUnPaidSalesCash:number = 0;
   totalProductsPrice:number = 0;
 
@@ -88,7 +89,7 @@ export class OverviewDashboardComponent {
       
     this.httpservice.getAnalytics().subscribe({
       next: data => {
-        console.log(data)      
+        // console.log(data)      
         this.productsLen = data.productLen
         this.salesLen = data.salesLen
         this.expiryLen = data.expiryLen
@@ -108,6 +109,7 @@ export class OverviewDashboardComponent {
         this.totalUnPaidSalesCash = data.totalUnPaidSalesCash
         this.branches = data.branches
         this.totalProductsPrice = data.totalProductsPrice
+        this.monthlySales = data.monthlySales
         
         this.createChart()
         
@@ -169,26 +171,26 @@ export class OverviewDashboardComponent {
       labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'August', 'Sep', 'Oct', 'Nov', 'Dec'], 
        datasets: [
         {
-          label: "Monthly Cash Sales",
-          data: [this.monthlyCashSales['1'].toString(), this.monthlyCashSales['2'].toString(), this.monthlyCashSales['3'].toString(), this.monthlyCashSales['4'].toString(), this.monthlyCashSales['5'].toString(), this.monthlyCashSales['6'].toString(), this.monthlyCashSales['7'].toString(), this.monthlyCashSales['8'].toString(), this.monthlyCashSales['9'].toString(), this.monthlyCashSales['10'].toString(), this.monthlyCashSales['11'].toString(), this.monthlyCashSales['12'].toString()],
+          label: "TCash Sales",
+          data: [this.monthlySales['1'].total.toString(), this.monthlySales['2'].total.toString(), this.monthlySales['3'].total.toString(), this.monthlySales['4'].total.toString(), this.monthlySales['5'].total.toString(), this.monthlySales['6'].total.toString(), this.monthlySales['7'].total.toString(), this.monthlySales['8'].total.toString(), this.monthlyCashSales['9'].toString(), this.monthlySales['10'].total.toString(), this.monthlySales['11'].total.toString(), this.monthlySales['12'].total.toString()],
           backgroundColor: '#5078F2',
-          borderColor: '#FF4D4D',
+          borderColor: '#5078F2',
           tension: 0.1
         },
-        // {
-        //   label: "Withdrawals",
-        //   data: [this.analyticservice.stat[0].withdrawal.toString(), `${this.analyticservice.stat[1].withdrawal}`, `${this.analyticservice.stat[2].withdrawal}`, `${this.analyticservice.stat[3].withdrawal}`, `${this.analyticservice.stat[4].withdrawal}`, `${this.analyticservice.stat[5].withdrawal}`, `${this.analyticservice.stat[6].withdrawal}`, `${this.analyticservice.stat[7].withdrawal}`, `${this.analyticservice.stat[8].withdrawal}`, `${this.analyticservice.stat[9].withdrawal}`, `${this.analyticservice.stat[10].withdrawal}`, `${this.analyticservice.stat[11].withdrawal}`],
-        //   backgroundColor: '#FF7878',
-        //   borderColor: '#FF7878',
-        //   tension: 0.1
-        // },
-        // {
-        //   label: "Deposits",
-        //   data: [`${this.analyticservice.stat[0].deposit}`, `${this.analyticservice.stat[1].deposit}`, `${this.analyticservice.stat[2].deposit}`, `${this.analyticservice.stat[3].deposit}`, `${this.analyticservice.stat[4].deposit}`, `${this.analyticservice.stat[5].deposit}`, `${this.analyticservice.stat[6].deposit}`, `${this.analyticservice.stat[7].deposit}`, `${this.analyticservice.stat[8].deposit}`, `${this.analyticservice.stat[9].deposit}`, `${this.analyticservice.stat[10].deposit}`, `${this.analyticservice.stat[11].deposit}`],
-        //   backgroundColor: '#dbf26e',
-        //   borderColor: '#dbf26e',
-        //   tension: 0.1
-        // } 
+        {
+          label: "Outright",
+          data: [this.monthlySales['1'].outright.toString(), this.monthlySales['2'].outright.toString(), this.monthlySales['3'].outright.toString(), this.monthlySales['4'].outright.toString(), this.monthlySales['5'].outright.toString(), this.monthlySales['6'].outright.toString(), this.monthlySales['7'].outright.toString(), this.monthlySales['8'].outright.toString(), this.monthlyCashSales['9'].toString(), this.monthlySales['10'].outright.toString(), this.monthlySales['11'].outright.toString(), this.monthlySales['12'].outright.toString()],
+          backgroundColor: '#dbf26e',
+          borderColor: '#dbf26e',
+          tension: 0.1
+        },
+        {
+          label: "Credit",
+          data: [`${this.monthlySales['1'].credit.toString()}`, `${this.monthlySales['2'].credit.toString()}`, `${this.monthlySales['3'].credit.toString()}`, `${this.monthlySales['4'].credit.toString()}`, `${this.monthlySales['5'].credit.toString()}`, `${this.monthlySales['6'].credit.toString()}`, `${this.monthlySales['7'].credit.toString()}`, `${this.monthlySales['8'].credit.toString()}`, `${this.monthlySales['9'].credit.toString()}`, `${this.monthlySales['10'].credit.toString()}`, `${this.monthlySales['11'].credit.toString()}`, `${this.monthlySales['12'].credit.toString()}`],
+          backgroundColor: '#FF7878',
+          borderColor: '#FF7878',
+          tension: 0.1
+        } 
       ]
     }
 
@@ -206,7 +208,7 @@ export class OverviewDashboardComponent {
         },
         plugins: {
           legend: {
-            display: false
+            display: true
           },
         }
         // aspectRatio:2.5
@@ -251,13 +253,14 @@ export class OverviewDashboardComponent {
         this.recentProducts = data.recentProducts
         this.expiringproducts = data.products_expired
         this.monthlyCashSales = data.monthlyCashSales
-        this.totalSalesAmountForWeek = data.totalSalesAmountForWeek
+      this.totalSalesAmountForWeek = data.totalSalesAmountForWeek
         this.totalSalesAmountForMonth = data.totalSalesAmountForMonth
         this.totalPaidSalesForMonth = data.totalPaidSalesForMonth
         this.totalUnPaidSalesCash = data.totalUnPaidSalesCash
         this.totalPrice = this.calculateTotal(data.products)
         this.totalProductsPrice = data.totalProductsPrice
         this.branches = data.branches
+        this.monthlySales = data.monthlySales
 
         this.createChart()
       },
