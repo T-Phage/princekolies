@@ -568,6 +568,7 @@ export class PosComponent {
         error: error => {
           let msg = error.error.message
           console.error('error :', error)
+          this.swalService.fireError(msg);
           this.sharedservice.infoFunc('alert alert-danger', msg, false, false, false)
           setTimeout(() => this.sharedservice.infoFunc('', '', false, false, false),4000)
           if (error.status == 401){

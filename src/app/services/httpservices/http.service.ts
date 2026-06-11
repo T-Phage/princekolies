@@ -361,6 +361,10 @@ export class HttpService {
     return this.http.get<any>(`${this.baseUrl}/business/customers`, {headers: this.getHeaders()})
   }
 
+  updateCustomerCreditWorthiness(customerId:any, body:any){
+    return this.http.patch<any>(`${this.baseUrl}/update/credit/worthiness/${customerId}`, body, {headers: this.getHeaders()});
+  }
+
   updateCustomer(customerId:any, body:any){
     return this.http.patch<any>(`${this.baseUrl}/business/customers/${customerId}`, body, {headers: this.getHeaders()});
   }

@@ -145,6 +145,12 @@
                                         data-bs-target="#edit-debtors-payment"><i data-feather="eye"
                                             class="info-img"></i>Update Payments</a>
                                 </li>
+                                <li *ngIf="userrole == 'Business_Owner'" (click)="updateCustomerCreditWorthiness(debtor.customer, debtor.customer.is_credit_allowed == 0 ? 1 : 0)">
+                                    <a href="javascript:void(0);" class="dropdown-item">
+                                        <i data-feather="eye" class="info-img"></i>
+                                        {{ debtor.customer.is_credit_allowed == 0 ? 'Enable' : 'Disable' }} Credit Purchases
+                                    </a>
+                                </li>
                                 <!-- <li (click)="debtorClicked(debtor.customer.name,debtor.reference,debtor.status,debtor.grand_total,debtor.payment_status,debtor.amount_paid, debtor.biller, debtor.items_returned, debtor.customer.phone, debtor.customer.identification_type, debtor.customer.identity_number)">
                                     <a href="javascript:void(0);" class="dropdown-item" data-bs-toggle="modal"
                                     data-bs-target="#delete-debtor-units"><i data-feather="trash" class="info-img"></i>

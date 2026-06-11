@@ -216,6 +216,25 @@ export class DebtorsComponent {
     return amount
   }
 
+  updateCustomerCreditWorthiness(customer:any, is_credit_allowed:any){
+    // console.log(customer, is_credit_allowed)
+    this.sharedservice.infoFunc('alert alert-info', 'Updating customer credit worthiness...', true, true, true)
+    this.httpService.updateCustomerCreditWorthiness(customer.id, {is_credit_allowed: is_credit_allowed})
+    .subscribe({
+      next: data => {
+        this.sharedservice.infoFunc('', '', false, false, false);
+        this.swalService.fireSuccess("Customer credit worthiness updated Successfully")
+        this.ngOnDestroy()
+        this.ngOnInit();
+      },
+      error: (err) => {
+        console.log(err)
+        this.swalService.fireError(err.error.message)
+        this.sharedservice.infoFunc('', '', false, false, false);
+      }
+    })
+  }
+
   ngOnInit(): void {
     // console.log(this.currentDate)
     this.sharedservice.infoFunc('alert alert-info', 'fetching branch debtors...  ', true, true, true);
