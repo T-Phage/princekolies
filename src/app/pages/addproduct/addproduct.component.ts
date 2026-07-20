@@ -23,6 +23,10 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 export class AddproductComponent {
 
   submitted = false;
+  
+  selectedFile: File | null = null;
+  imagePreview: string | null = null;
+
   constructor(
     public sharedservice: SharedService,
     private formBuilder: FormBuilder,
@@ -41,6 +45,8 @@ export class AddproductComponent {
   barcodeData: string = '';
   inputBuffer: string = '';
   scanTimeout: any;
+  selectedImageBase64: string | null = null;
+  imageName: string = '';
 
   // @HostListener('window:keypress', ['$event'])
   // handleKeyDown(event: KeyboardEvent) {
@@ -59,6 +65,24 @@ export class AddproductComponent {
     // Add logic to process the barcode here
   }
 
+  // Handle file selection change
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedFile = input.files[0];
+
+      this.imageName = this.selectedFile.name;
+
+      // Optional: Create a local image preview URL
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreview = reader.result as string;
+        this.selectedImageBase64 = reader.result as string;
+      };
+      reader.readAsDataURL(this.selectedFile);
+    }
+  }
+
   categories$!: Observable<any>;
   branches$!: Observable<any>;
   categories:any[] = [];
@@ -75,10 +99,10 @@ export class AddproductComponent {
     'quantity_alert': ['', Validators.compose([Validators.required, Validators.min(0), ])],//this.validationservice.positiveIntegerValidator()])],
     'manufactured_date': [''],
     'expiry_date': [''],
-    'createdby': [parseInt(`${sessionStorage.getItem('id')}`)]
+    'image_data': [''],
+    'image_name': [''],
+    // 'createdby': [parseInt(`${sessionStorage.getItem('id')}`)]
   })
-
-
 
   catChange(e: Event) {
 
@@ -86,13 +110,18 @@ export class AddproductComponent {
 
   createNewProduct(evt: Event) {
     evt.preventDefault()
+
     console.log(this.newProductForm)
     console.log(this.newProductForm.value)
     this.newProductForm.controls.barcode.enable()
+    this.newProductForm.get('image_data')?.setValue(this.selectedImageBase64);
+    this.newProductForm.get('image_name')?.setValue(this.imageName);
     this.submitted = true;
 
     if (this.newProductForm.valid) {
+
       this.httpservice.createProduct(this.newProductForm.value).subscribe({
+      // this.httpservice.createProduct(formData).subscribe({
         next: data => {
           this.sharedservice.infoFunc('alert alert-success', 'product added successfully', false, false, false)
           this.swalservices.fireSuccess('Product added successfully');

@@ -215,6 +215,47 @@
                     </div>
                 </div>
             </div>
+            <div class="accordion-card-one accordion" id="accordionExample5">
+                <div class="accordion-item">
+                    <div class="accordion-header" id="headingFour">
+                        <div class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapseFive"
+                            aria-controls="collapseFive">
+                            <div class="text-editor add-list">
+                                <div class="addproduct-icon list">
+                                    <h5><i data-feather="list" class="add-info"></i><span>
+                                            Product Image</span></h5>
+                                    <a href="javascript:void(0);"><i data-feather="chevron-down"
+                                            class="chevron-down-add"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div id="collapseFive" class="accordion-collapse collapse show" aria-labelledby="headingFive"
+                        data-bs-parent="#accordionExample5">
+                        <div class="accordion-body">
+                            <div class="text-editor add-list add">
+                                <div class="row">
+                                    <div class="col-lg-4 col-sm-6 col-12">
+                                        <div class="input-blocks">
+                                            <label>Image</label>
+                                            <div class="input-groupicon calender-input">
+                                                <i data-feather="calendar" class="info-img"></i>
+                                                <input type="file" (change)="onFileSelected($event)" accept="image/*" class="form-control" placeholder="">
+                                            </div>
+                                            <div *ngIf="imagePreview" style="margin-bottom: 15px;">
+                                                <p>Preview:</p>
+                                                <img [src]="imagePreview" alt="Preview" style="max-width: 100%; max-height: 200px; border: 1px solid #ccc;" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         
     </div>

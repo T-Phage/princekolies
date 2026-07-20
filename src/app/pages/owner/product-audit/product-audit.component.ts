@@ -41,6 +41,7 @@ export class ProductAuditComponent {
 
   queryAudit(evt: Event) {
     $('.dataaudit').DataTable().destroy();
+    console.log('clicked')
     evt.preventDefault();
     this.auditData = [];
     // console.log(this.auditForm.value);

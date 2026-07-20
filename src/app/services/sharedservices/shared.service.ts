@@ -40,7 +40,7 @@ export class SharedService {
     let currentUrl = this.router.url;
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
     this.router.onSameUrlNavigation = 'reload';
-    this.router.navigate([route]);
+    this.router.navigate([route], { replaceUrl: true });
   }
 
   loadScript(src: string): Promise<void> {

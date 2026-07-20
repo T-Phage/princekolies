@@ -4,12 +4,15 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { SharedService } from '../sharedservices/shared.service';
 import { SwalservicesService } from '../swal/swalservices.service';
+import { AuthserviceService } from '../auth/authservice.service';
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class HttpService {
+  // baseDomain = 'http://localhost/pos/public';
+  baseDomain = 'https://techneservers.com';
   // baseUrl = 'http://localhost/pos/public/api'
   // baseUrl = 'http://localhost/techne_app_2/public/api'
   baseUrl = 'https://techneservers.com/pos_api/api'
@@ -24,19 +27,21 @@ export class HttpService {
     private http: HttpClient,
     private sharedservice: SharedService,
     private router: Router,
-    private swalservices: SwalservicesService
+    private swalservices: SwalservicesService,
+    private authService: AuthserviceService
   ) { }
 
-  httpLogout() {
+  httpLogout(message: string) {
     this.http.post<any>(`${this.baseUrl}/auth/logout`, {}, {headers: this.getHeaders(),}).subscribe({
         next: data => {
           this.appToken = '';
           sessionStorage.clear();
           localStorage.clear();
           this.router.navigate(['/auth/login'])
+          // this.swalservices.fireError(message)
         },
         error: error => {
-          this.swalservices.fireWarning("invalid auth credentials. redirecting to login...")
+          this.swalservices.fireError(message) //"invalid auth credentials. redirecting to login...")
           this.appToken = '';
           sessionStorage.clear();
           localStorage.clear();
@@ -50,7 +55,7 @@ export class HttpService {
     this.http.get<any>(`${this.baseUrl}/self`, {headers: this.getHeaders(),}).subscribe({
         next: data => {
           console.log('self')
-          // console.log(data)
+          console.log(data)
         },
         error: error => {
           console.log(error)
@@ -87,7 +92,7 @@ export class HttpService {
       this.http.post<any>(`${this.baseUrl}/auth/login`, body, {headers: this.getHeaders(),}).subscribe({
         next: data => {
           this.sharedservice.infoFunc('alert alert-success', 'user authenticated', false, false, false)
-          // console.log(data)
+          console.log(data)
         
           sessionStorage.setItem('token', data.token)
           sessionStorage.setItem('is_admin', data.is_admin)
@@ -98,22 +103,29 @@ export class HttpService {
           sessionStorage.setItem('user', JSON.stringify(data.user))
           sessionStorage.setItem('number_of_branches', data.no_of_branches)
           sessionStorage.setItem('selected_branch', '0');
+          // sessionStorage.setItem('account_type', JSON.stringify(data.user.branch_info.business_info))
+          sessionStorage.setItem('account_ty', JSON.stringify(data.account_type))
+          console.log(data.user.branch_info.business_info)
 
           this.appToken = data.token;
           this.role = data.role;
 
+          this.authService.login(data.token, data.user.role, data.account_type);
+
+          setTimeout(() => {
           // console.log(data)
-          if(data.user.role == "Business_Owner"){
-            this.router.navigate(['/dashboard/overview-dashboard'])
-          }
-          else if(data.user.role == "Account_Officer"){
-            this.router.navigate(['/dashboard/overview-dashboard'])
-          }
-          else if(data.user.role == "Manager"){
-            this.router.navigate(['/dashboard/pos'])
-          } else {
-            this.router.navigate(['/dashboard/pos'])
-          }
+            if(data.user.role == "Business_Owner"){
+              this.router.navigate(['/dashboard/overview-dashboard'])
+            }
+            else if(data.user.role == "Account_Officer"){
+              this.router.navigate(['/dashboard/overview-dashboard'])
+            }
+            else if(data.user.role == "Manager"){
+              this.router.navigate(['/dashboard/pos'])
+            } else {
+              this.router.navigate(['/dashboard/pos'])
+            }
+          }, 1000)
           
           setTimeout(() => {
             this.sharedservice.infoFunc('', '', false, false, false)
@@ -148,7 +160,7 @@ export class HttpService {
   getProductsExpiring(page: number, perPage: number): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/products/expiry?page=${page}&per_page=${perPage}`, {headers: this.getHeaders()})
   }
-
+  
   getBranchProductsExpiring(branchId:any): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/products/expiry/${branchId}`, {headers: this.getHeaders()})
   }

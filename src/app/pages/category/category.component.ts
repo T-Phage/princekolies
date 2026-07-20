@@ -208,8 +208,8 @@ export class CategoryComponent {
         error: _error => {
           console.log(_error);
           // this.dataTableInit(); 
-          if(_error.error.staus === 401){
-            this.httpservices.httpLogout()
+          if(_error.error.staus === 401 || _error.error.staus === 403){
+            this.httpservices.httpLogout(_error.error.message)
           }
         }
       })
@@ -235,8 +235,8 @@ export class CategoryComponent {
         },
         error: error => {
           this.sharedservices.infoFunc('alert alert-danger', '', false, false, false);
-          if (error.status === 401){
-            this.httpservices.httpLogout()
+          if (error.status === 401 || error.status === 403){
+            this.httpservices.httpLogout(error.error.message)
           }
         }
       })
@@ -256,8 +256,8 @@ export class CategoryComponent {
         }, 250)
       },
       error: error => {
-        if (error.status === 401){
-          this.httpservices.httpLogout()
+        if (error.status === 401 || error.status === 403){
+          this.httpservices.httpLogout(error.error.message)
         }
       }
     })

@@ -233,28 +233,28 @@ export class PosComponent {
       });
   
     this.httpservice.getByBranchProducts(this.newSalesFrm.value.branch_id)
-        .subscribe({
-          next: data => {
-            // console.log(data)
-            this.products = data
-          },
-          error: error => {
-            this.loadingService.hide();
-            // this.errorLoading = true;
-            
-            console.log('error :', error)
-            if (error.status == 401){
-              // alert('Your session has expired, you will be redirected to log in');
-              this.swalService.fireError('Your session has expired, you will be redirected to log in')
-              this.router.navigate(['/auth/login'])
-            } else {
-              this.swalService.fireError('Failed to fetch branch products')
-            }
-          },
-          complete: () => {
-            this.loadingService.hide();
+      .subscribe({
+        next: data => {
+          // console.log(data)
+          this.products = data
+        },
+        error: error => {
+          this.loadingService.hide();
+          // this.errorLoading = true;
+          
+          console.log('error :', error)
+          if (error.status == 401){
+            // alert('Your session has expired, you will be redirected to log in');
+            this.swalService.fireError('Your session has expired, you will be redirected to log in')
+            this.router.navigate(['/auth/login'])
+          } else {
+            this.swalService.fireError('Failed to fetch branch products')
           }
-        });
+        },
+        complete: () => {
+          this.loadingService.hide();
+        }
+      });
 
   }
 
@@ -282,7 +282,7 @@ export class PosComponent {
   currentDate = new Date();
   newSalesFrm = this.formBuilder.group({
     'customer_id': [''],
-    'customer_name': [''],
+    'customer_name': ['', Validators.required],
     'customer_address': [''],
     'customer_phone': [''],
     'customer_business_name': [''],
@@ -430,7 +430,6 @@ export class PosComponent {
     var balance = amount - parseFloat(`${this.newSalesFrm.get('grand_total')?.value}`)
     this.newSalesFrm.get('balance')?.setValue(parseFloat(balance.toFixed(2)));
   }
-
 
   inpProductNameChange(evt: any){
     const inputValue = evt.target.value;

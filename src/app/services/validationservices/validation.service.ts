@@ -50,4 +50,23 @@ export class ValidationService {
   
     })
   }
+
+  ghanaCardValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value;
+
+      if (!value) {
+        return null; // Return null if empty (handled by Validators.required)
+      }
+
+      // Regex breakdown: 
+      // ^GHA- : Starts with 'GHA-'
+      // \d{9} : Followed by exactly 9 digits
+      // -\d$  : Ends with a hyphen and exactly 1 digit
+      const ghanaCardRegex = /^GHA-\d{9}-\d$/i;
+      const isValid = ghanaCardRegex.test(value);
+
+      return isValid ? null : { invalidGhanaCard: true };
+    };
+  }
 }

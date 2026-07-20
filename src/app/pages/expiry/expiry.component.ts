@@ -72,8 +72,8 @@ export class ExpiryComponent {
         error: _error => {
           console.log(_error);
           // this.initDataTable();
-          if(_error.error.staus === 401){
-            this.httpservice.httpLogout()
+          if(_error.error.staus === 401 || _error.error.staus === 403){
+            this.httpservice.httpLogout(_error.error.message)
           }
         }
       })
@@ -99,8 +99,8 @@ export class ExpiryComponent {
           this.sharedservice.infoFunc('', '', false, false, false);
           console.log(_error);
           // this.initDataTable();
-          if(_error.error.staus === 401){
-            this.httpservice.httpLogout()
+          if(_error.error.staus === 401 || _error.error.staus === 403){
+            this.httpservice.httpLogout(_error.error.message)
           }
         }
       })
@@ -130,8 +130,8 @@ export class ExpiryComponent {
           this.sharedservice.infoFunc('', '', false, false, false);
           console.log(_error);
           // this.initDataTable();
-          if(_error.error.staus === 401){
-            this.httpservice.httpLogout()
+          if(_error.error.staus === 401 || _error.error.staus === 403){
+            this.httpservice.httpLogout(_error.error.message)
           }
         }
       })

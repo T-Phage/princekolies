@@ -76,7 +76,7 @@
                         <td>{{ audit.quantity_change | number: '1.0-2' }}</td>
                         <td>{{ audit.price_before | currency:'GHS' }}</td>
                         <td class="new-value">{{ audit.price_after | currency:'GHS' }}</td>
-                        <td>{{ audit.branch.branch_name || '' }}</td>
+                        <td>{{ audit.branch ? audit.branch.branch_name : '' }}</td>
                         <td>{{ audit.user.name }}</td>
                     </tr>
                 </tbody>

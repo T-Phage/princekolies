@@ -76,6 +76,8 @@ export class OverviewDashboardComponent {
     this.loading = false;
     this.username = sessionStorage.getItem('username') || '';
 
+    this.httpservice.httpself();
+
     if(parseInt(`${this.branch.value.id}`) != 0 ){
       this.branchChange();
       return
@@ -123,12 +125,12 @@ export class OverviewDashboardComponent {
         let msg = error.error.message
         // console.error('error :', error)
         // console.log(msg)
-        if (msg == 'Unauthenticated.' || error.status == 401 || msg == 'Token has expired' || msg == 'Invalid token') {
+        if (msg == 'Unauthenticated.' || error.status == 401 || error.status == 403 || msg == 'Token has expired' || msg == 'Invalid token') {
           this.session_off = true;
           setTimeout(()=>{
             this.session_off = true;
-            this.httpservice.httpLogout()
-          },300)
+            this.httpservice.httpLogout(msg)
+          },900)
           // this.sharedservice.infoFunc('alert alert-danger', 'Session expired. Please login again.', false, false, false)
         }
       }
@@ -273,7 +275,7 @@ export class OverviewDashboardComponent {
           this.session_off = true;
           setTimeout(()=>{
             this.session_off = true;
-            this.httpservice.httpLogout()
+            this.httpservice.httpLogout(msg)
           },300)
           return
           // this.sharedservice.infoFunc('alert alert-danger', 'Session expired. Please login again.', false, false, false)

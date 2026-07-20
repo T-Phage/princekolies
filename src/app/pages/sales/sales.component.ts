@@ -91,8 +91,8 @@ export class SalesComponent implements OnInit {
           this.sharedservice.infoFunc('', '', false, false, false);
           console.log(_error);
           // this.initDataTable();
-          if(_error.error.staus === 401){
-            this.httpservice.httpLogout()
+          if(_error.error.staus === 401 || _error.error.staus === 403){
+            this.httpservice.httpLogout(_error.error.message)
           }
         }
       })
@@ -171,8 +171,8 @@ export class SalesComponent implements OnInit {
         },
         error: _err => {
           this.sharedservice.infoFunc('', '', false, false, false);
-          if(_err.error.staus === 401){
-            this.httpservice.httpLogout()
+          if(_err.error.staus === 401 || _err.error.staus === 403){
+            this.httpservice.httpLogout(_err.error.message)
           }
         }
       })
@@ -200,8 +200,8 @@ export class SalesComponent implements OnInit {
           this.sharedservice.infoFunc('', '', false, false, false);
           console.log(_error);
           // this.initDataTable();
-          if(_error.error.staus === 401){
-            this.httpservice.httpLogout()
+          if(_error.error.staus === 401 || _error.error.staus === 403){
+            this.httpservice.httpLogout(_error.error.message)
           }
         }
       })

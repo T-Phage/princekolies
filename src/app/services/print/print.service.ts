@@ -45,7 +45,7 @@ export class PrintService {
                   color: #000;
                 }
                 table {
-                    border: 1px solid #000;
+                    border: 0px solid #000;
                 }
                 table th {
                   border-bottom: 1px solid #000;
@@ -92,6 +92,44 @@ export class PrintService {
         .font-bolder, .text-600 {
             font-weight: 600!important;
         }
+            .text-center {
+              text-align: center !important;
+            }
+              .head-text {
+                font-size:20px;
+                margin:0 !important;
+              }
+              .hide {
+                display: none;
+              }
+                .img-receipt {
+
+                  .receipt-row td {
+                    padding: 2px;
+                  }
+                  .text-12 {
+                    font-size: 12px;
+                  }
+                  .icon-head a img {
+                    width: 50px;
+                    height: 30px;
+                  }
+                  .head-text {
+                    font-size:14px;
+                    margin:0 !important;
+                  }
+                  .amount-payable {
+                    border-top: 1px solid #000; 
+                    * {
+                      margin: 0;
+                      padding: 0;
+                    }
+                    td {
+                      font-size: 14px;
+                      font-weight: bold;
+                    }
+                  }
+                }
             </style>
           </head>
           <body onload="window.print(); window.close();">

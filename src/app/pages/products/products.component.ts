@@ -58,25 +58,6 @@ export class ProductsComponent {
       $('.datanew').DataTable().destroy()
       sessionStorage.setItem('selected_branch', `${this.branch.value.id}`)
       this.sharedservice.refreshComponentFunc(this.router.url)
-      // this.products = []
-      // this.httpservice.getByBranchProducts(this.branch.value.id)
-      //   .subscribe({
-      //     next: data => {
-      //       this.products = data
-      //       // Initialize DataTable after data loads
-      //       setTimeout(() => {
-      //         this.initDataTable();
-      //         this.sharedservice.infoFunc('', '', false, false, false);
-      //       }, 170);
-      //     },
-      //     error: _error => {
-      //       console.log(_error);
-      //       this.initDataTable();
-      //       if(_error.error.staus === 401){
-      //         this.httpservice.httpLogout()
-      //       }
-      //     }
-      //   })
   }
 
   ngOnInit() {
@@ -105,8 +86,8 @@ export class ProductsComponent {
             this.sharedservice.infoFunc('', '', false, false, false);
             console.log(_error);
             // this.initDataTable();
-            if(_error.error.staus === 401){
-              this.httpservice.httpLogout()
+            if(_error.error.staus === 401 || _error.error.staus === 403){
+              this.httpservice.httpLogout(_error.error.message)
             }
           }
         })
@@ -117,7 +98,7 @@ export class ProductsComponent {
     if (this.branch.value.id == null || this.branch.value.id == '0') {
       setTimeout(() => {
           this.sharedservice.infoFunc('alert alert-danger', 'branch not selected...  ', false, false, false);
-      }, 4500);
+      }, 1500);
 
         return
     }
@@ -140,8 +121,8 @@ export class ProductsComponent {
           this.sharedservice.infoFunc('', '', false, false, false);
           console.log(_error);
           // this.initDataTable();
-          if(_error.error.staus === 401){
-            this.httpservice.httpLogout()
+          if(_error.error.staus === 401 || _error.error.staus === 403){
+            this.httpservice.httpLogout(_error.error.message)
           }
         }
       })

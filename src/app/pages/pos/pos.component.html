@@ -266,7 +266,7 @@
                         <span>{{ service.value.name }}</span>
                         <div class="d-flex align-items-center">
                             <!-- <span class="me-3">Ghc {{ service.value.cost }}</span> -->
-                            <input (chaange)="calculateGrandTotal()" (keyup)="calculateGrandTotal()" type="number" min="{{service.value.min_price}}" formControlName="cost" class="form-control w-100 text-center">
+                            <input (change)="calculateGrandTotal()" (keyup)="calculateGrandTotal()" type="number" min="{{service.value.min_price}}" formControlName="cost" class="form-control w-100 text-center">
                             <button type="button" class="btn btn-sm btn-danger" (click)="remove_extra(i)">
                                 <i class="fa fa-trash"></i>
                             </button>

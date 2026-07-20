@@ -25,10 +25,14 @@ import { CustomersComponent } from './pages/owner/customers/customers.component'
 import { AllocationsComponent } from './pages/owner/allocations/allocations.component';
 import { BranchesComponent } from './pages/owner/branches/branches.component';
 import { ProductAuditComponent } from './pages/owner/product-audit/product-audit.component';
+import { authGuard } from './core/guards/auth.guard';
+import { PermissionsComponent } from './pages/owner/permissions/permissions.component';
+import { Pos2Component } from './pages/pos-2/pos-2.component';
 
 export const routes: Routes = [
     {
         path: 'dashboard',
+        canActivate: [authGuard],
         component: DashboardComponent,
         children: [
             {path: 'products', component: ProductsComponent},
@@ -55,7 +59,9 @@ export const routes: Routes = [
             {path: 'owner/allocations', component: AllocationsComponent},
             {path: 'owner/branches', component: BranchesComponent},
             {path: 'owner/products-audits', component: ProductAuditComponent},
+            {path: 'owner/user-permissions', component: PermissionsComponent},
         ]
     },
+    {path: 'dashboard/pos-2', component: Pos2Component},
     { path: 'auth/login', component: LoginComponent },
 ];

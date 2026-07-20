@@ -77,8 +77,8 @@ export class LowStockComponent {
         },
         error: _error => {
           console.log(_error);
-          if(_error.error.staus === 401){
-            this.httpservice.httpLogout()
+          if(_error.error.staus === 401 || _error.error.staus === 403){
+            this.httpservice.httpLogout(_error.error.message)
           }
         }
       })
@@ -149,8 +149,8 @@ export class LowStockComponent {
       },
       error: error => {
         this.sharedservice.infoFunc('', '', false, false, false);
-        if(error.error.staus === 401){
-          this.httpservice.httpLogout()
+        if(error.error.staus === 401 || error.error.staus === 403){
+          this.httpservice.httpLogout(error.error.message)
         }
       }
     })

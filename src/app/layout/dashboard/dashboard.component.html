@@ -101,7 +101,7 @@
             <div class="dropdown-menu dropdown-menu-right">
                 <a class="dropdown-item" [routerLink]="['/dashboard/profile']">My Profile</a>
                 <a class="dropdown-item" [routerLink]="['/dashboard/update-password']">Update Password</a>
-                <a class="dropdown-item" (click)="httpservice.httpLogout()">Logout</a>
+                <a class="dropdown-item" (click)="httpservice.httpLogout('')">Logout</a>
             </div>
         </div>
     </div>
@@ -168,6 +168,9 @@
 
                             <li *ngIf="!accounts" [className]="router.url == '/dashboard/pos'? 'active': '' "><a [routerLink]="['/dashboard/pos']"><i
                                         ></i><span>POS</span></a></li>
+
+                            <li *ngIf="!accounts" [className]="router.url == '/dashboard/pos-2'? 'active': '' "><a [routerLink]="['/dashboard/pos-2']"><i
+                                        ></i><span>POS 2</span></a></li>
                             
                             <li [className]="router.url == '/dashboard/returns'? 'active': '' "><a [routerLink]="['/dashboard/returns']"><i
                                 ></i><span>Returns</span></a></li>
@@ -178,6 +181,8 @@
                         <ul>
                             <li [className]="router.url == '/dashboard/users'? 'active': '' "><a [routerLink]="['/dashboard/users']"><i
                                         ></i><span>Users</span></a></li>
+                            <!-- <li [className]="router.url == '/dashboard/owner/user-permissions' ? 'active': '' "><a [routerLink]="['/dashboard/owner/user-permissions']"><i
+                                        ></i><span>User Permissions</span></a></li> -->
                             <li [className]="router.url == '/dashboard/owner/customers'? 'active': '' "><a [routerLink]="['/dashboard/owner/customers']"><i
                                         data-feather=""></i><span>Customers</span></a></li>
                         </ul>

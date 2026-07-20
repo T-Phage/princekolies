@@ -91,8 +91,8 @@ export class AllocationsComponent {
             this.sharedservice.infoFunc('', '', false, false, false);
             console.log(_error);
             // this.initDataTable();
-            if(_error.error.staus === 401){
-              this.httpservice.httpLogout()
+            if(_error.error.staus === 401 || _error.error.staus === 403){
+              this.httpservice.httpLogout(_error.error.message)
             }
           }
         })
@@ -207,10 +207,9 @@ export class AllocationsComponent {
             let msg = error.error.message
             console.error('error :', error)
             this.sharedservice.infoFunc('alert alert-danger', msg, false, false, false)
-            let fume = this.sharedservice.infoFunc
-  
+              
             setTimeout(()=>{
-              fume('', '', false, false, false) 
+              this.sharedservice.infoFunc('', '', false, false, false) 
             }, 5000)
           }
         })

@@ -92,8 +92,8 @@ export class DebtorsComponent {
           setTimeout(() => {
             this.sharedservice.infoFunc('', '', false, false, false);
           }, 6000);
-          if(err.error.staus === 401){
-            this.httpService.httpLogout()
+          if(err.error.staus === 401 || err.error.staus === 403){
+            this.httpService.httpLogout(err.error.message)
           }
         }
       })
@@ -254,8 +254,8 @@ export class DebtorsComponent {
         error: (err) => {
           // console.log(err)
           this.sharedservice.infoFunc('alert alert-danger', 'Error fetching branch debtors...  ' + err.error.message, false, false, false);
-          if(err.error.staus === 401){
-            this.httpService.httpLogout()
+          if(err.error.staus === 401 || err.error.staus === 403){
+            this.httpService.httpLogout(err.error.message)
           }
         }
       })
@@ -285,8 +285,8 @@ export class DebtorsComponent {
           setTimeout(() => {
             this.sharedservice.infoFunc('', '', false, false, false);
           }, 6000);
-          if(err.error.staus === 401){
-            this.httpService.httpLogout()
+          if(err.error.staus === 401 || err.error.staus === 403){
+            this.httpService.httpLogout(err.error.message)
           }
         }
       })
