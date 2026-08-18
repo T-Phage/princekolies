@@ -1,0 +1,184 @@
+
+<div class="bg-stone-50 text-stone-800 font-sans antialiased flex flex-col min-h-screen">
+
+    <!-- ============================
+         SITE HEADER
+         ============================ -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <nav class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <!-- Logo Area -->
+            <div class="flex items-center space-x-2" style="max-width: 86px;">
+                <img src="\assets\images\Screenshot_20241029-162322-removebg-preview.png" alt="EXPOSALE Logo" class="logo-img h-85" style="max-height: 85px !important;">
+            </div>
+            
+            <!-- Navigation Links -->
+            <div class="flex items-center space-x-8 text-sm text-stone-600 font-medium">
+                <a href="#about" class="hover:text-brand transition">About Us</a>
+                <a href="#contact" class="hover:text-brand transition">Contact</a>
+                <a href="#pricing" class="hover:text-brand transition">Pricing</a>
+            </div>
+            
+            <!-- CTA -->
+            <div class="flex items-center space-x-3">
+                 <a href="/auth/login" class="px-5 py-2.5 text-sm font-semibold bg-brand text-white rounded-full hover:bg-orange-600 transition shadow-sm">
+                    Login
+                 </a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 flex-grow">
+
+        <!-- Hero Section with Image Background -->
+        <section class="relative rounded-3xl overflow-hidden mt-10 mb-24 group">
+            <!-- Background Image -->
+            <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=2000" alt="Retail Store Counter" class="absolute inset-0 w-full h-full object-cover brightness-95">
+            
+            <!-- Content Overlay -->
+            <div class="relative z-10 bg-white/90 backdrop-blur-[2px] m-12 p-16 md:w-3/5 rounded-2xl shadow-xl border border-white/30">
+                <span class="inline-block bg-brand/15 text-brand text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-4">Launching Soon</span>
+                <h1 class="text-5xl font-extrabold text-stone-900 leading-tight tracking-tight mb-5">
+                    MODERN POINT OF SALE <br>
+                    FOR RETAIL MASTERY
+                </h1>
+                <p class="text-xl text-stone-700 max-w-lg mb-8">
+                    We are putting the finishing touches on EXPOSALE. Be the first to experience the ultimate tool to ignite your retail growth.
+                </p>
+                
+                <!-- Early Access Subscription Form -->
+                <div id="notify" class="flex flex-col sm:flex-row gap-3 max-w-md">
+                    <input type="email" placeholder="Enter your email address" class="px-5 py-3.5 rounded-full border border-stone-300 focus:outline-none focus:ring-2 focus:ring-brand flex-grow text-sm">
+                    <button class="px-8 py-3.5 bg-brand text-white font-semibold rounded-full hover:bg-orange-600 transition shadow-md whitespace-nowrap">
+                        Notify Me
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- =========================
+             ICONS & FEATURES SECTION
+             ========================= -->
+        <section id="about" class="mb-24 text-center">
+            <h2 class="text-4xl font-bold text-stone-900 mb-16 tracking-tight">BUILT FOR POWER & EASE</h2>
+            
+            <div class="grid md:grid-cols-2 gap-10 max-w-5xl mx-auto">
+                <!-- Analytics Card -->
+                <div class="bg-white p-10 rounded-3xl shadow-lg border border-stone-100 flex flex-col items-center transition hover:-translate-y-2 hover:shadow-xl">
+                    <img src="https://img.icons8.com/fluency/96/combo-chart--v2.png" alt="Analytics Dashboard Icon" class="w-24 h-24 mb-8">
+                    <h3 class="text-xl font-semibold text-stone-900 mb-2">Real-Time Analytics Dashboard</h3>
+                    <p class="text-stone-600 text-sm">Monitor live sales, track multi-branch inventory, and make data-driven decisions instantly.</p>
+                </div>
+                
+                <!-- Terminal Card -->
+                <div class="bg-white p-10 rounded-3xl shadow-lg border border-stone-100 flex flex-col items-center transition hover:-translate-y-2 hover:shadow-xl">
+                    <img src="https://img.icons8.com/fluency/96/pos-terminal.png" alt="Payment Terminal Icon" class="w-24 h-24 mb-8">
+                    <h3 class="text-xl font-semibold text-stone-900 mb-2">Advanced POS Terminal</h3>
+                    <p class="text-stone-600 text-sm">Lightning-fast checkout processing designed to keep your lines moving and customers happy.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- =========================
+             PRICING PLANS (COMING SOON)
+             ========================= -->
+        <section id="pricing" class="mb-24 text-center">
+            <h2 class="text-4xl font-bold text-stone-900 mb-4 tracking-tight">FLEXIBLE PLANS COMING SOON</h2>
+            <p class="text-stone-600 mb-16 max-w-xl mx-auto">We are designing transparent packages tailored for businesses of all sizes. Pricing details will be revealed at launch.</p>
+
+            <!-- Pricing Grid -->
+            <div class="grid lg:grid-cols-3 gap-8 items-start max-w-6xl mx-auto">
+                
+                <!-- Plan 1: STARTER -->
+                <div class="bg-white p-10 rounded-3xl shadow-xl border border-stone-100 text-left relative transition hover:border-brand/20">
+                    <h4 class="text-xl font-semibold text-stone-900 mb-6">STARTER</h4>
+                    
+                    <ul class="space-y-4 text-sm text-stone-600 mb-10">
+                        <li class="flex items-center space-x-3">
+                            <img src="https://img.icons8.com/fluency/24/checked.png" alt="Check" class="w-5 h-5">
+                            <span>1 Register</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <img src="https://img.icons8.com/fluency/24/checked.png" alt="Check" class="w-5 h-5">
+                            <span>Inventory Sync</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <img src="https://img.icons8.com/fluency/24/checked.png" alt="Check" class="w-5 h-5">
+                            <span>Basic Analytics</span>
+                        </li>
+                    </ul>
+                    
+                    <div class="text-center border-t border-stone-100 pt-8">
+                         <div class="text-2xl font-bold text-stone-400 mb-6">Coming Soon</div>
+                         <button disabled class="w-full py-4 bg-stone-200 text-stone-500 rounded-full font-semibold cursor-not-allowed">Unveiling Soon</button>
+                    </div>
+                </div>
+
+                <!-- Plan 2: PRO -->
+                <div class="bg-white p-10 rounded-3xl shadow-xl border border-stone-100 text-left relative transition hover:border-brand/20 scale-105 z-10 ring-2 ring-brand/30">
+                    <span class="bg-brand text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-2 inline-block">Most Popular</span>
+                    <h4 class="text-xl font-semibold text-stone-900 mb-6 mt-2">PRO</h4>
+                    
+                    <ul class="space-y-4 text-sm text-stone-600 mb-10">
+                        <li class="flex items-center space-x-3">
+                            <img src="https://img.icons8.com/fluency/24/checked.png" alt="Check" class="w-5 h-5">
+                            <span>3 Registers</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <img src="https://img.icons8.com/fluency/24/checked.png" alt="Check" class="w-5 h-5">
+                            <span>Employee Management</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <img src="https://img.icons8.com/fluency/24/checked.png" alt="Check" class="w-5 h-5">
+                            <span>CRM & Advanced Reports</span>
+                        </li>
+                    </ul>
+                    
+                    <div class="text-center border-t border-stone-100 pt-8">
+                         <div class="text-2xl font-bold text-stone-400 mb-6">Coming Soon</div>
+                         <button disabled class="w-full py-4 bg-brand/80 text-white rounded-full font-semibold cursor-not-allowed">Unveiling Soon</button>
+                    </div>
+                </div>
+
+                <!-- Plan 3: ENTERPRISE -->
+                <div class="bg-white p-10 rounded-3xl shadow-xl border border-stone-100 text-left relative transition hover:border-brand/20">
+                    <h4 class="text-xl font-semibold text-stone-900 mb-6">ENTERPRISE</h4>
+                    
+                    <ul class="space-y-4 text-sm text-stone-600 mb-10">
+                        <li class="flex items-center space-x-3">
+                            <img src="https://img.icons8.com/fluency/24/checked.png" alt="Check" class="w-5 h-5">
+                            <span>Unlimited Registers</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <img src="https://img.icons8.com/fluency/24/checked.png" alt="Check" class="w-5 h-5">
+                            <span>Multi-Location Tenant Setup</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <img src="https://img.icons8.com/fluency/24/checked.png" alt="Check" class="w-5 h-5">
+                            <span>API Access & Priority Support</span>
+                        </li>
+                    </ul>
+                    
+                    <div class="text-center border-t border-stone-100 pt-8">
+                         <div class="text-2xl font-bold text-stone-400 mb-6">Coming Soon</div>
+                         <button disabled class="w-full py-4 bg-stone-200 text-stone-500 rounded-full font-semibold cursor-not-allowed">Unveiling Soon</button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- ============
+         FOOTER
+         ============ -->
+    <footer id="contact" class="bg-white border-t border-stone-100 mt-auto">
+        <div class="max-w-7xl mx-auto px-6 py-10 text-center text-xs text-stone-500">
+            <div class="flex justify-center space-x-8 mb-6">
+                <a href="#about" class="hover:text-brand transition">About Us</a>
+                <a href="#pricing" class="hover:text-brand transition">Pricing</a>
+                <a href="#" class="hover:text-brand transition">Terms of Service</a>
+            </div>
+            © 2026 EXPOSALE. All rights reserved.
+        </div>
+    </footer>
+</div>

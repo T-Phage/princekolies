@@ -36,6 +36,8 @@ export class LowStockComponent {
   
   role:string = '';
 
+  no_of_branches = Number(sessionStorage.getItem('number_of_branches'));
+
   constructor(
     private httpservice: HttpService,
     private zone: NgZone,
@@ -89,7 +91,7 @@ export class LowStockComponent {
     this.role = sessionStorage.getItem('role') || '';
     this.categories$ = this.httpservice.getCategories(this.currentPage, this.perPage);
 
-    if(this.role != 'Business_Owner'){
+    if((this.role != 'Business_Owner' && this.role != 'Account_Officer')){
       this.httpservice.getStockedOutProducts(this.currentPage, this.perPage).subscribe({
         next: data=> {
           this.products_out = data
@@ -118,6 +120,10 @@ export class LowStockComponent {
 
       return
     }
+
+    if(this.no_of_branches == 1){
+      this.branch.get('id')?.setValue(sessionStorage.getItem('user_branch') || '0')
+    }
     this.branches$ = this.httpservice.getbranches()
      if (this.branch.value.id == null || this.branch.value.id == '0') {
       setTimeout(() => {
@@ -130,7 +136,7 @@ export class LowStockComponent {
     this.httpservice.getProductsAlert(this.branch.value.id)
     .subscribe({
       next: data=> {
-        // console.log(data)
+        console.log(data)
         this.products_low = data.low_stock
         this.products_out = data.out_of_stock
         this.sharedservice.infoFunc('', '', false, false, false);
@@ -184,7 +190,7 @@ export class LowStockComponent {
   private generateTableHtml(): string {
     // console.log(this.products)
     if(this.low){
-      let tableHtml = '<table><thead><tr><th>Product Name</th><th>Category</th><th>Quantity</th><th>Price</th><th>Expiry Date</th><th>Uploaded By</th><th>Updated By</th></tr></thead><tbody>';
+      let tableHtml = '<table><thead><tr><th>Product Name</th><th>Category</th><th>Quantity</th><th>Price</th><th>Expiry Date</th></tr></thead><tbody>';
       this.products_low.forEach(product => {
         tableHtml += `<tr>
                         <td>${product.name}</td>
@@ -196,8 +202,6 @@ export class LowStockComponent {
                           month: 'short',
                           year: 'numeric'
                         })}</td>
-                        <td>${product.createdby}</td>
-                        <td>${product.updatedby}</td>
                       </tr>`;
       });
       tableHtml += '</tbody></table>';
@@ -385,6 +389,32 @@ export class LowStockComponent {
   
   }
 
+    closeModalAndRefresh() {
+    // Get the modal element
+    const modalElement = document.getElementById('update-product');
+    if (modalElement) {
+      // Get Bootstrap modal instance and hide it
+      const modal = (window as any).bootstrap.Modal.getInstance(modalElement);
+      if (modal) {
+        modal.hide();
+      }
+    }
+
+    // Remove modal backdrop
+    const backdrop = document.querySelector('.modal-backdrop');
+    if (backdrop) {
+      backdrop.remove();
+    }
+
+    // Restore body scroll
+    document.body.classList.remove('modal-open');
+    document.body.style.overflow = 'auto';
+
+    // Refresh the component
+    // this.refreshData();
+    this.sharedservice.refreshComponentFunc(this.router.url)
+  }
+
   submitUpdateFrm(event:Event){
     event.preventDefault();
 
@@ -396,50 +426,11 @@ export class LowStockComponent {
           $('.datanew_1').DataTable().destroy()
           $('.datanew_2').DataTable().destroy()
 
-          this.sharedservice.refreshComponentFunc(this.router.url)
-          // $('.datanew ').empty()
-          // this.sharedservice.infoFunc('alert alert-success', 'product updated', false, false, false) 
-          // this.products_out$ = this.httpservice.getStockedOutProducts(this.currentPage, this.perPage);
-          // this.products_low$ = this.httpservice.getLowStockedProducts(this.currentPage, this.perPage);
-          // this.categories$ = this.httpservice.getCategories(this.currentPage, this.perPage);
-          // this.httpservice.getStockedOutProducts(this.currentPage, this.perPage).subscribe({
-          //   next: data=> {
-          //     this.products_out = data
-          //   },
-          //   error: error => {
+          setTimeout(() => {
+            // this.closeModalAndRefresh()
+            this.ngOnInit()
+          }, 1000)
       
-          //   }
-          // })
-          // this.httpservice.getLowStockedProducts(this.currentPage, this.perPage).subscribe({
-          //   next: data=> {
-          //     this.products_low = data
-          //   },
-          //   error: error => {
-      
-          //   }
-          // })
-          
-          // setTimeout(()=> this.sharedservice.infoFunc('','', false,false,false), 3500)
-           
-          // // window.location.reload() 
-          // setTimeout(()=> {
-          //   $('.datanew').DataTable({
-          //     "bFilter": true,
-          //     // "sDom": 'fBtlpi',
-          //     "dom": 'pftil',
-          //     "ordering": true,
-          //     "language": {
-          //       search: ' ',
-          //       emptyTable: "No data available in table",
-          //       infoEmpty: "",
-          //       sLengthMenu: '_MENU_',
-          //       searchPlaceholder: "Search",
-          //       info: "_START_ - _END_ of _TOTAL_ items",
-          //       paginate: {
-          //         next: ' <i class=" fa fa-angle-right"></i>',
-          //         previous: '<i class="fa fa-angle-left"></i> '
-          //       },
-          //     },
           //     initComplete: (_settings: any, _json: any) => {
           //       $('.dataTables_filter').appendTo('#tableSearch');
           //       $('.dataTables_filter').appendTo('.search-input');

@@ -195,7 +195,7 @@
             <div class="modal-body">
                 <form (submit)="submitQueryFrm($event)" [formGroup]="queryFrm">
                     <div class="row">
-                        <div class="col-lg-12 col-sm-12 col-12">
+                        <div *ngIf="no_of_branches > 1" class="col-lg-12 col-sm-12 col-12">
                             <div class="input-blocks">
                                 <label>Branch</label>
                                 <select (change)="branchChange()" formControlName="branch_id" class="form-control">

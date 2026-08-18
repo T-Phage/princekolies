@@ -34,6 +34,7 @@ export class ExpiryComponent {
   branches$! : Observable<any>;
 
   role:string = '';
+  no_of_branches = Number(sessionStorage.getItem('number_of_branches'));
 
   constructor(
     private httpservice: HttpService,
@@ -84,7 +85,7 @@ export class ExpiryComponent {
     this.role = sessionStorage.getItem('role') || '';
     this.categories$ = this.httpservice.getCategories(1, 10)
 
-    if(this.role != 'Business_Owner') {
+    if((this.role != 'Business_Owner' && this.role != 'Account_Officer')){
       this.httpservice.getProductsExpiring(0,0)
       .subscribe({
         next: data => {
@@ -108,6 +109,9 @@ export class ExpiryComponent {
     }
     this.branches$ = this.httpservice.getbranches()
 
+    if (this.no_of_branches == 1){
+      this.branch.get('id')?.setValue(sessionStorage.getItem('user_branch') || '0')
+    }
     if (this.branch.value.id == null || this.branch.value.id == '0') {
       setTimeout(() => {
         this.sharedservice.infoFunc('alert alert-danger', 'branch not selected...  ', false, false, false);
@@ -120,7 +124,7 @@ export class ExpiryComponent {
       .subscribe({
         next: data => {
           this.products = data
-          // console.log(data)
+          console.log(data)
           this.datableservice.initiateDataTable('.dataexp', 25);
           setTimeout(() =>{
             this.sharedservice.infoFunc('', '', false, false, false);
@@ -299,8 +303,8 @@ export class ExpiryComponent {
       .subscribe({
         next: data => {
           $('.dataexp').DataTable().destroy()
-          // this.ngOnInit()
-          this.sharedservice.refreshComponentFunc(this.router.url); 
+          this.ngOnInit()
+          // this.sharedservice.refreshComponentFunc(this.router.url); 
         },
         error: error => {
           let msg = error.error.message

@@ -23,6 +23,7 @@ export class RestockComponent {
   selectedProduct: any;
   products:any[] = [];
   submitted: boolean = false;
+  no_of_branches = Number(sessionStorage.getItem('number_of_branches'));
 
   constructor(
     private httpservice: HttpService,
@@ -38,7 +39,7 @@ export class RestockComponent {
         product_id: ['', Validators.required],
         product_name: ['', Validators.required],
         quantity: ['', Validators.required],
-        branch_id: ['', Validators.required],
+        branch_id: [this.no_of_branches == 1 ? sessionStorage.getItem('user_branch') || null : null, Validators.required],
         price: ['', Validators.compose([Validators.required, Validators.pattern(this.sharedservice.amount)])],
       }),
     ]),
@@ -70,7 +71,7 @@ export class RestockComponent {
       product_id: ['', Validators.required],
       product_name: ['', Validators.required],
       quantity: ['', Validators.required],
-      branch_id: ['', Validators.required],
+      branch_id: [this.no_of_branches == 1 ? sessionStorage.getItem('user_branch') || null : null, Validators.required],
       price: ['', Validators.compose([Validators.required, Validators.pattern(this.sharedservice.amount)])],
     }));
 
@@ -160,8 +161,8 @@ export class RestockComponent {
     this.httpservice.getProducts(1, 10).subscribe({
       next: (res) => {
         this.products = res;
-        // console.log(res)
-        setTimeout(()=>{
+        console.log(res)
+        setTimeout(()=> {
           this.sharedservice.infoFunc('', '', false, false, false)
         }, 270)
       },

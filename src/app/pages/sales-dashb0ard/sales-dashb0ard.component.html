@@ -11,7 +11,7 @@
                 </div>
                 <i data-feather="calendar" class="feather-14"></i>
             </div>
-            <form *ngIf="userrole =='Business_Owner' || userrole =='Account_Officer'"  [formGroup]="branch">
+            <form *ngIf="(userrole =='Business_Owner' || userrole =='Account_Officer') && no_of_branches > 1"  [formGroup]="branch">
                 <select (change)="branchChange()" class="form-control" formControlName="id">
                     <option [value]="0">Select Branch</option>
                     <option *ngFor="let branch of branches$ | async" [value]="branch.id">{{branch.branch_name}}</option>

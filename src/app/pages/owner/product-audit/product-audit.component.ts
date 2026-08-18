@@ -22,6 +22,7 @@ export class ProductAuditComponent {
   products$!: Observable<any>;
   branches$!: Observable<any>;
   auditData: any[] = [];
+  no_of_branches = Number(sessionStorage.getItem('number_of_branches'));
 
   constructor(
     private scriptLoader: ScriploadService,

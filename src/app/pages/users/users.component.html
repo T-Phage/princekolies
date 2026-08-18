@@ -54,7 +54,7 @@
                                 <th>Phone</th>
                                 <th>email</th>
                                 <th>Role</th>
-                                <th>Branch</th>
+                                <th *ngIf="no_of_branches > 1">Branch</th>
                                 <th>Status</th>
                                 <th *ngIf="role == 'Business_Owner'" class="no-sort">Action</th>
                             </tr>
@@ -71,7 +71,7 @@
                                 <td>{{user.phone_number}}</td>
                                 <td>{{user.email}}</td>
                                 <td>{{user.role}}</td>
-                                <td>{{user.branch_name}}</td>
+                                <td *ngIf="no_of_branches > 1">{{user.branch_name}}</td>
                                 <td> 
                                     <span *ngIf="user.user_account == 'Inactive'" class="badge badge-linedanger">{{user.user_account}}</span>
                                     <span *ngIf="user.user_account == 'Active'" class="badge badge-linesuccess">{{user.user_account}}</span>
@@ -211,7 +211,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-lg-6">
+                                <div *ngIf="no_of_branches > 1" class="col-lg-6">
                                     <div class="input-blocks">
                                         <label>Branch</label>
                                         <select formControlName="branch" class="form-control">
@@ -323,7 +323,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-lg-6">
+                                <div *ngIf="no_of_branches > 1" class="col-lg-6">
                                     <div class="input-blocks">
                                         <label>Branch</label>
                                         <select formControlName="branch" class="form-control">

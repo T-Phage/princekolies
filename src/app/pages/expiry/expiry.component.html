@@ -49,7 +49,7 @@
                 </div>
             </div>
 
-            <form *ngIf="role == 'Business_Owner'" [formGroup]="branch">
+            <form *ngIf="role == 'Business_Owner' && no_of_branches > 1" [formGroup]="branch">
                 <select formControlName="id" (change)="branchChange()" class="form-control">
                     <option>Select branch</option>
                     <option *ngFor="let branch of branches$ | async" [value]="branch.id">{{branch.branch_name}}</option>
@@ -87,7 +87,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let product of products$ | async">
+                    <tr *ngFor="let product of products">
                         <td>
                             <label class="checkboxs">
                                 <input type="checkbox">

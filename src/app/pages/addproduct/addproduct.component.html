@@ -49,7 +49,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-lg-4 col-sm-6 col-12">
+                                <div *ngIf="no_of_branches > 1" class="col-lg-4 col-sm-6 col-12">
                                     <div class="mb-3 add-product">
                                         <label class="form-label">Branch</label>
                                         <select formControlName="branch" class="form-control text-uppercase">
@@ -75,7 +75,7 @@
                                         <!-- <select formControlName="category" class="select"> -->
                                         <select formControlName="category_id" class="form-control">
                                             <option [value]="null" disabled>Choose</option>
-                                            <option *ngFor="let categor of filteredCategories"
+                                            <option *ngFor="let categor of categories"
                                                 value="{{categor.id}}">{{categor.name}}</option>
                                         </select>
                                         <div *ngIf="(newProductForm.get('category_id')?.invalid && newProductForm.get('category_id')?.touched) || submitted">

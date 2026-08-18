@@ -41,7 +41,8 @@ export class PosComponent {
   oncredit: boolean = false;
 
   role = this.httpservice.getUserRole();
-
+  no_of_branches = Number(sessionStorage.getItem('number_of_branches'));
+  
   constructor(
     private formBuilder: FormBuilder,
     private httpservice: HttpService,
@@ -212,6 +213,9 @@ export class PosComponent {
     }
     
     this.branches$ = this.httpservice.getbranches()
+    if (this.no_of_branches == 1) {
+      this.newSalesFrm.get('branch_id')?.setValue(sessionStorage.getItem('user_branch') || '0')
+    }
     if (this.newSalesFrm.value.branch_id == null || this.newSalesFrm.value.branch_id == '0') {
       this.loadingService.hide()
       setTimeout(() => {
@@ -302,7 +306,7 @@ export class PosComponent {
     'biller': [sessionStorage.getItem('id')],
     'items': this.formBuilder.array([]),
     'extra_services': this.formBuilder.array([]),
-    'branch_id': [this.role == 'Business_Owner' ? sessionStorage.getItem('selected_branch'): ''],
+    'branch_id': [this.role == 'Business_Owner' && this.no_of_branches > 1 ? sessionStorage.getItem('selected_branch'): sessionStorage.getItem('user_branch')],
     'discount': [0.0, Validators.compose([Validators.required, Validators.pattern(this.sharedservice.amount)])],
     'sale_date': [this.currentDate.toISOString().split('T')[0]]
   })

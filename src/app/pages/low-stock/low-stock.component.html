@@ -60,7 +60,7 @@
                                         class="feather-search"></i></a>
                             </div>
                         </div>
-                        <form *ngIf="role == 'Business_Owner'" [formGroup]="branch">
+                        <form *ngIf="role == 'Business_Owner' && no_of_branches > 1" [formGroup]="branch">
                             <select formControlName="id" (change)="branchChange()" class="form-control">
                                 <option>Select branch</option>
                                 <option *ngFor="let branch of branches$ | async" [value]="branch.id">{{branch.branch_name}}</option>
@@ -123,10 +123,10 @@
                                     <!-- <td>{{ product.createdby }}</td> -->
                                     <td *ngIf="role == 'Business_Owner'" class="action-table-data">
                                         <div class="edit-delete-action">
-                                            <a (click)="productClicked(product.id,product.name,product.description,product.barcode,product.price,product.category_,product.quantity,product.quantity_alert,product.manufactured_date,product.expiry_date)" class="me-2 p-2" data-bs-toggle="modal" data-bs-target="#update-product" href="javascript:void(0);">
+                                            <a (click)="productClicked(product.product_id,product.name,product.description,product.barcode,product.price,product.category_,product.quantity,product.quantity_alert,product.manufactured_date,product.expiry_date)" class="me-2 p-2" data-bs-toggle="modal" data-bs-target="#update-product" href="javascript:void(0);">
                                                 <i data-feather="edit" class="feather-edit"></i>
                                             </a>
-                                            <!-- <a (click)="productClicked(product.id,product.name,product.description,product.barcode,product.price,product.category_,product.quantity,product.quantity_alert,product.manufactured_date,product.expiry_date)" class="confirm-text p-2" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#delete-units">
+                                            <!-- <a (click)="productClicked(product.product_id,product.name,product.description,product.barcode,product.price,product.category_,product.quantity,product.quantity_alert,product.manufactured_date,product.expiry_date)" class="confirm-text p-2" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#delete-units">
                                                 <i data-feather="trash-2" class="feather-trash-2"></i>
                                             </a> -->
                                         </div>
@@ -150,7 +150,7 @@
                                         class="feather-search"></i></a>
                             </div>
                         </div>
-                        <form *ngIf="role == 'Business_Owner'" [formGroup]="branch">
+                        <form *ngIf="role == 'Business_Owner' && no_of_branches > 1" [formGroup]="branch">
                             <select formControlName="id" (change)="branchChange()" class="form-control">
                                 <option>Select branch</option>
                                 <option *ngFor="let branch of branches$ | async" [value]="branch.id">{{branch.branch_name}}</option>
@@ -196,7 +196,7 @@
                                     <!-- <td>{{ product.createdby }}</td> -->
                                     <td *ngIf="role == 'Business_Owner'" class="action-table-data">
                                         <div class="edit-delete-action">
-                                            <a (click)="productClicked(product.id,product.name,product.description,product.barcode,product.price,product.category_,product.quantity,product.quantity_alert,product.manufactured_date,product.expiry_date)" class="me-2 p-2" data-bs-toggle="modal" data-bs-target="#update-product" href="javascript:void(0);">
+                                            <a (click)="productClicked(product.product_id,product.name,product.description,product.barcode,product.price,product.category_,product.quantity,product.quantity_alert,product.manufactured_date,product.expiry_date)" class="me-2 p-2" data-bs-toggle="modal" data-bs-target="#update-product" href="javascript:void(0);">
                                                 <i data-feather="edit" class="feather-edit"></i>
                                             </a>
                                             <!-- <a (click)="productClicked(product.id,product.name,product.description,product.barcode,product.price,product.category_,product.quantity,product.quantity_alert,product.manufactured_date,product.expiry_date)" class="confirm-text p-2" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#delete-units">
@@ -234,7 +234,7 @@
 </div>
 
 
-<div class="modal fade" id="edit-stock">
+<!-- <div class="modal fade" id="edit-stock">
     <div class="modal-dialog modal-dialog-centered custom-modal-two">
         <div class="modal-content">
             <div class="page-wrapper-new p-0">
@@ -296,7 +296,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 
 <div class="modal fade" id="update-product">

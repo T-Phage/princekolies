@@ -35,6 +35,7 @@ export class SaleanalyticsComponent {
   branches:any[] = [];
 
   submitted = true;
+  no_of_branches = Number(sessionStorage.getItem('number_of_branches'));
 
   constructor(
     private httpservice: HttpService,
@@ -92,6 +93,9 @@ export class SaleanalyticsComponent {
   }
 
   ngOnInit ():void {
+    if(this.no_of_branches == 1){
+      this.queryFrm.get('branch_id')?.setValue(parseInt(`${sessionStorage.getItem('user_branch')}`) || 0)
+    }
     if(parseInt(`${sessionStorage.getItem('selected_branch')}`) != 0){
       this.queryFrm.get('branch_id')?.setValue(parseInt(`${sessionStorage.getItem('selected_branch')}`) || 0)
     }

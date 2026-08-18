@@ -28,6 +28,8 @@ export class DebtorsComponent {
   categories$!: Observable<any>;
   role:string = '';
 
+  no_of_branches = Number(sessionStorage.getItem('number_of_branches'));
+
   // currentDate = new Date().toLocaleDateString().split('T')[0];
 
   clickedDebtor = {
@@ -242,7 +244,7 @@ export class DebtorsComponent {
     this.categories$ = this.httpService.getCategories(1, 10)
     this.branches$ = this.httpService.getbranches();
     
-    if(this.httpService.getUserRole() != 'Business_Owner' && this.httpService.getUserRole() != 'Account_Officer') {
+    if((this.httpService.getUserRole() != 'Business_Owner' && this.httpService.getUserRole() != 'Account_Officer')) {
       this.httpService.getBranchDebtors('0')
       .subscribe({
         next: (res) => {
@@ -252,7 +254,7 @@ export class DebtorsComponent {
           this.sharedservice.infoFunc('', '', false, false, false);
         },
         error: (err) => {
-          // console.log(err)
+          console.log(err)
           this.sharedservice.infoFunc('alert alert-danger', 'Error fetching branch debtors...  ' + err.error.message, false, false, false);
           if(err.error.staus === 401 || err.error.staus === 403){
             this.httpService.httpLogout(err.error.message)
@@ -261,6 +263,11 @@ export class DebtorsComponent {
       })
 
       return;
+    }
+
+    if(this.no_of_branches == 1){
+      this.branch.get('id')?.setValue(sessionStorage.getItem('user_branch'))
+      this.editPaymentFrm.get('branch_id')?.setValue(sessionStorage.getItem('user_branch'))
     }
 
     if (this.branch.value.id == null || this.branch.value.id == '0') {

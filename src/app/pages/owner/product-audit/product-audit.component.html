@@ -20,7 +20,7 @@
                 <label class="form-label small fw-bold">END DATE</label>
                 <input type="date" class="form-control" formControlName="endDate">
             </div>
-            <div class="col-md-3">
+            <div *ngIf="no_of_branches > 1" class="col-md-3">
                 <label class="form-label small fw-bold">BRANCH</label>
                 <select class="form-select" formControlName="branch">
                     <option value="">Select Branch</option>

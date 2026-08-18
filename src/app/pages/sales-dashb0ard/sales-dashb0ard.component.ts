@@ -31,6 +31,8 @@ export class SalesDashb0ardComponent {
 
   errorLoading:boolean = false;
 
+  no_of_branches = Number(sessionStorage.getItem('number_of_branches'));
+
   salesa:any;
   public chart: any;
   recentSales:any[] = [];
@@ -329,6 +331,10 @@ export class SalesDashb0ardComponent {
       return
     }
 
+    if(this.no_of_branches == 1){
+      this.branch.get('id')?.setValue(sessionStorage.getItem('user_branch'))
+    }
+
     this.branches$ = this.httpservice.getbranches();
 
     if(parseInt(`${sessionStorage.getItem('selected_branch')}`) != 0){
@@ -339,7 +345,6 @@ export class SalesDashb0ardComponent {
       this.httpservice.getSalesAnalytics().subscribe({
         next: data => {
           // this.loading = false;
-          // console.log(data)
           // this.todayCashAmount = data.todayCashAmount
           this.salesa = data.monthlySales
           this.salescount = data.todaySales

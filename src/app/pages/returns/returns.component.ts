@@ -49,6 +49,7 @@ export class ReturnsComponent {
     barcodeData: string = '';
     inputBuffer: string = '';
     scanTimeout: any;
+    no_of_branches = Number(sessionStorage.getItem('number_of_branches'));
   
     constructor(
       private formBuilder: FormBuilder,
@@ -143,7 +144,7 @@ export class ReturnsComponent {
       this.sharedservice.infoFunc('alert alert-info', 'fetching branch returns...  ', true, true, true);
       this.branches$ = this.httpservice.getbranches()
       this.userRole = this.httpservice.getUserRole();
-      if(this.userRole !== 'Business_Owner'){
+      if((this.userRole !== 'Business_Owner' && this.userRole !== 'Account_Officer') || this.no_of_branches == 1){
       
         this.httpservice.getSalesReturns(1, 10).subscribe({
           next: data => {

@@ -26,6 +26,8 @@ export class OverviewDashboardComponent {
     private fb: FormBuilder,
   ){  }
 
+  no_of_branches = Number(sessionStorage.getItem('number_of_branches'));
+
   loading: boolean = true;
   errorLoading:boolean = false;
 
@@ -77,6 +79,9 @@ export class OverviewDashboardComponent {
     this.username = sessionStorage.getItem('username') || '';
 
     this.httpservice.httpself();
+    if(this.no_of_branches == 1){
+      this.branch.get('id')?.setValue(sessionStorage.getItem('user_branch'))
+    }
 
     if(parseInt(`${this.branch.value.id}`) != 0 ){
       this.branchChange();

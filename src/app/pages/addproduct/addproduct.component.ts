@@ -26,6 +26,7 @@ export class AddproductComponent {
   
   selectedFile: File | null = null;
   imagePreview: string | null = null;
+  no_of_branches = Number(sessionStorage.getItem('number_of_branches'));
 
   constructor(
     public sharedservice: SharedService,
@@ -92,7 +93,7 @@ export class AddproductComponent {
     'name': ['', Validators.required],
     'description': [''],
     'barcode': ['',],
-    'branch': ['0'],
+    'branch': [this.no_of_branches == 1 ? sessionStorage.getItem('user_branch') : '0', Validators.required ],
     'price': ['', Validators.compose([Validators.required, Validators.pattern(this.sharedservice.amount)])],
     'category_id': [null, Validators.compose([Validators.required])],
     'quantity': ['', Validators.compose([Validators.required, Validators.min(0),])],// this.validationservice.positiveIntegerValidator()])],
@@ -153,16 +154,27 @@ export class AddproductComponent {
   }
 
   async ngOnInit() {
+    if(this.no_of_branches == 1){
+      this.newProductForm.get('branch')?.setValue(sessionStorage.getItem('user_branch'));
+    } else {
+      this.newProductForm.get('branch')?.setValue(sessionStorage.getItem('selected_branch'));
+    }
+    console.log(this.newProductForm.value)
     // this.startCamera()
-    this.categories$ = await this.httpservice.getCategories(1, 10);
+    this.categories$ = this.httpservice.getCategories(1, 10);
     this.branches$ = this.httpservice.getbranches();
 
     this.categories$.subscribe({
       next: data => {
+        console.log('categories ', data)
         this.categories = data
       },
       error: _err => {}
     })
+
+    if(this.no_of_branches == 1) {
+      this.newProductForm.get('branch')?.setValue(sessionStorage.getItem('user_branch'));
+    }
 
     this.newProductForm.get('branch')?.valueChanges.subscribe(branch_id => {
       // console.log(branch_id)
@@ -171,15 +183,19 @@ export class AddproductComponent {
        if (this.newProductForm.get('category_id')?.value == null){
         this.newProductForm.get('category_id')?.setErrors({required: true})
        }
-      if(branch_id) {
-        this.filteredCategories = this.categories.filter(c => c.branch_id == branch_id);
-      } else {
-        this.filteredCategories = [];
-      }
+      // if(branch_id) {
+      //   this.filteredCategories = this.categories.filter(c => c.branch_id == branch_id);
+      // } else {
+      //   this.filteredCategories = [];
+      // }
     })
 
     setTimeout(() => {
-      this.newProductForm.get('branch')?.setValue(`${sessionStorage.getItem('selected_branch')}`, {emitEvent: true});
+      // this.newProductForm.get('branch')?.setValue(`${sessionStorage.getItem('selected_branch')}`, {emitEvent: true});
     }, 1000);
+  }
+
+  ngOnDestroy() {
+    this.sharedservice.infoFunc('', '', false, false, false)
   }
 }

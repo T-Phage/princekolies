@@ -40,6 +40,8 @@ export class ExpensesComponent {
     'id': [sessionStorage.getItem('selected_branch')]
   })
 
+  no_of_branches = Number(sessionStorage.getItem('number_of_branches'));
+
   new_expenditureFrm = this.formBuilder.group({
     expense_category: ['', Validators.required],
     expense_date: [this.currentDate.toISOString().split('T')[0], Validators.required],
@@ -47,7 +49,7 @@ export class ExpensesComponent {
     reference: ['', Validators.required],
     expense_for: ['', Validators.required],
     description: [''],
-    branch_id: [this.role == 'Business_Owner' ? sessionStorage.getItem('selected_branch') : ''],
+    branch_id: [this.role == 'Business_Owner' && this.no_of_branches > 1 ? sessionStorage.getItem('selected_branch') : sessionStorage.getItem('user_branch')],
   })
 
   branchChange() {
@@ -82,7 +84,7 @@ export class ExpensesComponent {
   submitExpenditure(evt: Event) {
     evt.preventDefault();
 
-    // console.log(this.new_expenditureFrm.value)
+    console.log(this.new_expenditureFrm.value)
     // console.log(this.new_expenditureFrm.valid)
     if(!this.new_expenditureFrm.valid){
       return
@@ -113,7 +115,7 @@ export class ExpensesComponent {
     this.sharedservice.infoFunc('alert alert-info', 'fetching expenses...', true, true, true)
     this.expCategory$ = this.httpservice.getExpenseCategory();
     // this.branches$ = this.httpservice.getbranches();
-    if (this.role != 'Business_Owner' && this.role != 'Account_Officer'){
+    if ((this.role != 'Business_Owner' && this.role != 'Account_Officer') || this.no_of_branches == 1) {
       this.httpservice.getExpenses().subscribe({
         next: data => {
           console.log(data)
@@ -131,6 +133,10 @@ export class ExpensesComponent {
         }
       })
       return
+    }
+
+    if(this.no_of_branches == 1){
+      this.branch.get('id')?.setValue(sessionStorage.getItem('user_branch') || '0')
     }
     
     this.branches$ = this.httpservice.getbranches();

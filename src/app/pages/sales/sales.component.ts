@@ -36,6 +36,7 @@ export class SalesComponent implements OnInit {
   selectedProduct: any;
 
   role = this.httpservice.getUserRole();
+  no_of_branches = Number(sessionStorage.getItem('number_of_branches'));
 
   constructor(
     private formBuilder: FormBuilder,
@@ -157,7 +158,7 @@ export class SalesComponent implements OnInit {
     this.products$ = this.httpservice.getProducts(1, 10)
     this.branches$ = this.httpservice.getbranches()
 
-    if (this.role != 'Business_Owner' && this.role != 'Account_Officer') {
+    if ((this.role != 'Business_Owner' && this.role != 'Account_Officer')) {
       
       this.httpservice.getSales(1, 10)
       .subscribe({
@@ -179,6 +180,10 @@ export class SalesComponent implements OnInit {
       return
     }
 
+    if(this.no_of_branches == 1){
+      this.branch.get('id')?.setValue(sessionStorage.getItem('user_branch'))
+    }
+
     if (this.branch.value.id == null || this.branch.value.id == '0') {
       setTimeout(() => {
           this.sharedservice.infoFunc('alert alert-danger', 'branch not selected...  ', false, false, false);
@@ -190,7 +195,6 @@ export class SalesComponent implements OnInit {
     this.httpservice.getBranchSales(this.branch.value.id)
       .subscribe({
         next: data => {
-          // console.log(data)
           this.sales = data
 
           this.sharedservice.infoFunc('', '', false, false, false);

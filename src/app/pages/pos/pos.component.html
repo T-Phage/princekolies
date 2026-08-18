@@ -23,7 +23,7 @@
                         </div> -->
                     </div>
                 </div>
-                <div *ngIf="role == 'Business_Owner'"  class="col-lg-3 col-sm-12 col-12">
+                <div *ngIf="role == 'Business_Owner' && no_of_branches > 1"  class="col-lg-3 col-sm-12 col-12">
                     <div class="input-blocks">
                         <label>Branch</label>
                         <select (change)="branchChange()" formControlName="branch_id" class="form-control">
@@ -322,7 +322,7 @@
 <div style="display: none;" id="receipt" #receiptContent>
     <div class="page-content">
         <div class="page-header text-blue-d2 text-center" style="display: flex;justify-content:center;color: #000;">
-            <h3 class="page-title text-center">Princekolies Poultry Ent.</h3>
+            <h3 class="page-title text-center">Feedstup Enterprise.</h3>
             <!-- <h1 class="page-title text-secondary-d1">
                 Invoice
                 <small class="page-info">

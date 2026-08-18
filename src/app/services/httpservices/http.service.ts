@@ -11,13 +11,9 @@ import { AuthserviceService } from '../auth/authservice.service';
 })
 
 export class HttpService {
-  // baseDomain = 'http://localhost/pos/public';
-  baseDomain = 'https://techneservers.com';
-  // baseUrl = 'http://localhost/pos/public/api'
-  // baseUrl = 'http://localhost/techne_app_2/public/api'
-  baseUrl = 'https://techneservers.com/pos_api/api'
-  // appToken = 'ZxcvkdmnvnbjkjewoMQ23'
-  // appToken = sessionStorage.getItem('token') || '';
+  baseDomain = 'https://getexposale.com/backend';
+  baseUrl = 'https://getexposale.com/backend/api'
+
   appToken:string = '';
   role:string = '';
   dateError: boolean = false;
@@ -103,9 +99,10 @@ export class HttpService {
           sessionStorage.setItem('user', JSON.stringify(data.user))
           sessionStorage.setItem('number_of_branches', data.no_of_branches)
           sessionStorage.setItem('selected_branch', '0');
+          sessionStorage.setItem('user_branch', data.user.branch_id);
           // sessionStorage.setItem('account_type', JSON.stringify(data.user.branch_info.business_info))
           sessionStorage.setItem('account_ty', JSON.stringify(data.account_type))
-          console.log(data.user.branch_info.business_info)
+          console.log(data.user.business_info)
 
           this.appToken = data.token;
           this.role = data.role;

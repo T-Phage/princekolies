@@ -38,6 +38,7 @@ export class CategoryComponent {
   role:string = '';
   owner:boolean = false;
   submitted:boolean = false;
+  no_of_branches = Number(sessionStorage.getItem('number_of_branches'));
 
   constructor(
     private formBuilder: FormBuilder,
@@ -57,7 +58,7 @@ export class CategoryComponent {
     'name': ['', Validators.required],
     'status': [true, Validators.required],
     'createdby': [parseInt(`${sessionStorage.getItem('id')}`),],
-    'branch': [sessionStorage.getItem('selected_branch'), Validators.required],
+    'branch': [this.no_of_branches == 1 ? null : sessionStorage.getItem('selected_branch')],
   });
 
   updateCategoryFrm = this.formBuilder.group({
@@ -217,7 +218,7 @@ export class CategoryComponent {
   }
 
   ngOnInit() {
-    this.sharedservices.infoFunc('alert alert-info', 'fetching branch products...  ', true, true, true);
+    this.sharedservices.infoFunc('alert alert-info', 'fetching branch product category...  ', true, true, true);
     this.role = sessionStorage.getItem('role') || '';
     this.branches$ = this.httpservices.getbranches();
  

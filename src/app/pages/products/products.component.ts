@@ -33,6 +33,8 @@ export class ProductsComponent {
 
   role:string = '';
 
+  no_of_branches = Number(sessionStorage.getItem('number_of_branches'));
+
   constructor(
     private httpservice: HttpService,
     public currency: CurrencyPipe,
@@ -68,7 +70,7 @@ export class ProductsComponent {
 
     this.role = this.httpservice.getUserRole();
     // this.products = []
-    if(this.httpservice.getUserRole() != 'Business_Owner' && this.httpservice.getUserRole() != 'Account_Officer'){
+    if((this.httpservice.getUserRole() != 'Business_Owner' && this.httpservice.getUserRole() != 'Account_Officer')){
       this.httpservice.getProducts(0,0)
         .subscribe({
           next: data => {
@@ -95,11 +97,13 @@ export class ProductsComponent {
       return;
     }
     
+    if(this.no_of_branches == 1){
+      this.branch.get('id')?.setValue(sessionStorage.getItem('user_branch') || '0')
+    }
     if (this.branch.value.id == null || this.branch.value.id == '0') {
       setTimeout(() => {
           this.sharedservice.infoFunc('alert alert-danger', 'branch not selected...  ', false, false, false);
       }, 1500);
-
         return
     }
 

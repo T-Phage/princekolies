@@ -41,7 +41,7 @@
                 </div>
             </div>
             
-            <form *ngIf="role == 'Business_Owner' || role == 'Account_Officer'" [formGroup]="branch">
+            <form *ngIf="(role == 'Business_Owner' || role == 'Account_Officer') && no_of_branches > 1" [formGroup]="branch">
                 <select formControlName="id" (change)="branchChange()" class="form-control">
                     <option value="0">Select branch</option>
                     <option *ngFor="let branch of branches$ | async" [value]="branch.id">{{branch.branch_name}}</option>
@@ -328,7 +328,7 @@
 </div> -->
 
 
-<div class="modal fade" id="showpayment" tabindex="-1" aria-labelledby="showpayment" aria-hidden="true">
+<!-- <div class="modal fade" id="showpayment" tabindex="-1" aria-labelledby="showpayment" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered stock-adjust-modal">
         <div class="modal-content">
             <div class="page-wrapper-new p-0">
@@ -389,10 +389,10 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 
-<div class="modal fade" id="createpayment" tabindex="-1" aria-labelledby="createpayment" aria-hidden="true">
+<!-- <div class="modal fade" id="createpayment" tabindex="-1" aria-labelledby="createpayment" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header border-0 custom-modal-header">
@@ -469,10 +469,10 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 
-<div class="modal fade" id="editpayment" tabindex="-1" aria-labelledby="editpayment" aria-hidden="true">
+<!-- <div class="modal fade" id="editpayment" tabindex="-1" aria-labelledby="editpayment" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header border-0 custom-modal-header">
@@ -549,8 +549,120 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 <!-- receipt.component.html -->
-
+<!-- receipt -->
+<div class="modal fade modal-default" id="print-receipt" aria-labelledby="print-receipt"
+    style="display: none; padding-left: 0px;" aria-modal="true" role="dialog" #receiptContent>
+    <div class="modal-dialog modal-dialog-centered img-receipt">
+        <div class="modal-content">
+            <div class="d-flex justify-content-end hide">
+                <button type="button" class="close p-0 hide" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="icon-head text-center">
+                    <a href="javascript:void(0);">
+                        <!-- <img src="/assets/images/PRINCE_.jpg-removebg.png" width="100" height="50" alt="Receipt Logo"> -->
+                    </a>
+                </div>
+                <div class="text-center info text-center">
+                    <h6 class="head-text">Feedstup Enterprise.</h6>
+                    <p class="mb-0 text-12">Phone Number: 0502893903</p>
+                    <!-- <p class="mb-0">Email: <a href=""></a></p> -->
+                </div>
+                <div class="tax-invoice text-12">
+                    <!-- <h6 class="text-center">Tax Invoice</h6> -->
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6">
+                            <div class="invoice-user-name"><span>Attendant: </span><span>{{clickedSale.biller}}</span></div>
+                            <!-- <div class="invoice-user-name"><span>Invoice No: </span><span>{{newSalesFrm.controls.reference.value}}</span></div> -->
+                            <div *ngIf="clickedSale.customer_name" class="invoice-user-name"><span>Customer Name: </span><span>{{clickedSale.customer_name}}</span></div>
+                        </div>
+                        <div class="col-sm-12 col-md-6">
+                            <div class="invoice-user-name"><span>Invoice No: </span><span>{{clickedSale.reference}}</span></div>
+                        </div>
+                        <div class="col-sm-12 col-md-6">
+                            <div class="invoice-user-name"><span>Date: </span><span>{{ currentDate | date: 'shortDate' }}</span></div>
+                            <div class="invoice-user-name"><span>Status: </span>{{clickedSale.payment_status}}<span></span></div>
+                        </div>
+                    </div>
+                </div>
+                <table class="table-borderless w-100 table-fit">
+                    <thead>
+                        <tr>
+                            <th># Item</th>
+                            <th>Price</th>
+                            <th>Qty</th>
+                            <th class="text-end">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="text-12 receipt-row"  *ngFor="let item of clickedSale.items; let i = index">
+                            <td>{{i+1}}. {{item['product'] }}</td>
+                            <td>{{item['unit_cost'] | currency : 'Ghc '}}</td>
+                            <td>{{item['quantity']}}</td>
+                            <td class="text-end">{{item['purchase_price'] | currency : 'Ghc '}}</td>
+                        </tr>
+                        <tr class="text-12 receipt-row" *ngFor="let service of clickedSale.extra_services">
+                            <td></td>
+                            <td>{{service['name']}}</td>
+                            <td></td>
+                            <td>{{service['cost']}}</td>
+                        </tr>
+                        
+                        <tr class="border-top amount-payable">
+                            <td colspan="4">
+                                <table class="table-borderless w-100 table-fit">
+                                    <tbody>
+                                        <tr>
+                                            <td>Sub Total :</td>
+                                            <td class="text-end">{{clickedSale.grand_total - clickedSale.discount | currency : 'Ghc '}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Discount :</td>
+                                            <td class="text-end">{{clickedSale.discount | currency : 'Ghc -'}}</td>
+                                        </tr>
+                                        <!-- <tr>
+                                            <td>Shipping :</td>
+                                            <td class="text-end">0.00</td>
+                                        </tr> -->
+                                        <!-- <tr>
+                                            <td>Tax (5%) :</td>
+                                            <td class="text-end">$5.00</td>
+                                        </tr> -->
+                                        <!-- <tr>
+                                            <td>Total Bill :</td>
+                                            <td class="text-end">$655.00</td>
+                                        </tr> -->
+                                        <!-- <tr>
+                                            <td>Due :</td>
+                                            <td class="text-end">$0.00</td>
+                                        </tr> -->
+                                        <tr>
+                                            <td>Total Payable :</td>
+                                            <td class="text-end">{{clickedSale.grand_total | currency : 'Ghc '}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="text-center invoice-bar">
+                    <p class="hide">**Thank you for your business!
+                    </p>
+                    <a  class="hide" href="javascript:void(0);">
+                        <img src="/assets/images/barcode-03.jpg" alt="Barcode">
+                    </a>
+                    <p class="text-12 hide">{{clickedSale.payment_status}} Sale </p>
+                    <p class="text-12">**Thank You For Shopping With Us. Hope to See You Again</p>
+                    <a href="javascript:void(0);" class="btn btn-primary hide">Print Receipt</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 

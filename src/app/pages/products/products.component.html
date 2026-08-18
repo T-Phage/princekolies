@@ -49,7 +49,7 @@
                 </div>
             </div>
 
-            <form *ngIf="role == 'Business_Owner' || role == 'Account_Officer'" [formGroup]="branch">
+            <form *ngIf="(role == 'Business_Owner' || role == 'Account_Officer') && no_of_branches > 1" [formGroup]="branch">
                 <select formControlName="id" (change)="branchChange()" class="form-control">
                     <option>Select branch</option>
                     <option *ngFor="let branch of branches$ | async" [value]="branch.id">{{branch.branch_name}}</option>

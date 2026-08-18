@@ -83,13 +83,14 @@ export class Pos2Component implements AfterViewInit {
   currentDate = new Date();
     newSalesFrm = this.formBuilder.group({
       'customer_id': [''],
-      'customer_name': ['', Validators.compose([Validators.required])],
+      'first_name': ['', Validators.compose([Validators.required])],
+      'last_name': ['', Validators.compose([])],
       'customer_address': [''],
       'customer_phone': [''],
       'customer_business_name': [''],
       'identity_number': ['', Validators.compose([])],
       'identification_type': [''],
-      'customer_email': ['', Validators.email],
+      'customer_email': ['',],
       'reference': [''],
       'status': ['Completed'],
       'grand_total': ['0.00', Validators.required],
@@ -291,8 +292,14 @@ export class Pos2Component implements AfterViewInit {
     if(checked){
       this.newSalesFrm.get('payment_status')?.setValue('Unpaid');
       // this.newSalesFrm
-      this.newSalesFrm.get('customer_name')?.setValidators([Validators.required]);
-      this.newSalesFrm.get('customer_name')?.updateValueAndValidity();
+      this.newSalesFrm.get('first_name')?.setValidators([Validators.required]);
+      this.newSalesFrm.get('first_name')?.updateValueAndValidity();
+
+      this.newSalesFrm.get('last_name')?.setValidators([Validators.required]);
+      this.newSalesFrm.get('last_name')?.updateValueAndValidity();
+
+      this.newSalesFrm.get('customer_email')?.setValidators([Validators.email, Validators.required]);
+      this.newSalesFrm.get('customer_email')?.updateValueAndValidity();
       // 
       this.newSalesFrm.get('customer_phone')?.setValidators([Validators.required]);
       this.newSalesFrm.get('customer_phone')?.updateValueAndValidity();
@@ -313,9 +320,17 @@ export class Pos2Component implements AfterViewInit {
     }else{
       this.newSalesFrm.get('payment_status')?.setValue('Paid');
       
-      // this.newSalesFrm.get('customer_name')?.setValidators([])
-      this.newSalesFrm.get('customer_name')?.setValue('')
-      this.newSalesFrm.get('customer_name')?.updateValueAndValidity();
+      // this.newSalesFrm.get('cus_name')?.setValidators([])
+      this.newSalesFrm.get('first_name')?.setValue('')
+      this.newSalesFrm.get('first_name')?.updateValueAndValidity();
+      // 
+      this.newSalesFrm.get('last_name')?.setValidators([])
+      this.newSalesFrm.get('last_name')?.setValue('')
+      this.newSalesFrm.get('last_name')?.updateValueAndValidity();
+
+      this.newSalesFrm.get('customer_email')?.setValidators([])
+      this.newSalesFrm.get('customer_email')?.setValue('')
+      this.newSalesFrm.get('customer_email')?.updateValueAndValidity();
       //
       this.newSalesFrm.get('customer_phone')?.setValidators([])
       this.newSalesFrm.get('customer_phone')?.setValue('')
@@ -352,11 +367,11 @@ export class Pos2Component implements AfterViewInit {
     const inputValue = evt.target.value;
     // console.log(inputValue)
     // console.log(inputValue.toString().split(' | ')[0])
-    this.selectedCustomer = this.customers.find((customer:any) => customer.name === inputValue);
+    this.selectedCustomer = this.customers.find((customer:any) => customer.first_name === inputValue);
     
     // console.log(this.selectedCustomer)
 
-    // this.newSalesFrm.get('customer_name')?.setValue(this.selectedCustomer.name)
+    // this.newSalesFrm.get('cus_name')?.setValue(this.selectedCustomer.name)
     this.newSalesFrm.get('customer_phone')?.setValue(this.selectedCustomer.phone)
     this.newSalesFrm.get('customer_business_name')?.setValue(this.selectedCustomer.business_name)
     this.newSalesFrm.get('customer_address')?.setValue(this.selectedCustomer.address)
@@ -365,32 +380,6 @@ export class Pos2Component implements AfterViewInit {
     this.newSalesFrm.get('identity_number')?.setValue(this.selectedCustomer.identity_number)
     this.newSalesFrm.get('customer_id')?.setValue(this.selectedCustomer.id)
   }
-
-  // inpProductNameChange(evt: any){
-  //   const inputValue = evt.target.value;
-  //   // console.log(inputValue)
-  //   this.selectedProduct = this.products.find(product => product.name === inputValue);
-  //   // console.log(this.isProductExpired(this.selectedProduct.expiry_date))
-    
-  //   console.log(this.selectedProduct)
-  //   if(this.isProductExpired(this.selectedProduct.expiry_date)){
-  //     this.alertExpired()
-  //     return
-  //   }
-  //   if (this.selectedProduct) {
-  //     this.addAlias(
-  //       this.selectedProduct.name, 
-  //       this.selectedProduct.product_id || this.selectedProduct.id, 
-  //       1,
-  //       this.selectedProduct.price,
-  //       this.selectedProduct.price,
-  //       this.selectedProduct.barcode || '',
-  //     );
-  //   } else {
-  //     this.selectedProduct = null;
-  //     return
-  //   }
-  // }
 
   productClicked(product:any){
     console.log(product)
@@ -503,7 +492,7 @@ export class Pos2Component implements AfterViewInit {
       this.httpservice.getAllCustomers()
         .subscribe({
           next: data => {
-            // this.customers = data
+            this.customers = data
           },
           error: error => {
             
@@ -513,7 +502,7 @@ export class Pos2Component implements AfterViewInit {
       this.httpservice.getProducts(1, 10)
         .subscribe({
           next: data => {
-            // console.log(data)
+            console.log(data)
             this.products = data
             this.filteredProducts = this.products;
             this.categories = this.getUniqueCategories();
@@ -540,7 +529,7 @@ export class Pos2Component implements AfterViewInit {
     this.branches$ = this.httpservice.getbranches()
     if (this.newSalesFrm.value.branch_id == null || this.newSalesFrm.value.branch_id == '0') {
       this.loadingService.hide()
-      this.newSalesFrm.get('branch_id')?.setValue(userObj.branch)
+      this.newSalesFrm.get('branch_id')?.setValue(userObj.branch_id);
       setTimeout(() => {
         // this.sharedservice.infoFunc('alert alert-danger', 'branch not selected...  ', false, false, false);
         this.swalService.fireWarning('User branch has been selected')
@@ -548,10 +537,10 @@ export class Pos2Component implements AfterViewInit {
       // return
     }
   
-    this.httpservice.getByBranchProducts(userObj.branch)
+    this.httpservice.getByBranchProducts(userObj.branch_id)
       .subscribe({
         next: data => {
-          // console.log(data)
+          console.log(data)
           this.products = data
           this.filteredProducts = this.products;
           this.categories = this.getUniqueCategories();

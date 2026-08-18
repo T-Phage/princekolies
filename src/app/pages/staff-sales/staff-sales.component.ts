@@ -301,7 +301,7 @@ export class StaffSalesComponent {
       });
   
       // Save the generated PDF
-      doc.save('princekolies_sales_'+(this.username)+'_'+(this.selectedDate)+'.pdf');
+      doc.save('sales_'+(this.username)+'_'+(this.selectedDate)+'.pdf');
     }
     printTable() {
       const printWindow = window.open('', '_blank');  // Open a new window

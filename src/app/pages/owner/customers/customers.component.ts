@@ -43,7 +43,8 @@ export class CustomersComponent {
     console.log(customer)
     this.updatecustomerFrm.patchValue({
       id: customer.id,
-      name: customer.name,
+      first_name: customer.first_name,
+      last_name: customer.last_name,
       phone: customer.phone,
       email: customer.email,
       address: customer.address,
@@ -95,7 +96,8 @@ export class CustomersComponent {
 
   updatecustomerFrm = this.formbuilder.group({
     id: ['', Validators.required],
-    name: ['', Validators.required],
+    first_name: ['', Validators.required],
+    last_name: ['', Validators.required],
     phone: ['', Validators.required],
     email: ['', Validators.compose([Validators.email])],
     address: ['', Validators.required],

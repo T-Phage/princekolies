@@ -28,6 +28,7 @@ import { ProductAuditComponent } from './pages/owner/product-audit/product-audit
 import { authGuard } from './core/guards/auth.guard';
 import { PermissionsComponent } from './pages/owner/permissions/permissions.component';
 import { Pos2Component } from './pages/pos-2/pos-2.component';
+import { HomepageComponent } from './homepage/homepage.component';
 
 export const routes: Routes = [
     {
@@ -64,4 +65,5 @@ export const routes: Routes = [
     },
     {path: 'dashboard/pos-2', component: Pos2Component},
     { path: 'auth/login', component: LoginComponent },
+    { path: '', component: HomepageComponent },
 ];

@@ -68,7 +68,7 @@
                                         <span class="checkmarks"></span>
                                     </label>
                                 </td>
-                                <td>{{customer.name}}</td>
+                                <td>{{customer.first_name + ' ' + customer.last_name}}</td>
                                 <td>{{customer.business_name}}</td>
                                 <td>{{customer.email}}</td>
                                 <td>{{customer.identification_type}}</td>
@@ -130,11 +130,20 @@
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="input-blocks">
-                                        <label>Customer Name</label>
-                                        <input formControlName="name" type="text" placeholder="Thomas">
+                                        <label>Customer First Name</label>
+                                        <input formControlName="first_name" type="text" placeholder="">
                                     </div>
-                                    <div style="color:red" *ngIf="updatecustomerFrm.get('name')?.invalid && updatecustomerFrm.get('name')?.touched">
-                                        <div class="forgot-link" style="font-size: 12px;font-weight: 500;" *ngIf="updatecustomerFrm.get('name')?.errors!['required']">name is required.</div>
+                                    <div style="color:red" *ngIf="updatecustomerFrm.get('first_name')?.invalid && updatecustomerFrm.get('first_name')?.touched">
+                                        <div class="forgot-link" style="font-size: 12px;font-weight: 500;" *ngIf="updatecustomerFrm.get('first_name')?.errors!['required']">first name is required.</div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="input-blocks">
+                                        <label>Customer Last Name</label>
+                                        <input formControlName="last_name" type="text" placeholder="">
+                                    </div>
+                                    <div style="color:red" *ngIf="updatecustomerFrm.get('last_name')?.invalid && updatecustomerFrm.get('last_name')?.touched">
+                                        <div class="forgot-link" style="font-size: 12px;font-weight: 500;" *ngIf="updatecustomerFrm.get('last_name')?.errors!['required']">last name is required.</div>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">

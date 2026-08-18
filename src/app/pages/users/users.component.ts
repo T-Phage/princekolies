@@ -28,6 +28,8 @@ export class UsersComponent {
 
   role = this.httpservice.getUserRole();
 
+  no_of_branches = Number(sessionStorage.getItem('number_of_branches'));
+
   constructor(
     private httpservice: HttpService,
     private formbuilder: FormBuilder,
@@ -41,6 +43,10 @@ export class UsersComponent {
     this.httpservice.httpself()
     this.users$ = this.httpservice.getUsers()
     this.branches$ = this.httpservice.getbranches()
+    if (this.no_of_branches == 1) {
+      this.newUserFrm.get('branch')?.setValue(`${sessionStorage.getItem('user_branch')}`, { emitEvent: true });
+      this.updateUserFrm.get('branch_id')?.setValue(`${sessionStorage.getItem('user_branch')}`, { emitEvent: true });
+    }
 
       this.httpservice.getUsers()
       .subscribe({
@@ -66,7 +72,7 @@ export class UsersComponent {
     'role': '',
     'user_account': '',
     'status': [false],
-    'branch': '',
+    'branch_id': '',
   }
 
   userid: any;
@@ -78,7 +84,7 @@ export class UsersComponent {
     'role': ['', Validators.required],
     'user_account': ['', Validators.required],
     'status': [false],
-    'branch': ['', Validators.required],
+    'branch_id': ['', Validators.required],
   })
 
   userClicked(id: any, name: string, email: string, phone_number: string, role: string, user_account: string, branch_id: number) {
@@ -88,7 +94,7 @@ export class UsersComponent {
     this.updateUserFrm.controls.role.setValue(role)
     this.updateUserFrm.controls.user_account.setValue(user_account)
     this.userid = id
-    this.updateUserFrm.controls.branch.setValue(`${branch_id}`)
+    this.updateUserFrm.controls.branch_id.setValue(`${branch_id}`)
   }
 
   newUserFrm = this.formbuilder.group({
@@ -163,7 +169,8 @@ export class UsersComponent {
             // this.users$.
             setTimeout(() =>{ 
               this.sharedservice.infoFunc('', '', false, false, false)
-              this.closeModalAndRefresh();      
+              // this.closeModalAndRefresh(); 
+              this.ngOnInit()
             }, 1000)
             // setTimeout(()=>this.sharedservice.refreshComponentFunc('dashboard/users'), 2000)
           },
