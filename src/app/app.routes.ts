@@ -65,5 +65,5 @@ export const routes: Routes = [
     },
     {path: 'dashboard/pos-2', component: Pos2Component},
     { path: 'auth/login', component: LoginComponent },
-    { path: '', component: HomepageComponent },
+    // { path: '', component: HomepageComponent },
 ];
