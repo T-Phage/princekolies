@@ -95,6 +95,7 @@ export class AddproductComponent {
     'barcode': ['',],
     'branch': [this.no_of_branches == 1 ? sessionStorage.getItem('user_branch') : '0', Validators.required ],
     'price': ['', Validators.compose([Validators.required, Validators.pattern(this.sharedservice.amount)])],
+    'cost_price': ['', Validators.compose([Validators.required, Validators.pattern(this.sharedservice.amount)])],
     'category_id': [null, Validators.compose([Validators.required])],
     'quantity': ['', Validators.compose([Validators.required, Validators.min(0),])],// this.validationservice.positiveIntegerValidator()])],
     'quantity_alert': ['', Validators.compose([Validators.required, Validators.min(0), ])],//this.validationservice.positiveIntegerValidator()])],
@@ -147,6 +148,9 @@ export class AddproductComponent {
           console.error('error :', error)
           this.sharedservice.infoFunc('alert alert-danger', msg, false, false, false)
           setTimeout(() => this.sharedservice.infoFunc('', '', false, false, false), 8000)
+        }, 
+        complete: () => {
+          this.sharedservice.infoFunc('', '', false, false, false);
         }
       })
     }

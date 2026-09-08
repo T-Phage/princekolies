@@ -136,7 +136,17 @@
                                         </div>
                                         <div class="col-lg-4 col-sm-6 col-12">
                                             <div class="input-blocks add-product">
-                                                <label>Price</label>
+                                                <label>Cost Price</label>
+                                                <input formControlName="cost_price" min="0" type="text" class="form-control">
+                                                <div *ngIf="(newProductForm.get('cost_price')?.invalid && newProductForm.get('cost_price')?.touched) || submitted">
+                                                    <div *ngIf="newProductForm.controls.cost_price.errors?.['required']" class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;">field is required.</div>
+                                                    <div *ngIf="newProductForm.controls.cost_price.errors?.['pattern']" class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;">invalid input format</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-sm-6 col-12">
+                                            <div class="input-blocks add-product">
+                                                <label>Selling Price</label>
                                                 <input formControlName="price" min="0" type="text" class="form-control">
                                                 <div *ngIf="(newProductForm.get('price')?.invalid && newProductForm.get('price')?.touched) || submitted">
                                                     <div *ngIf="newProductForm.controls.price.errors?.['required']" class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;">field is required.</div>
@@ -154,7 +164,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
 
                                 </div>
