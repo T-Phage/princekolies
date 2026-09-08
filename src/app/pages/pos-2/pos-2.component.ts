@@ -104,7 +104,7 @@ export class Pos2Component implements AfterViewInit {
       'biller': [sessionStorage.getItem('id')],
       'items': this.formBuilder.array([]),
       'extra_services': this.formBuilder.array([]),
-      'branch_id': [this.role == 'Business_Owner' ? sessionStorage.getItem('selected_branch'): ''],
+      'branch_id': [this.role == 'Business_Owner' ? sessionStorage.getItem('selected_branch'): sessionStorage.getItem('user_branch')],
       'discount': [0.0, Validators.compose([Validators.required, Validators.pattern(this.sharedservice.amount)])],
       'sale_date': [this.currentDate.toISOString().split('T')[0]]
     })
@@ -367,12 +367,14 @@ export class Pos2Component implements AfterViewInit {
     const inputValue = evt.target.value;
     // console.log(inputValue)
     // console.log(inputValue.toString().split(' | ')[0])
-    this.selectedCustomer = this.customers.find((customer:any) => customer.first_name === inputValue);
+    this.selectedCustomer = this.customers.find((customer:any) => customer.first_name === inputValue || customer.last_name === inputValue);
     
     // console.log(this.selectedCustomer)
 
     // this.newSalesFrm.get('cus_name')?.setValue(this.selectedCustomer.name)
+    this.newSalesFrm.get('last_name')?.setValue(this.selectedCustomer.last_name)
     this.newSalesFrm.get('customer_phone')?.setValue(this.selectedCustomer.phone)
+    this.newSalesFrm.get('customer_email')?.setValue(this.selectedCustomer.email)
     this.newSalesFrm.get('customer_business_name')?.setValue(this.selectedCustomer.business_name)
     this.newSalesFrm.get('customer_address')?.setValue(this.selectedCustomer.address)
     this.newSalesFrm.get('customer_id')?.setValue(this.selectedCustomer.id)
@@ -446,7 +448,7 @@ export class Pos2Component implements AfterViewInit {
       this.swalService.fireWarning('Amount paid by customer is less the grand total. \n Kindly get customer details')
     }
 
-    console.log(this.newSalesFrm.value) 
+    // console.log(this.newSalesFrm.value) 
     // $('#print-receipt').modal('show');
 
     if (this.newSalesFrm.valid && this.newSalesFrm.controls.items.length >= 1){
@@ -523,6 +525,8 @@ export class Pos2Component implements AfterViewInit {
             this.loadingService.hide();
           }
         });
+
+        this.newSalesFrm.get('branch_id')?.setValue(userObj.branch_id);
        return
     }
     

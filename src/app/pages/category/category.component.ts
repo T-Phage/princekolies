@@ -1,5 +1,5 @@
 import { Component, NgZone } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators, FormArray } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { HttpService } from '../../services/httpservices/http.service';
 import { SharedService } from '../../services/sharedservices/shared.service';
@@ -39,6 +39,7 @@ export class CategoryComponent {
   owner:boolean = false;
   submitted:boolean = false;
   no_of_branches = Number(sessionStorage.getItem('number_of_branches'));
+  // subcat: FormArray;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -59,7 +60,33 @@ export class CategoryComponent {
     'status': [true, Validators.required],
     'createdby': [parseInt(`${sessionStorage.getItem('id')}`),],
     'branch': [this.no_of_branches == 1 ? null : sessionStorage.getItem('selected_branch')],
+    'subcat': this.formBuilder.array([
+      this.formBuilder.group({
+        'name': ['', Validators.required],
+        'status': [true, Validators.required],
+        'createdby': [parseInt(`${sessionStorage.getItem('id')}`),],
+      })
+    ]),
   });
+
+  addItem() {
+    if (this.subcat.length === 10){
+      return
+    }
+
+    // If valid, reset submitted for the new row and push the new group
+    this.submitted = false;
+  
+    this.subcat.push(this.formBuilder.group({
+        'name': ['', Validators.required],
+        'status': [true, Validators.required],
+        'createdby': [parseInt(`${sessionStorage.getItem('id')}`),],
+      }));
+  }
+
+  get subcat() {
+    return this.createCategoryFrm.get('subcat') as FormArray;
+  }
 
   updateCategoryFrm = this.formBuilder.group({
     'name': ['', Validators.required],
@@ -81,7 +108,7 @@ export class CategoryComponent {
   submitUpdateFrm(event:Event){
     event.preventDefault();
 
-    // console.log(this.updateCategoryFrm.value)
+    console.log(this.updateCategoryFrm.value)
     if(this.updateCategoryFrm.valid){
       this.httpservices.updateCategory(this.selectedCategoryId, this.updateCategoryFrm.value)
       .subscribe({
@@ -226,7 +253,7 @@ export class CategoryComponent {
       this.httpservices.getCategories(0, 0)
       .subscribe({
         next: data => {
-          // console.log(data)
+          console.log(data)
           this.sharedservices.infoFunc('', '', false, false, false);
           this.categories = data
 
@@ -248,7 +275,7 @@ export class CategoryComponent {
     this.httpservices.getCategoriesByBranch(this.branch.value.id)
     .subscribe({
       next: data => {
-        // console.log(data)
+        console.log(data)
         this.sharedservices.infoFunc('', '', false, false, false);
         this.categories = data
 

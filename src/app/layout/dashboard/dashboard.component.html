@@ -134,10 +134,10 @@
                                     [routerLink]="['/dashboard/add-product']"><i
                                         data-feather=""></i><span>Create
                                         Product</span></a></li>
-                            <li *ngIf="owner" [className]="router.url == '/dashboard/owner/allocations'? 'active': '' "><a
+                            <!-- <li *ngIf="owner" [className]="router.url == '/dashboard/owner/allocations'? 'active': '' "><a
                                     [routerLink]="['/dashboard/owner/allocations']"><i
                                         data-feather=""></i><span>
-                                        Allocations</span></a></li>
+                                        Allocations</span></a></li> -->
                             <li *ngIf="owner" [className]="router.url == '/dashboard/restock'? 'active': '' "><a [routerLink]="['/dashboard/restock']"><i data-feather=""></i><span>Restock
                                         Products</span></a></li>
                             <li [className]="router.url == '/dashboard/products/expiry'? 'active': '' "><a [routerLink]="['/dashboard/products/expiry']"><i data-feather=""></i><span>Expired
@@ -150,7 +150,7 @@
                                     [routerLink]="['/dashboard/category']"><i
                                         ></i><span>Category</span></a>
                             </li>
-                            <li [className]="router.url == '/dashboard/owner/products-audits'? 'active': '' "><a [routerLink]="['/dashboard/owner/products-audits']"><i
+                            <li *ngIf="owner" [className]="router.url == '/dashboard/owner/products-audits'? 'active': '' "><a [routerLink]="['/dashboard/owner/products-audits']"><i
                                         data-feather=""></i><span>Product Audits</span></a></li>
                         </ul>
                     </li>
@@ -187,7 +187,7 @@
                                         data-feather=""></i><span>Customers</span></a></li>
                         </ul>
                     </li>
-                    <li class="submenu-open">
+                    <!-- <li class="submenu-open">
                         <h6 class="submenu-hdr">Finance and Accounts</h6>
                         <ul>
                             <li [className]="router.url == '/dashboard/expenses'? 'active': '' "><a [routerLink]="['/dashboard/expenses']"><i
@@ -195,14 +195,14 @@
                             <li *ngIf="owner" [className]="router.url == '/dashboard/expense-category'? 'active': '' "><a [routerLink]="['/dashboard/expense-category']"><i
                                         ></i><span>Expense Categories</span></a></li>
                         </ul>
-                    </li>
-                    <li *ngIf="owner" class="submenu-open">
+                    </li> -->
+                    <!-- <li *ngIf="owner" class="submenu-open">
                         <h6 class="submenu-hdr">Regional Hubs</h6>
                         <ul>
                             <li [className]="router.url == '/dashboard/owner/branches'? 'active': '' "><a [routerLink]="['/dashboard/owner/branches']"><i
                                         ></i><span>Branches</span></a></li>
                         </ul>
-                    </li>
+                    </li> -->
                 </ul>
             </div>
         </div>
@@ -284,7 +284,7 @@
                                         data-feather=""></i><span>Customers</span></a></li>
                         </ul>
                     </li>
-                    <li *ngIf="manager || owner || accounts" class="submenu-open">
+                    <!-- <li *ngIf="manager || owner || accounts" class="submenu-open">
                         <h6 class="submenu-hdr">Finance and Accounts</h6>
                         <ul>
                             <li (click)="toggleMenu()" [className]="router.url == '/dashboard/expenses'? 'active': '' "><a [routerLink]="['/dashboard/expenses']"><i
@@ -292,7 +292,7 @@
                             <li (click)="toggleMenu()" [className]="router.url == '/dashboard/expense-category'? 'active': '' "><a [routerLink]="['/dashboard/expense-category']"><i
                                         ></i><span>Expense Categories</span></a></li>
                         </ul>
-                    </li>
+                    </li> -->
                      <!-- <li *ngIf="owner" class="submenu-open">
                         <h6 class="submenu-hdr">Regional Hubs</h6>
                         <ul>

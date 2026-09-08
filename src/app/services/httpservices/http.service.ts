@@ -1,18 +1,21 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { ElementRef, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { SharedService } from '../sharedservices/shared.service';
 import { SwalservicesService } from '../swal/swalservices.service';
 import { AuthserviceService } from '../auth/authservice.service';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class HttpService {
-  baseDomain = 'https://getexposale.com/backend';
-  baseUrl = 'https://getexposale.com/backend/api'
+  // baseDomain = 'https://getapis.getexposale.com/backend';
+  // baseUrl = 'https://getapis.getexposale.com/api'
+  baseUrl = 'http://localhost/getexposale/public/api';
+  baseDomain = '';
 
   appToken:string = '';
   role:string = '';
@@ -26,6 +29,18 @@ export class HttpService {
     private swalservices: SwalservicesService,
     private authService: AuthserviceService
   ) { }
+
+  private handleError(error: HttpErrorResponse) {
+    if (error.status === 0) {
+      // Client-side or network error occurred.
+      console.error('An error occurred:', error.error);
+    } else {
+      // The backend returned an unsuccessful response code.
+      console.error(`Backend returned code ${error.status}, body was: `, error.error);
+    }
+    // Return an observable with a user-facing error message.
+    return throwError(() => new Error('Something bad happened; please try again later.'));
+  }
 
   httpLogout(message: string) {
     this.http.post<any>(`${this.baseUrl}/auth/logout`, {}, {headers: this.getHeaders(),}).subscribe({
@@ -88,7 +103,7 @@ export class HttpService {
       this.http.post<any>(`${this.baseUrl}/auth/login`, body, {headers: this.getHeaders(),}).subscribe({
         next: data => {
           this.sharedservice.infoFunc('alert alert-success', 'user authenticated', false, false, false)
-          console.log(data)
+          // console.log(data)
         
           sessionStorage.setItem('token', data.token)
           sessionStorage.setItem('is_admin', data.is_admin)
@@ -101,8 +116,9 @@ export class HttpService {
           sessionStorage.setItem('selected_branch', '0');
           sessionStorage.setItem('user_branch', data.user.branch_id);
           // sessionStorage.setItem('account_type', JSON.stringify(data.user.branch_info.business_info))
-          sessionStorage.setItem('account_ty', JSON.stringify(data.account_type))
-          console.log(data.user.business_info)
+          sessionStorage.setItem('account_type', JSON.stringify(data.account_type))
+          sessionStorage.setItem('business_name', data.user.business_info.business_name)
+          // console.log(data.user.business_info)
 
           this.appToken = data.token;
           this.role = data.role;
@@ -118,9 +134,9 @@ export class HttpService {
               this.router.navigate(['/dashboard/overview-dashboard'])
             }
             else if(data.user.role == "Manager"){
-              this.router.navigate(['/dashboard/pos'])
+              this.router.navigate(['/dashboard/sales-dashboard'])
             } else {
-              this.router.navigate(['/dashboard/pos'])
+              this.router.navigate(['/dashboard/sales-dashboard'])
             }
           }, 1000)
           
@@ -205,7 +221,9 @@ export class HttpService {
 
   createProduct(body: any) {
     this.sharedservice.infoFunc('alert alert-info', 'adding new product...', true, true, true)
-    return this.http.post<any>(`${this.baseUrl}/add/product`, body, {headers: this.getHeaders()})
+    return this.http.post<any>(`${this.baseUrl}/add/product`, body, {headers: this.getHeaders()}).pipe(
+      catchError(this.handleError)
+    )
 
   }
 

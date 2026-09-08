@@ -1,8 +1,8 @@
 {
   "name": "exposale",
-  "short_name": "exposal",
+  "short_name": "exposale",
   "theme_color": "#1976d2",
-  "background_color": "#fafafa",
+  "background_color": "#121212",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",

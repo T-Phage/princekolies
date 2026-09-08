@@ -81,14 +81,13 @@ export class PrintService {
               padding: 0;
               margin: 0;
           }
-    
-        hr {
-            margin-top: 1rem;
-            margin-bottom: 1rem;
-            border: 0;
-            border-top: 1px solid rgba(0,0,0,.1);
+            .modal-body {
+              padding: 20px auto;
+            }
+          
+          hr {
+            border: solid 2px #fff;
           }
-    
         .font-bolder, .text-600 {
             font-weight: 600!important;
         }
@@ -133,7 +132,8 @@ export class PrintService {
             </style>
           </head>
           <body onload="window.print(); window.close();">
-          
+            <hr/>
+            <hr/>
             ${printContent}
             <hr/>
             <hr/>
@@ -142,8 +142,7 @@ export class PrintService {
             <hr/>
             <hr/>
             <hr/>
-            <hr/>
-            ...
+            .
           </body>
           </html>
         `);

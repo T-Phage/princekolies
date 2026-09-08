@@ -112,8 +112,8 @@ export class AddproductComponent {
   createNewProduct(evt: Event) {
     evt.preventDefault()
 
-    console.log(this.newProductForm)
-    console.log(this.newProductForm.value)
+    // console.log(this.newProductForm)
+    // console.log(this.newProductForm.value)
     this.newProductForm.controls.barcode.enable()
     this.newProductForm.get('image_data')?.setValue(this.selectedImageBase64);
     this.newProductForm.get('image_name')?.setValue(this.imageName);
@@ -140,7 +140,6 @@ export class AddproductComponent {
             // this.newProductForm.controls.branch.setValue(`${sessionStorage.getItem('selected_branch')}`)
             this.submitted = false;
           }, 4000)
-          
         },
         error: error => {
           this.swalservices.fireError('An error occured. Try again...');
@@ -159,7 +158,7 @@ export class AddproductComponent {
     } else {
       this.newProductForm.get('branch')?.setValue(sessionStorage.getItem('selected_branch'));
     }
-    console.log(this.newProductForm.value)
+    // console.log(this.newProductForm.value)
     // this.startCamera()
     this.categories$ = this.httpservice.getCategories(1, 10);
     this.branches$ = this.httpservice.getbranches();

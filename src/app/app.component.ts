@@ -40,7 +40,7 @@ export class AppComponent {
         this.manager = true;
         this.router.navigateByUrl('/dashboard/sales-dashboard')
       } else {
-        this.router.navigateByUrl('/dashboard/pos')
+        this.router.navigateByUrl('/dashboard/sales-dashboard')
       }
     }
   }

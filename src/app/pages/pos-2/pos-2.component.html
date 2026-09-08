@@ -425,7 +425,7 @@
                                                             list="list-customers">
                                                         <datalist id="list-customers">
                                                             <option class="option" *ngFor="let customer of customers">
-                                                                {{customer.first_name}}
+                                                                {{customer.first_name}} {{customer.last_name}}
                                                             </option>
                                                         </datalist>
                                                     </div>
@@ -440,14 +440,14 @@
                                                 <div class="col-lg-6 col-sm-12 col-12">
                                                     <div class="input-blocks">
                                                         <label>Customer Last Name</label>
-                                                        <input type="text" (change)="selectCustomer($event)"
+                                                        <input type="text" 
                                                             formControlName="last_name" class="form-control"
                                                             list="list-customers">
-                                                        <datalist id="list-customers">
+                                                        <!-- <datalist id="list-customers">
                                                             <option class="option" *ngFor="let customer of customers">
                                                                 {{customer.last_name}}
                                                             </option>
-                                                        </datalist>
+                                                        </datalist> -->
                                                     </div>
                                                     <div
                                                         *ngIf="(newSalesFrm.get('last_name')?.invalid && newSalesFrm.get('last_name')?.touched) || submitted">
@@ -618,8 +618,8 @@
                     </a>
                 </div>
                 <div class="text-center info text-center">
-                    <h6 class="head-text">Feedstup Enterprise.</h6>
-                    <p class="mb-0 text-12">Phone Number: 0502893903</p>
+                    <h6 class="head-text">Royal Bea 97 Ent.</h6>
+                    <p class="mb-0 text-12">Phone Number: 0241781394</p>
                     <!-- <p class="mb-0">Email: <a href=""></a></p> -->
                 </div>
                 <div class="tax-invoice text-12">
@@ -628,8 +628,8 @@
                         <div class="col-sm-12 col-md-6">
                             <div class="invoice-user-name"><span>Attendant: </span><span>{{username}}</span></div>
                             <!-- <div class="invoice-user-name"><span>Invoice No: </span><span>{{newSalesFrm.controls.reference.value}}</span></div> -->
-                            <div *ngIf="newSalesFrm.controls.first_name.value" class="invoice-user-name"><span>Customer First Name: </span><span>{{newSalesFrm.controls.first_name.value}}</span></div>
-                            <div *ngIf="newSalesFrm.controls.last_name.value" class="invoice-user-name"><span>Customer Last Name: </span><span>{{newSalesFrm.controls.last_name.value}}</span></div>
+                            <div *ngIf="newSalesFrm.controls.first_name.value" class="invoice-user-name"><span>Customer Name: </span><span>{{newSalesFrm.controls.first_name.value}} {{newSalesFrm.controls.last_name.value}}</span></div>
+                            <!-- <div *ngIf="newSalesFrm.controls.last_name.value" class="invoice-user-name"><span>Customer Last Name: </span><span>{{newSalesFrm.controls.last_name.value}}</span></div> -->
                         </div>
                         <div class="col-sm-12 col-md-6">
                             <div class="invoice-user-name"><span>Invoice No: </span><span>{{newSalesFrm.controls.reference.value}}</span></div>
@@ -710,6 +710,11 @@
                     <p class="text-12 hide">{{newSalesFrm.controls.payment_status.value}} Sale </p>
                     <p class="text-12">**Thank You For Shopping With Us. Hope to See You Again</p>
                     <a href="javascript:void(0);" (click)="printReceipt();" class="btn btn-primary hide">Print Receipt</a>
+
+                    <br>
+                    <br>
+                    <br>
+                    <br>
                 </div>
             </div>
         </div>
