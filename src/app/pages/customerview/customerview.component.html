@@ -1,0 +1,100 @@
+<!-- customer-screen.component.html -->
+<div class="customer-display">
+  <!-- Left Side: Active Order Summary -->
+  <main class="order-panel">
+    <header class="brand-header">
+      <div class="logo">
+        <img width="150" src="assets/images/Screenshot_20241029-162322-removebg-preview.png" alt="Logo" class="logo-image" />
+        <!-- <span class="logo-icon">🛍️</span> -->
+        <!-- <h2>Exposale POS</h2> -->
+      </div>
+      <span class="status-badge">Transaction in Progress</span>
+    </header>
+
+    <!-- Empty State -->
+    <div *ngIf="cartItems.length === 0" class="empty-cart">
+      <div class="empty-icon">🛒</div>
+      <h3>Welcome!</h3>
+      <p>Your items will appear here as they are scanned.</p>
+    </div>
+
+    <!-- Active Cart Table -->
+    <div *ngIf="cartItems.length > 0" class="cart-scroll-area">
+      <table class="cart-table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th class="text-center">Qty</th>
+            <th class="text-right">Price</th>
+            <th class="text-right">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of cartItems" class="cart-row">
+            <td class="item-name">{{ item.product }}</td>
+            <td class="text-center item-qty">{{ item.quantity || 1 }}</td>
+            <td class="text-right item-price">Ghc {{ item.unit_cost | number:'1.2-2' }}</td>
+            <td class="text-right item-total">Ghc {{ ((item.quantity || 1) * item.unit_cost) | number:'1.2-2' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Total Summary Banner -->
+    <footer class="cart-footer">
+      <div class="summary-line">
+        <span>Subtotal</span>
+        <span>Ghc {{ subtotal | number:'1.2-2' }}</span>
+      </div>
+      <!-- <div class="summary-line">
+        <span>Tax (10%)</span>
+        <span>${{ tax | number:'1.2-2' }}</span>
+      </div> -->
+      <div class="summary-line total-line">
+        <span>Total Due</span>
+        <span class="grand-total">Ghc {{ cartTotal | number:'1.2-2' }}</span>
+      </div>
+    </footer>
+  </main>
+
+  <!-- Right Side: Promotional Banner / Payment Status -->
+  <!-- <aside class="media-panel">
+    <div class="promo-content">
+      <div class="promo-badge">Special Offer</div>
+      <h1>Enjoy 15% Off Your Next Visit!</h1>
+      <p>Ask our cashier about signing up for our loyalty rewards program today.</p>
+      <div class="qr-placeholder">
+        <div class="qr-box">QR CODE</div>
+        <span>Scan to join rewards</span>
+      </div>
+    </div>
+  </aside> -->
+
+  <aside class="media-panel">
+    <div class="welcome-content">
+      <div class="welcome-badge">Welcome</div>
+      <h1>Thank You for Shopping With Us!</h1>
+      <p class="welcome-lead">We appreciate your business and are delighted to serve you today.</p>
+      
+      <div class="divider"></div>
+
+      <div class="service-highlights">
+        <div class="highlight-item">
+          <span class="highlight-icon">✨</span>
+          <div>
+            <h4>Quality Assured</h4>
+            <p>Every item is carefully checked for your satisfaction.</p>
+          </div>
+        </div>
+
+        <div class="highlight-item">
+          <span class="highlight-icon">🤝</span>
+          <div>
+            <h4>Here to Help</h4>
+            <p>Please let your cashier know if you need any assistance.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+</div>

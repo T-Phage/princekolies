@@ -29,20 +29,24 @@ export class AppComponent {
     let token = sessionStorage.getItem('token');
     let role = `${sessionStorage.getItem('role')}`;
     // console.log (token)
-    if (token == null){
-      this.router.navigateByUrl('/auth/login')
-    } else {
-      if(role == 'Business_Owner' || role == 'Account_Officer'){
-        this.owner = true;
-        this.router.navigateByUrl('/dashboard/overview-dashboard')
-      }
-      else if(role == 'Manager'){
-        this.manager = true;
-        this.router.navigateByUrl('/dashboard/sales-dashboard')
-      } else {
-        this.router.navigateByUrl('/dashboard/sales-dashboard')
-      }
+    if(this.router.url == '/customer-screen'){
+      return; // Allow access to the customer screen without authentication
     }
+    console.log(this.router.url)
+    // if (token == null){
+    //   this.router.navigateByUrl('/auth/login')
+    // } else {
+    //   if(role == 'Business_Owner' || role == 'Account_Officer'){
+    //     this.owner = true;
+    //     this.router.navigateByUrl('/dashboard/overview-dashboard')
+    //   }
+    //   else if(role == 'Manager'){
+    //     this.manager = true;
+    //     this.router.navigateByUrl('/dashboard/sales-dashboard')
+    //   } else {
+    //     this.router.navigateByUrl('/dashboard/sales-dashboard')
+    //   }
+    // }
   }
 
   ngOnInit() {

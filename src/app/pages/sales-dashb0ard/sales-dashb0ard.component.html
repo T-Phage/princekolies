@@ -28,7 +28,7 @@
         <div class="col-xl-6 col-sm-12 col-12">
             <div class="card d-flex align-items-center justify-content-between default-cover mb-4">
                 <div>
-                    <h6>Daily Earning</h6>
+                    <h6>Total Sales Amount</h6>
                     <h3><span class="counters" [data-count]="todayCashAmount">{{todayCashAmount | currency : 'Ghc '}}</span></h3>
                     <p class="sales-range">
                         <span *ngIf="percentageIncrease >= 0">
@@ -51,8 +51,8 @@
         <div class="col-xl-4 col-sm-6 col-12">
             <div class="card color-info bg-primary mb-4">
                 <img src="assets/images/total-sales.svg" alt="img">
-                <h3 class="counters" [data-count]="salescount">{{salescount}}</h3>
-                <p>No of Total Sales</p>
+                <h3 class="counters" [data-count]="salescount">{{ earnings | currency : 'Ghc '}}</h3>
+                <p>Earnings Today</p>
                 <i data-feather="rotate-ccw" class="feather-16" data-bs-toggle="tooltip" data-bs-placement="top"
                     title="Refresh"></i>
             </div>
@@ -69,15 +69,15 @@
                 <p>Credit Paid Today</p>
             </div>
         </div>
-        <!-- <div class="col-xl-3 col-sm-6 col-12">
-            <div class="card color-info bg-secondary mb-4">
-                <img src="/assets/images/purchased-earnings.svg" alt="img">
-                <h3 class="counters" data-count="800.00">800+</h3>
-                <p>No of Total Sales</p>
+        <div class="col-xl-3 col-sm-6 col-12">
+            <div class="card color-info bg-info mb-4">
+                <!-- <img src="/assets/images/purchased-earnings.svg" alt="img"> -->
+                <h3 class="counters" [data-count]="expenseAmount">{{expenseAmount}}</h3>
+                <p>Expenses Today</p>
                 <i data-feather="rotate-ccw" class="feather-16" data-bs-toggle="tooltip" data-bs-placement="top"
                     title="Refresh"></i>
             </div>
-        </div> -->
+        </div>
     </div>
     <!-- categorySale -->
     <div class="row">

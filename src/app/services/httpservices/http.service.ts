@@ -12,10 +12,10 @@ import { catchError } from 'rxjs/operators';
 })
 
 export class HttpService {
-  // baseDomain = 'https://getapis.getexposale.com/backend';
-  // baseUrl = 'https://getapis.getexposale.com/api'
-  baseUrl = 'http://localhost/getexposale/public/api';
-  baseDomain = '';
+  baseDomain = 'https://getapis.getexposale.com/backend';
+  baseUrl = 'https://getapis.getexposale.com/api'
+  // baseUrl = 'http://localhost/getexposale/public/api';
+  // baseDomain = '';
 
   appToken:string = '';
   role:string = '';

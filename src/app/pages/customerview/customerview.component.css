@@ -1,0 +1,286 @@
+/* customer-screen.component.css */
+:host {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: #f8fafc;
+  color: #1e293b;
+}
+
+.customer-display {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  height: 100vh;
+}
+
+/* Order Panel (Left Side - White Background) */
+.order-panel {
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  border-right: 2px solid #fed7aa;
+  padding: 2rem;
+}
+
+.brand-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid #f1f5f9;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.logo-icon { font-size: 2rem; }
+.logo h2 { 
+  margin: 0; 
+  font-size: 1.5rem; 
+  color: #ea580c; /* Deep Orange */
+  font-weight: 800;
+}
+
+.status-badge {
+  background-color: #fff7ed;
+  color: #ea580c;
+  border: 1px solid #ffedd5;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+/* Cart Table Area */
+.cart-scroll-area {
+  flex: 1;
+  overflow-y: auto;
+  margin: 1.5rem 0;
+}
+
+.cart-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.cart-table th {
+  padding: 0.75rem 1rem;
+  color: #94a3b8;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  border-bottom: 2px solid #f1f5f9;
+  letter-spacing: 0.5px;
+}
+
+.cart-row td {
+  padding: 1.25rem 1rem;
+  font-size: 1.15rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.item-name { font-weight: 600; color: #0f172a; }
+.item-qty { color: #475569; font-weight: 600; }
+.item-price { color: #64748b; }
+.item-total { font-weight: 700; color: #ea580c; }
+
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+
+/* Empty State */
+.empty-cart {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+}
+
+.empty-icon { font-size: 4rem; margin-bottom: 1rem; opacity: 0.8; }
+.empty-cart h3 { color: #475569; margin-bottom: 0.5rem; }
+
+/* Total Summary Box (Highlight) */
+.cart-footer {
+  background-color: #fff7ed; /* Very light orange tint */
+  padding: 1.5rem;
+  border-radius: 16px;
+  border: 2px solid #ffedd5;
+}
+
+.summary-line {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  color: #64748b;
+  font-size: 1.1rem;
+}
+
+.total-line {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 2px dashed #fed7aa;
+  color: #0f172a;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.grand-total {
+  color: #f97316; /* Primary Orange */
+  font-size: 2.2rem;
+  font-weight: 800;
+}
+
+/* Media/Promo Panel (Right Side - Solid Orange Background) */
+/* .media-panel {
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  text-align: center;
+}
+
+.promo-content {
+  max-width: 400px;
+}
+
+.promo-badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  padding: 0.5rem 1.25rem;
+  border-radius: 50px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+}
+
+.promo-content h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+  font-weight: 800;
+}
+
+.promo-content p {
+  color: #ffedd5;
+  font-size: 1.15rem;
+  line-height: 1.6;
+  margin-bottom: 2.5rem;
+}
+
+.qr-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.qr-box {
+  width: 140px;
+  height: 140px;
+  background: #ffffff;
+  color: #ea580c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.qr-placeholder span {
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 600;
+} */
+ /* Welcoming Panel (Right Side) */
+.media-panel {
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  text-align: left;
+}
+
+.welcome-content {
+  max-width: 420px;
+}
+
+.welcome-badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  padding: 0.5rem 1.25rem;
+  border-radius: 50px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+}
+
+.welcome-content h1 {
+  font-size: 2.4rem;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+  font-weight: 800;
+}
+
+.welcome-lead {
+  color: #ffedd5;
+  font-size: 1.15rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.divider {
+  height: 2px;
+  background: rgba(255, 255, 255, 0.2);
+  margin-bottom: 2rem;
+  border-radius: 2px;
+}
+
+.service-highlights {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.highlight-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.highlight-icon {
+  font-size: 1.75rem;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.5rem;
+  border-radius: 12px;
+  line-height: 1;
+}
+
+.highlight-item h4 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.highlight-item p {
+  margin: 0;
+  color: #ffedd5;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}

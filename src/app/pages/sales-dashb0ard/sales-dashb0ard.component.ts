@@ -53,6 +53,8 @@ export class SalesDashb0ardComponent {
   servicesOnSales: any[] = [];
   credits:any = 0;
   creditsPaidToday = 0;
+  expenseAmount = 0;
+  earnings = 0;
 
   years$!: Observable<any>;
 
@@ -124,6 +126,8 @@ export class SalesDashb0ardComponent {
     this.momo = 0;
     this.cashIn = 0;
     this.bankCashIn = 0;
+    this.expenseAmount = 0;
+    this.earnings = 0;
     this.productSold = []
     this.productsReceipts = [];
     this.servicesOnSales = [];
@@ -144,6 +148,8 @@ export class SalesDashb0ardComponent {
           this.credits = data.credits
           this.creditsPaidToday = data.creditsPaidToday;
           this.servicesOnSales = data.servicesOnSales;
+          this.expenseAmount = data.expenseAmount;
+          this.earnings = data.earnings;
           this.loading = false;
         },
         error: error => {
@@ -175,6 +181,8 @@ export class SalesDashb0ardComponent {
           this.credits = data.credits;
           this.servicesOnSales = data.servicesOnSales;
           this.creditsPaidToday = data.creditsPaidToday;
+          this.expenseAmount = data.expenseAmount;
+          this.earnings = data.earnings;
           this.loading = false;
         },
         error: error => {
@@ -205,6 +213,8 @@ export class SalesDashb0ardComponent {
           this.credits = data.credits
           this.servicesOnSales = data.servicesOnSales
           this.creditsPaidToday = data.creditsPaidToday;
+          this.expenseAmount = data.expenseAmount;
+          this.earnings = data.earnings;
           this.loading = false;
         },
         error: error => {
@@ -235,6 +245,8 @@ export class SalesDashb0ardComponent {
           this.credits = data.credits
           this.servicesOnSales = data.servicesOnSales
           this.creditsPaidToday = data.creditsPaidToday;
+          this.expenseAmount = data.expenseAmount;
+          this.earnings = data.earnings;
           this.loading = false;
         },
         error: error => {
@@ -267,6 +279,8 @@ export class SalesDashb0ardComponent {
           this.loading = false;
           this.categorySales = data.categorySales;
           this.servicesOnSales = data.servicesOnSales;
+          this.expenseAmount = data.expenseAmount;
+          this.earnings = data.earnings;
         },
         error: error => {
           let msg = error.error.message
@@ -312,6 +326,8 @@ export class SalesDashb0ardComponent {
           this.servicesOnSales = data.servicesOnSales;
           this.creditsPaidToday = data.creditsPaidToday;
           this.credits = data.credits;
+          this.expenseAmount = data.expenseAmount;
+          this.earnings = data.earnings;
           this.loading = false;
           // console.log(data.recentSales)
           // console.log(dara)
@@ -363,6 +379,8 @@ export class SalesDashb0ardComponent {
           this.servicesOnSales = data.servicesOnSales
           this.creditsPaidToday = data.creditsPaidToday;
           this.loading = false;
+          this.expenseAmount = data.expenseAmount;
+          this.earnings = data.earnings;
           console.log(data.credits)
           console.log(data)
           //  if(this.manager){this.createChart()}

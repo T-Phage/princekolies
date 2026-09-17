@@ -148,9 +148,11 @@ export class AddproductComponent {
           console.error('error :', error)
           this.sharedservice.infoFunc('alert alert-danger', msg, false, false, false)
           setTimeout(() => this.sharedservice.infoFunc('', '', false, false, false), 8000)
+          this.submitted = false;
         }, 
         complete: () => {
           this.sharedservice.infoFunc('', '', false, false, false);
+            this.submitted = false;
         }
       })
     }

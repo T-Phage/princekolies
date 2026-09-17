@@ -29,8 +29,14 @@ import { authGuard } from './core/guards/auth.guard';
 import { PermissionsComponent } from './pages/owner/permissions/permissions.component';
 import { Pos2Component } from './pages/pos-2/pos-2.component';
 import { HomepageComponent } from './homepage/homepage.component';
+import { CustomerviewComponent } from './pages/customerview/customerview.component';
 
 export const routes: Routes = [
+    {
+        path: '',
+        redirectTo: 'dashboard',
+        pathMatch: 'full'
+    },
     {
         path: 'dashboard',
         canActivate: [authGuard],
@@ -63,7 +69,8 @@ export const routes: Routes = [
             {path: 'owner/user-permissions', component: PermissionsComponent},
         ]
     },
-    {path: 'dashboard/pos-2', component: Pos2Component},
+    { path: 'dashboard/pos-2', component: Pos2Component },
     { path: 'auth/login', component: LoginComponent },
+    { path: 'customer-screen', component: CustomerviewComponent },
     // { path: '', component: HomepageComponent },
 ];

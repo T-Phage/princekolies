@@ -1,4 +1,4 @@
-import { Component,AfterViewInit, ElementRef, ViewChild } from '@angular/core';
+import { Component,AfterViewInit, ElementRef, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { HttpService } from '../../services/httpservices/http.service';
 import { SharedService } from '../../services/sharedservices/shared.service';
@@ -10,6 +10,7 @@ import { FormBuilder, Validators, FormArray, ReactiveFormsModule } from '@angula
 import { Observable } from 'rxjs';
 import { ErrormodalComponent } from '../../components/errormodal/errormodal.component';
 import { ValidationService } from '../../services/validationservices/validation.service';
+import { BroadcastServicesService } from '../../services/broadcast/broadcast-services.service';
 
 declare var $: any;
 @Component({
@@ -37,6 +38,10 @@ export class Pos2Component implements AfterViewInit {
 
   public baseUrl = this.httpservice.baseDomain;
 
+  cart: any = { items: [], total: 0 };
+
+  
+
   constructor(
     private elementRef: ElementRef,
     private httpservice: HttpService,
@@ -48,6 +53,8 @@ export class Pos2Component implements AfterViewInit {
     private printservice: PrintService,
     private location: Location,
     public valservices: ValidationService,
+    private cdr: ChangeDetectorRef,
+    private cartBroadcast: BroadcastServicesService,
   ) { 
     this.username = sessionStorage.getItem('username')
   }
@@ -81,33 +88,33 @@ export class Pos2Component implements AfterViewInit {
   }
 
   currentDate = new Date();
-    newSalesFrm = this.formBuilder.group({
-      'customer_id': [''],
-      'first_name': ['', Validators.compose([Validators.required])],
-      'last_name': ['', Validators.compose([])],
-      'customer_address': [''],
-      'customer_phone': [''],
-      'customer_business_name': [''],
-      'identity_number': ['', Validators.compose([])],
-      'identification_type': [''],
-      'customer_email': ['',],
-      'reference': [''],
-      'status': ['Completed'],
-      'grand_total': ['0.00', Validators.required],
-      'amount_paid': [0.0, Validators.required],
-      'payment_status': ['Paid',],
-      'payment_method':[''],
-      'balance': [0.0, Validators.compose([Validators.required])], // Validators.pattern(this.sharedservice.amount)])],
-      'cash': [0.0, Validators.compose([Validators.required, Validators.pattern(this.sharedservice.amount)])],
-      'momo': [0.0, Validators.compose([Validators.required, Validators.pattern(this.sharedservice.amount)])],
-      'bank':[0.0, Validators.compose([Validators.required, Validators.pattern(this.sharedservice.amount)])],
-      'biller': [sessionStorage.getItem('id')],
-      'items': this.formBuilder.array([]),
-      'extra_services': this.formBuilder.array([]),
-      'branch_id': [this.role == 'Business_Owner' ? sessionStorage.getItem('selected_branch'): sessionStorage.getItem('user_branch')],
-      'discount': [0.0, Validators.compose([Validators.required, Validators.pattern(this.sharedservice.amount)])],
-      'sale_date': [this.currentDate.toISOString().split('T')[0]]
-    })
+  newSalesFrm = this.formBuilder.group({
+    'customer_id': [''],
+    'first_name': ['', Validators.compose([Validators.required])],
+    'last_name': ['', Validators.compose([])],
+    'customer_address': [''],
+    'customer_phone': [''],
+    'customer_business_name': [''],
+    'identity_number': ['', Validators.compose([])],
+    'identification_type': [''],
+    'customer_email': ['',],
+    'reference': [''],
+    'status': ['Completed'],
+    'grand_total': ['0.00', Validators.required],
+    'amount_paid': [0.0, Validators.required],
+    'payment_status': ['Paid',],
+    'payment_method':[''],
+    'balance': [0.0, Validators.compose([Validators.required])], // Validators.pattern(this.sharedservice.amount)])],
+    'cash': [0.0, Validators.compose([Validators.required, Validators.pattern(this.sharedservice.amount)])],
+    'momo': [0.0, Validators.compose([Validators.required, Validators.pattern(this.sharedservice.amount)])],
+    'bank':[0.0, Validators.compose([Validators.required, Validators.pattern(this.sharedservice.amount)])],
+    'biller': [sessionStorage.getItem('id')],
+    'items': this.formBuilder.array([]),
+    'extra_services': this.formBuilder.array([]),
+    'branch_id': [this.role == 'Business_Owner' ? sessionStorage.getItem('selected_branch'): sessionStorage.getItem('user_branch')],
+    'discount': [0.0, Validators.compose([Validators.required, Validators.pattern(this.sharedservice.amount)])],
+    'sale_date': [this.currentDate.toISOString().split('T')[0]]
+  })
 
   get items() {
     return this.newSalesFrm.get('items') as FormArray;
@@ -119,6 +126,7 @@ export class Pos2Component implements AfterViewInit {
   remove_extra(index: number) {
     this.extra_services.removeAt(index);
     this.calculateGrandTotal()
+    this.syncToCustomerScreen();
   }
 
   isServiceExists(serviceId: any): boolean {
@@ -139,29 +147,54 @@ export class Pos2Component implements AfterViewInit {
     });
     this.extra_services.push(serviceGroup);
     this.calculateGrandTotal()
+    this.syncToCustomerScreen();
+  }
+
+  private syncToCustomerScreen(): void {
+    this.cartBroadcast.sendUpdate({
+      items: this.items.value,
+      subtotal: this.subtotal,
+      total: this.newSalesFrm.get('grand_total')?.value || 0.00 // 
+    });
   }
   
   addAlias(product:any) {
-        // 
-      console.log(product.name, product.product_id, product.quantity, product.price, product.barcode)
-      if(!this.isProductExists(product.product_id)){
-        this.items.push(this.formBuilder.group({
-          'product': [product.name, Validators.required],
-          'product_id': [product.product_id, Validators.required],
-          'quantity': [1, Validators.compose([Validators.min(0.5), Validators.required])],
-          'barcode': [product.barcode,],
-          'purchase_price': [parseFloat(product.price), Validators.compose([Validators.required])],
-          'unit_cost': [parseFloat(product.price)],
-        }));
-        // this.calculateTotal(this.items.length-1)
+    console.log(product.name, product.product_id, product.quantity, product.price, product.barcode)
+    if(this.isProductExpired(product.expiry_date)){
+      this.alertExpired()
+      return
+    }
+    if(!this.isProductExists(product.product_id)){
+      this.items.push(this.formBuilder.group({
+        'product': [product.name, Validators.required],
+        'product_id': [product.product_id, Validators.required],
+        'quantity': [1, Validators.compose([Validators.min(0.5), Validators.required])],
+        'barcode': [product.barcode,],
+        'purchase_price': [parseFloat(product.price), Validators.compose([Validators.required])],
+        'unit_cost': [parseFloat(product.price)],
+      }));
+      // this.calculateTotal(this.items.length-1)
+      this.calculateGrandTotal()
+      this.syncToCustomerScreen();
+      
+    } else {
+      const index = this.items.controls.findIndex(item => item.value.product_id === product.product_id);
+        if (index !== -1) {
+        this.items.removeAt(index);
         this.calculateGrandTotal()
-      } else {
-        const index = this.items.controls.findIndex(item => item.value.product_id === product.product_id);
-         if (index !== -1) {
-          this.items.removeAt(index);
-          this.calculateGrandTotal()
-        }
       }
+    }
+  }
+
+  isProductExpired(expiryDate:Date) {
+    if (expiryDate == null || undefined){
+      return false
+    }
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Reset time to midnight
+    const expiration = new Date(expiryDate);
+    expiration.setHours(0, 0, 0, 0); // Reset time to midnight
+    return expiration < today;
   }
 
   // Custom validation to check if a product already exists in the array
@@ -172,6 +205,7 @@ export class Pos2Component implements AfterViewInit {
   removeItem(index: number): void {
     this.items.removeAt(index);
     this.calculateGrandTotal()
+    this.syncToCustomerScreen();
   }
 
   onDiscountChange(e: Event){
@@ -249,6 +283,7 @@ export class Pos2Component implements AfterViewInit {
     // console.log(parseFloat(`${this.newSalesFrm.get('grand_total')?.value}`))
     var balance = amount - parseFloat(`${this.newSalesFrm.get('grand_total')?.value}`)
     this.newSalesFrm.get('balance')?.setValue(parseFloat(balance.toFixed(2)));
+    this.syncToCustomerScreen();
   }
 
   public filterProducts(category: string): void {
@@ -420,6 +455,7 @@ export class Pos2Component implements AfterViewInit {
           this.newSalesFrm.get('branch_id')?.setValue(sessionStorage.getItem('branch_id'));
         }
         this.ngOnInit();
+        this.syncToCustomerScreen();
         // this.refresh();
       }, 1700);
   }

@@ -297,12 +297,12 @@ export class ProductsComponent {
   exportToExcel() {
     const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.products);
     const workbook: XLSX.WorkBook = {
-      Sheets: { 'Product Table': worksheet },
-      SheetNames: ['Product Table']
+      Sheets: { 'Product Items': worksheet },
+      SheetNames: ['Product Items']
     };
 
     const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-    this.saveAsExcelFile(excelBuffer, 'product_table');
+    this.saveAsExcelFile(excelBuffer, 'product_items');
   }
 
   // Save the Excel file
@@ -316,18 +316,25 @@ export class ProductsComponent {
     const doc = new jsPDF();
 
     var data = this.products
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`Products Report as at ${(new Date().toDateString().split('T')[0].replace(' ', '_'))}`, 14, 20);
 
     // Add table content using autoTable
 
     const columns = [
         { header: "Product", dataKey: "name" },
         { header: "Category", dataKey: "category_id" },
-        { header: "Price", dataKey: "price" },
-        { header: "Quantity", dataKey: "quantity" }
+        { header: "Cost Price", dataKey: "cost_price"},
+        { header: "Selling Price", dataKey: "price" },
+        { header: "Quantity", dataKey: "quantity" },
+        { header: "Total Amount", dataKey: "total_amount" },
     ];
+
     autoTable(doc, {
         columns: columns,
         body: data,
+        startY: 28,
         foot: [[
           { content: `Total Items: ${this.products.length}`, colSpan: 1, styles: { fontStyle: 'bold' } },
           { content: `Feed: `, styles: { fontStyle: 'bold', halign: 'right' } },
@@ -337,17 +344,18 @@ export class ProductsComponent {
     });
 
     // Save the generated PDF
-    doc.save('products_table_'+(new Date().toDateString().split('T')[0].replace(' ', '_'))+'.pdf');
+    doc.save('products_as_at_'+(new Date().toDateString().split('T')[0].replace(' ', '_'))+'.pdf');
   }
 
   printTable() {
+    var businessName = sessionStorage.getItem('business_name');
     const printWindow = window.open('', '_blank');  // Open a new window
     if (printWindow) {
       const tableHtml = this.generateTableHtml();  // Generate the table HTML
       printWindow.document.write(`
         <html>
           <head>
-            <title>Print Product Table</title>
+            <title>Print Products Table</title>
             <style>
               table { border-collapse: collapse; width: 100%; }
               th, td { border: 1px solid black; padding: 8px; text-align: left; }
@@ -355,7 +363,7 @@ export class ProductsComponent {
             </style>
           </head>
           <body onload="window.print(); window.close();">
-            <h2>Product Table</h2>
+            <h2> ${businessName} Products Report as at ${(new Date().toDateString().split('T')[0].replace(' ', '_'))}</h2>
             ${tableHtml}
           </body>
         </html>
@@ -366,13 +374,24 @@ export class ProductsComponent {
 
   // Generate the HTML for the table
   private generateTableHtml(): string {
-    let tableHtml = '<table><thead><tr><th>Product Name</th><th>Category</th><th>Quantity</th><th>Price</th></tr></thead><tbody>';
+    let tableHtml = '<table>\
+      <thead>\
+        <tr>\
+          <th>Product Name</th>\
+          <th>Category</th>\
+          <th>Quantity</th>\
+          <th>Cost Price</th>\
+          <th>Selling Price</th>\
+          <th>Total Product Amount</th>\
+        </tr></thead><tbody>';
     this.products.forEach(product => {
       tableHtml += `<tr>
                       <td>${product.name}</td>
                       <td>${product.category_id}</td>
                       <td>${product.quantity}</td>
+                      <td>${product.cost_price}</td>
                       <td>${product.price}</td>
+                      <td>${product.total_amount}</td>
                     </tr>`;
     });
     tableHtml += '</tbody></table>';

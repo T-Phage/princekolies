@@ -60,33 +60,33 @@ export class CategoryComponent {
     'status': [true, Validators.required],
     'createdby': [parseInt(`${sessionStorage.getItem('id')}`),],
     'branch': [this.no_of_branches == 1 ? null : sessionStorage.getItem('selected_branch')],
-    'subcat': this.formBuilder.array([
-      this.formBuilder.group({
-        'name': ['', Validators.required],
-        'status': [true, Validators.required],
-        'createdby': [parseInt(`${sessionStorage.getItem('id')}`),],
-      })
-    ]),
+    // 'subcat': this.formBuilder.array([
+    //   this.formBuilder.group({
+    //     'name': ['', Validators.required],
+    //     'status': [true, Validators.required],
+    //     'createdby': [parseInt(`${sessionStorage.getItem('id')}`),],
+    //   })
+    // ]),
   });
 
-  addItem() {
-    if (this.subcat.length === 10){
-      return
-    }
+  // addItem() {
+  //   if (this.subcat.length === 10){
+  //     return
+  //   }
 
-    // If valid, reset submitted for the new row and push the new group
-    this.submitted = false;
+  //   // If valid, reset submitted for the new row and push the new group
+  //   this.submitted = false;
   
-    this.subcat.push(this.formBuilder.group({
-        'name': ['', Validators.required],
-        'status': [true, Validators.required],
-        'createdby': [parseInt(`${sessionStorage.getItem('id')}`),],
-      }));
-  }
+  //   this.subcat.push(this.formBuilder.group({
+  //       'name': ['', Validators.required],
+  //       'status': [true, Validators.required],
+  //       'createdby': [parseInt(`${sessionStorage.getItem('id')}`),],
+  //     }));
+  // }
 
-  get subcat() {
-    return this.createCategoryFrm.get('subcat') as FormArray;
-  }
+  // get subcat() {
+  //   // return this.createCategoryFrm.get('subcat') as FormArray;
+  // }
 
   updateCategoryFrm = this.formBuilder.group({
     'name': ['', Validators.required],
@@ -148,11 +148,11 @@ export class CategoryComponent {
 
   createCategoryFunc(evt: Event) {
     evt.preventDefault()
-    this.sharedservices.infoFunc('alert alert-info', 'creating category... ', false, false, false)
     console.log(this.createCategoryFrm.value)
     console.log(this.createCategoryFrm)
     this.submitted = true;
     if (this.createCategoryFrm.valid) {
+      this.sharedservices.infoFunc('alert alert-info', 'creating category... ', true, true, true)
       this.httpservices.createCategory(this.createCategoryFrm.value)
       .subscribe({
         next : data => {
@@ -249,7 +249,7 @@ export class CategoryComponent {
     this.role = sessionStorage.getItem('role') || '';
     this.branches$ = this.httpservices.getbranches();
  
-    if(this.role != 'Business_Owner'){
+    // if(this.role != 'Business_Owner'){
       this.httpservices.getCategories(0, 0)
       .subscribe({
         next: data => {
@@ -270,25 +270,25 @@ export class CategoryComponent {
       })
 
       return
-    }
+    // }
     
-    this.httpservices.getCategoriesByBranch(this.branch.value.id)
-    .subscribe({
-      next: data => {
-        console.log(data)
-        this.sharedservices.infoFunc('', '', false, false, false);
-        this.categories = data
+    // this.httpservices.getCategoriesByBranch(this.branch.value.id)
+    // .subscribe({
+    //   next: data => {
+    //     console.log(data)
+    //     this.sharedservices.infoFunc('', '', false, false, false);
+    //     this.categories = data
 
-        setTimeout(()=>{
-          this.dataTableInit();
-        }, 250)
-      },
-      error: error => {
-        if (error.status === 401 || error.status === 403){
-          this.httpservices.httpLogout(error.error.message)
-        }
-      }
-    })
+    //     setTimeout(()=>{
+    //       this.dataTableInit();
+    //     }, 250)
+    //   },
+    //   error: error => {
+    //     if (error.status === 401 || error.status === 403){
+    //       this.httpservices.httpLogout(error.error.message)
+    //     }
+    //   }
+    // })
   }
 
   formatDate(dateString:string) {
