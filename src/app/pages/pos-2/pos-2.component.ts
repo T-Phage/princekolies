@@ -172,6 +172,7 @@ export class Pos2Component implements AfterViewInit {
         'barcode': [product.barcode,],
         'purchase_price': [parseFloat(product.price), Validators.compose([Validators.required])],
         'unit_cost': [parseFloat(product.price)],
+        'product_cost': [parseFloat(product.cost_price)],
       }));
       // this.calculateTotal(this.items.length-1)
       this.calculateGrandTotal()

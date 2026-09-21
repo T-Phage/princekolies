@@ -13,7 +13,9 @@ import { catchError } from 'rxjs/operators';
 
 export class HttpService {
   baseDomain = 'https://getapis.getexposale.com/backend';
-  baseUrl = 'https://getapis.getexposale.com/api'
+  // baseUrl = 'https://getapis.getexposale.com/api'
+  baseUrl = 'https://apee.be.getexposale.com/api'
+  // baseUrl = 'http://demose.localhost:8000/api'
   // baseUrl = 'http://localhost/getexposale/public/api';
   // baseDomain = '';
 
@@ -117,7 +119,7 @@ export class HttpService {
           sessionStorage.setItem('user_branch', data.user.branch_id);
           // sessionStorage.setItem('account_type', JSON.stringify(data.user.branch_info.business_info))
           sessionStorage.setItem('account_type', JSON.stringify(data.account_type))
-          sessionStorage.setItem('business_name', data.user.business_info.business_name)
+          // sessionStorage.setItem('business_name', data.user.business_info.business_name)
           // console.log(data.user.business_info)
 
           this.appToken = data.token;
@@ -126,7 +128,7 @@ export class HttpService {
           this.authService.login(data.token, data.user.role, data.account_type);
 
           setTimeout(() => {
-          // console.log(data)
+          console.log(data)
             if(data.user.role == "Business_Owner"){
               this.router.navigate(['/dashboard/overview-dashboard'])
             }

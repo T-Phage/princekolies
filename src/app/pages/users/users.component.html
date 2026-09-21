@@ -81,10 +81,10 @@
                                         <!-- <a class="me-2 p-2 mb-0" href="javascript:void(0);">
                                             <i data-feather="eye" class="action-eye"></i>
                                         </a> -->
-                                        <a (click)="userClicked(user.id, user.name, user.email, user.phone_number, user.role,user.user_account,user.branch_id)" class="me-2 p-2 mb-0" data-bs-toggle="modal" data-bs-target="#edit-units">
+                                        <a (click)="userClicked(user, user.id, user.name, user.email, user.phone_number, user.role,user.user_account,user.branch_id)" class="me-2 p-2 mb-0" data-bs-toggle="modal" data-bs-target="#edit-units">
                                             <i data-feather="edit" class="feather-edit"></i>
                                         </a>
-                                        <a [routerLink]="['/dashboard/staff-sales/', user.id, user.name]" class="me-2 p-2 mb-0">
+                                        <!-- <a [routerLink]="['/dashboard/staff-sales/', user.id, user.name]" class="me-2 p-2 mb-0">
                                             <i data-feather="eye" class="">
                                                 <svg fill="#000000" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
                                                     width="18px" height="22px" viewBox="0 0 442.04 442.04"
@@ -110,10 +110,10 @@
                                                         </g>
                                                     </g>
                                                 </svg>
-                                                <!-- <img src="assets/images/trash-solid.svg"> -->
                                             </i>
-                                        </a>
-                                        <a (click)="userClicked(user.id, user.name, user.email, user.phone_number, user.role,user.user_account,user.branch_id)" class="me-2 confirm-text p-2 mb-0" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#delete-units">
+                                        </a> -->
+                                        <!-- <img src="assets/images/trash-solid.svg"> -->
+                                        <a (click)="userClicked(user, user.id, user.name, user.email, user.phone_number, user.role,user.user_account,user.branch_id)" class="me-2 confirm-text p-2 mb-0" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#delete-units">
                                             <i data-feather="trash-2" class="feather-trash-2">
                                                 <!-- <img src="assets/images/trash-solid.svg"> -->
                                             </i>
@@ -326,7 +326,7 @@
                                 <div *ngIf="no_of_branches > 1" class="col-lg-6">
                                     <div class="input-blocks">
                                         <label>Branch</label>
-                                        <select formControlName="branch" class="form-control">
+                                        <select formControlName="branch_id" class="form-control">
                                             <!-- <option *ngFor="let branch of branches" [value]="branch.id">{{branch.branch_name}}</option> -->
                                             <option *ngFor="let branch of branches$ | async" [value]="branch.id">{{branch.branch_name}}</option>
                                         </select>

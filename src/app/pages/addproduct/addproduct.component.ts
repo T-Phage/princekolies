@@ -9,13 +9,13 @@ import { CommonModule } from '@angular/common';
 import { ErrormodalComponent } from '../../components/errormodal/errormodal.component';
 import { RouterLink, RouterOutlet } from '@angular/router';
 
-// import { ZXingScannerModule } from '@zxing/ngx-scanner';
-// import { BarcodeFormat } from '@zxing/library';
+import { ZXingScannerModule } from '@zxing/ngx-scanner';
+import { BarcodeFormat } from '@zxing/library';
 
 @Component({
   selector: 'app-addproduct',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, ErrormodalComponent, RouterLink],
+  imports: [ReactiveFormsModule, CommonModule, ErrormodalComponent, RouterLink, ZXingScannerModule],
   templateUrl: './addproduct.component.html',
   styleUrl: './addproduct.component.css',
   schemas: [NO_ERRORS_SCHEMA,]
@@ -38,7 +38,7 @@ export class AddproductComponent {
 
   }
 
-  // formats: BarcodeFormat[] = [BarcodeFormat.QR_CODE, BarcodeFormat.EAN_13, BarcodeFormat.UPC_A];
+  formats: BarcodeFormat[] = [BarcodeFormat.QR_CODE, BarcodeFormat.EAN_13, BarcodeFormat.UPC_A];
   scannedCode: string | null = null;
   hasTorch: boolean = false;
   isScannerVisible: boolean = true;
@@ -49,17 +49,17 @@ export class AddproductComponent {
   selectedImageBase64: string | null = null;
   imageName: string = '';
 
-  // @HostListener('window:keypress', ['$event'])
-  // handleKeyDown(event: KeyboardEvent) {
-  //   if (event.key === 'Enter') {
-  //     event.preventDefault(); // Prevent form submission
-  //     this.barcodeData = this.inputBuffer; // Finalize barcode data
-  //     this.inputBuffer = ''; // Clear the buffer
-  //     this.onBarcodeScanned(this.barcodeData);
-  //   } else {
-  //     this.inputBuffer += event.key; // Capture the scanned key
-  //   }
-  // }
+  @HostListener('window:keypress', ['$event'])
+  handleKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      event.preventDefault(); // Prevent form submission
+      this.barcodeData = this.inputBuffer; // Finalize barcode data
+      this.inputBuffer = ''; // Clear the buffer
+      this.onBarcodeScanned(this.barcodeData);
+    } else {
+      this.inputBuffer += event.key; // Capture the scanned key
+    }
+  }
 
   onBarcodeScanned(barcode: string) {
     console.log('Scanned barcode:', barcode);
@@ -144,11 +144,11 @@ export class AddproductComponent {
         },
         error: error => {
           this.swalservices.fireError('An error occured. Try again...');
-          let msg = error.error.message
+          this.submitted = false;
           console.error('error :', error)
+          let msg = error.error.message
           this.sharedservice.infoFunc('alert alert-danger', msg, false, false, false)
           setTimeout(() => this.sharedservice.infoFunc('', '', false, false, false), 8000)
-          this.submitted = false;
         }, 
         complete: () => {
           this.sharedservice.infoFunc('', '', false, false, false);

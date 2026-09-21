@@ -19,6 +19,8 @@
     "@angular/platform-browser-dynamic": "^17.3.0",
     "@angular/router": "^17.3.0",
     "@angular/service-worker": "^17.3.0",
+    "@zxing/library": "^0.21.3",
+    "@zxing/ngx-scanner": "^19.0.0",
     "chart.js": "^4.5.1",
     "file-saver": "^2.0.5",
     "jquery": "^4.0.0",

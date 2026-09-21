@@ -45,7 +45,7 @@ export class UsersComponent {
     this.branches$ = this.httpservice.getbranches()
     if (this.no_of_branches == 1) {
       this.newUserFrm.get('branch')?.setValue(`${sessionStorage.getItem('user_branch')}`, { emitEvent: true });
-      this.updateUserFrm.get('branch_id')?.setValue(`${sessionStorage.getItem('user_branch')}`, { emitEvent: true });
+      // this.updateUserFrm.get('branch_id')?.setValue(`${sessionStorage.getItem('user_branch')}`, { emitEvent: true });
     }
 
       this.httpservice.getUsers()
@@ -87,7 +87,7 @@ export class UsersComponent {
     'branch_id': ['', Validators.required],
   })
 
-  userClicked(id: any, name: string, email: string, phone_number: string, role: string, user_account: string, branch_id: number) {
+  userClicked(user:any, id: any, name: string, email: string, phone_number: string, role: string, user_account: string, branch_id: number) {
     this.updateUserFrm.controls.name.setValue(name)
     this.updateUserFrm.controls.email.setValue(email)
     this.updateUserFrm.controls.phone_number.setValue(phone_number)
