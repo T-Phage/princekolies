@@ -40,6 +40,17 @@
                             <div class="row">
                                 <div class="col-lg-4 col-sm-6 col-12">
                                     <div class="mb-3 add-product">
+                                        <label class="form-label">Barcode</label>
+                                        <input type="text" formControlName="barcode" class="form-control">
+                                        <div *ngIf="(newProductForm.get('barcode')?.invalid && newProductForm.get('barcode')?.touched) || submitted">
+                                            <!-- <div *ngIf="newProductForm.get('barcode')?.errors!['required']" class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;">product name field is required.</div> -->
+                                            <div *ngIf="newProductForm.controls.barcode.errors?.['required']" class="forgot-link text-danger" style="font-size: 12px;font-weight: 500;">field is required.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-lg-4 col-sm-6 col-12">
+                                    <div class="mb-3 add-product">
                                         <label class="form-label">Product Name</label>
                                         <input type="text" formControlName="name" class="form-control text-uppercase">
                                         <div *ngIf="(newProductForm.get('name')?.invalid && newProductForm.get('name')?.touched) || submitted">

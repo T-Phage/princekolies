@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ErrormodalComponent } from '../../../components/errormodal/errormodal.component';
 import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
+import autoTable, { RowInput } from 'jspdf-autotable';
 
 @Component({
   selector: 'app-saleanalytics',
@@ -36,6 +36,13 @@ export class SaleanalyticsComponent {
 
   submitted = true;
   no_of_branches = Number(sessionStorage.getItem('number_of_branches'));
+
+  companyName = 'Acme Corporation';
+  reportTitle = 'Income Statement';
+  asOfDate = '';
+
+  profitLoss:any = {};
+  expenses:any[] = [];
 
   constructor(
     private httpservice: HttpService,
@@ -77,6 +84,8 @@ export class SaleanalyticsComponent {
         this.productsReceipts = data.productsReceipts;
         this.cashAmount = data.cashAmount;
         this.salescount = data.salescount;
+        this.expenses = data.expenses;
+        this.profitLoss = data.profitLoss;
         this.sharedservice.infoFunc('alert alert-success', 'Report generated successfully. Close modal', false, false, false)
         this.datableservice.initiateDataTable('.products_receipts', 25)
         setTimeout(() => {
@@ -203,6 +212,181 @@ export class SaleanalyticsComponent {
       `);
       printWindow.document.close();  // Close the document to finish loading
     }
+  }
+
+  exportToPdf() {
+    const doc = new jsPDF();
+    console.log('===pdf export clicked===');
+    // 1. Add Header Information
+    doc.setFontSize(18);
+    doc.text(this.companyName, 14, 20);
+    
+    doc.setFontSize(14);
+    doc.text(this.reportTitle, 14, 28);
+    
+    doc.setFontSize(10);
+    doc.setTextColor(100);
+    doc.text(this.asOfDate, 14, 34);
+
+    // 2. Define Table Content (Assets, Liabilities, Equity)
+    const tableData: RowInput[] = [
+      // Assets Section Header
+      [{ content: 'ASSETS', colSpan: 2, styles: { fontStyle: 'bold', fillColor: [220, 220, 220] } }],
+      ['Cash and cash equivalents', '$45,000'],
+      ['Accounts receivable', '$12,500'],
+      ['Inventory', '$23,000'],
+      ['Total Current Assets', '$80,500'],
+
+      // Liabilities Section Header
+      [{ content: 'LIABILITIES', colSpan: 2, styles: { fontStyle: 'bold', fillColor: [220, 220, 220] } }],
+      ['Accounts payable', '$8,000'],
+      ['Short-term loans', '$10,000'],
+      ['Total Current Liabilities', '$18,000'],
+
+      // Equity Section Header
+      [{ content: 'EQUITY', colSpan: 2, styles: { fontStyle: 'bold', fillColor: [220, 220, 220] } }],
+      ['Common stock', '$40,000'],
+      ['Retained earnings', '$22,500'],
+      ['Total Equity', '$62,500'],
+    ];
+
+    // 3. Generate Table via jspdf-autotable
+     
+    autoTable(doc, {
+      startY: 40,
+      body: tableData,
+      // head: [['Account / Description', 'Amount']],
+      theme: 'grid',
+      headStyles: { fillColor: [41, 128, 185] }, // Professional blue theme
+      columnStyles: {
+        0: { cellWidth: 130 },
+        1: { cellWidth: 50, halign: 'right' } // Align numbers to the right
+      },
+      didParseCell: (data) => {
+        // Optional: Bold specific total rows dynamically
+        // const text = data.cell.raw as string;
+        // if (text && text.includes('Total')) {
+        //   data.cell.styles.fontStyle = 'bold';
+        // }
+        const cellText = data.cell.text ? data.cell.text.join(' ') : '';
+        if (cellText.includes('Total')) {
+          data.cell.styles.fontStyle = 'bold';
+        }
+      }
+    });
+
+    // 4. Save the PDF Document
+    doc.save('balance-sheet.pdf');
+  }
+
+   exportProfitLossToPdf() {
+
+    const start = new Date(`${this.queryFrm.value.startDate}`);
+    const end = new Date(`${this.queryFrm.value.endDate}`);
+    // 1. Calculate the exact last day of the end date's month
+    const lastDayOfEndMonth = new Date(end.getFullYear(), end.getMonth() + 1, 0);
+    const isFullCalendarMonth = 
+      start.getDate() === 1 &&                                  // Starts on the 1st
+      end.getDate() === lastDayOfEndMonth.getDate() &&          // Ends on the last day of the month
+      start.getMonth() === end.getMonth() &&                    // Same month
+      start.getFullYear() === end.getFullYear();
+
+      let reportDateText = '';
+    
+    if (isFullCalendarMonth) {
+      // Format nicely, e.g., "December 31, 2025"
+      const formattedDate = end.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+      reportDateText = `For the Month Ending ${formattedDate}`;
+    } else {
+      const formattedStartDate = start.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+
+      const formattedEndDate = end.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+      // Default fallback (e.g., for custom date ranges or point-in-time balance sheets)
+      reportDateText = `For the period of ${formattedStartDate} to ${formattedEndDate}`; // ${end.toLocaleDateString('en-US')}`;
+    }
+
+    // Pass `reportDateText` directly into your jsPDF generation header!
+    console.log(reportDateText);
+    this.asOfDate = reportDateText;
+
+    const doc = new jsPDF() //{
+    //   orientation: 'landscape',
+    //   unit: 'mm',
+    //   format: 'a4'
+    // });
+    // 1. Add Header Information
+    doc.setFontSize(18);
+    doc.text(this.companyName, 14, 20);
+    
+    doc.setFontSize(14);
+    doc.text(this.reportTitle, 14, 28);
+    
+    doc.setFontSize(10);
+    doc.setTextColor(100);
+    doc.text(this.asOfDate, 14, 34);
+
+    // 2. Define Table Content (Assets, Liabilities, Equity)
+    const tableData: RowInput[] = [
+      // Assets Section Header
+      [{ content: 'Revenue', colSpan: 3, styles: { fontStyle: 'bold', fillColor: [220, 220, 220] } }],
+      ['Sales', `${this.profitLoss.totalSales}`, ''],
+      ['Credit Repayments', `${this.profitLoss.credits}`, ''],
+      ['Services', `${this.profitLoss.services}`, ''],
+      ['', '', `${this.profitLoss.totalIncome}`],
+      ['Cost of Products Sold', '', `(${this.profitLoss.productsCost})`],
+      // ['', '', `${this.profitLoss.intermediate}`, ],
+      ['Gross Profit', '', `${this.profitLoss.productCostProfit}`],
+
+      // Liabilities Section Header
+      [{ content: 'Expenditure', colSpan: 3, styles: { fontStyle: 'bold', fillColor: [220, 220, 220] } }],
+
+      // Loop through the items array dynamically
+      ...this.expenses.map(item => [item.expense_for, item.amount, '']),
+      ['Total Expenditure', '', `(${this.profitLoss.totalExpenses})`],
+
+      // Equity Section Header
+      [{ content: 'Net Profit/ Loss', colSpan: 3, styles: { fontStyle: 'bold', fillColor: [220, 220, 220] } }],
+      // ['Products', `GHc ${this.profitLoss.productsProfitLoss}`],
+      // ['Expenditure', `GHc ${this.profitLoss.totalExpenses}`],
+      ['Net Profit/ Loss', '', `${this.profitLoss.intermediate}`],
+    ];
+
+    // 3. Generate Table via jspdf-autotable
+     
+    autoTable(doc, {
+      startY: 40,
+      body: tableData,
+      head: [['Account / Description', 'Amount (GHc)', ' (GHc)']],
+      theme: 'grid',
+      headStyles: { fillColor: [41, 128, 185] }, // Professional blue theme
+      columnStyles: {
+        0: { cellWidth: 100 },
+        1: { cellWidth: 30, halign: 'center' }, // Align numbers to the right
+        3: { cellWidth: 50, halign: 'right' } // Align numbers to the right
+      },
+      didParseCell: (data) => {
+        // Optional: Bold specific total rows dynamically
+        const cellText = data.cell.text ? data.cell.text.join(' ') : '';
+        if (cellText.includes('Total')) {
+          data.cell.styles.fontStyle = 'bold';
+        }
+      }
+    });
+
+    // 4. Save the PDF Document
+    doc.save(`Account_Statement_${new Date().toLocaleDateString()}.pdf`);
   }
 
 }
